@@ -7,7 +7,7 @@ export const Project = () => {
         <Text fontSize="5xl" fontWeight="bold">
           Project
         </Text>
-
+        {/* TODO: 관리자만 보이도록 권한 설정 필요 */}
         <Flex m={2}>
           <Button {...buttonStyle} mr={4}>
             팀원 관리

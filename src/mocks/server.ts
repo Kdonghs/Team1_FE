@@ -1,5 +1,10 @@
 import { setupServer } from "msw/node";
 
-import { handlers } from "../api/hooks/teamProgress.mock";
+import { projectMockHandler } from "@/api/hooks/projectDetail.mock";
 
-export const server = setupServer(...handlers);
+import { teamProgressMockHandler } from "../api/hooks/teamProgress.mock";
+
+export const server = setupServer(
+  ...teamProgressMockHandler,
+  ...projectMockHandler
+);
