@@ -1,8 +1,5 @@
 import {
   Button,
-  ButtonGroup,
-  FormControl,
-  FormLabel,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -13,11 +10,15 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import { useState } from "react";
 
 import { DateField } from "../../Fields/dateField";
 import { TextField } from "../../Fields/textField";
+import { ToggleButtonGroup } from "./toggleButtonGroup";
 
 export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
+  const [selectedFeature, setSelectedFeature] = useState("기본");
+
   return (
     <>
       <ModalOverlay />
@@ -32,23 +33,12 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
             <DateField label="시작일" />
             <DateField label="종료일" />
 
-            <FormControl display="flex" alignItems="center" gap={3}>
-              <FormLabel
-                minWidth="25%"
-                m="0"
-                color="#727272"
-                fontSize={18}
-                fontWeight={800}
-              >
-                기능 설정
-              </FormLabel>
-              <ButtonGroup variant="outline" width={"100%"} minW={"50%"}>
-                <StyledButton flex={1}>기본</StyledButton>
-                <StyledButton flex={1} whiteSpace={"normal"}>
-                  사용자 설정
-                </StyledButton>
-              </ButtonGroup>
-            </FormControl>
+            <ToggleButtonGroup
+              label="기능 설정"
+              options={["기본", "사용자 설정"]}
+              selectedOption={selectedFeature}
+              onChange={setSelectedFeature}
+            />
           </Stack>
           <Spacer height={100} />
         </ModalBody>
@@ -70,7 +60,7 @@ const StyledModalContent = styled(ModalContent)`
 
 const StyledButton = styled(Button)`
   height: 50px;
-  padding: 4px 8px; /* px, py */
+  padding: 4px 8px;
   background-color: #95a4fc;
   color: white;
 `;
