@@ -3,7 +3,6 @@ import {
   ButtonGroup,
   FormControl,
   FormLabel,
-  Input,
   ModalBody,
   ModalCloseButton,
   ModalContent,
@@ -15,6 +14,9 @@ import {
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 
+import { DateField } from "../../Fields/dateField";
+import { TextField } from "../../Fields/textField";
+
 export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
   return (
     <>
@@ -23,60 +25,12 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
         <ModalHeader fontSize={26} fontWeight={800} pb={10}>
           프로젝트 설정
         </ModalHeader>
-        <ModalCloseButton m={3} />
+        <ModalCloseButton m={5} />
         <ModalBody>
           <Stack spacing={4} display="flex">
-            <FormControl display="flex" alignItems="center" gap={3}>
-              <FormLabel
-                minWidth="25%"
-                m="0"
-                color="#727272"
-                fontSize={18}
-                fontWeight={800}
-              >
-                프로젝트명
-              </FormLabel>
-              <Input
-                height="50px"
-                border="#E3E3E3 solid 1.3px"
-                focusBorderColor="#95A4FC"
-                type="text"
-              />
-            </FormControl>
-            <FormControl display="flex" alignItems="center" gap={3}>
-              <FormLabel
-                minWidth="25%"
-                m="0"
-                color="#727272"
-                fontSize={18}
-                fontWeight={800}
-              >
-                시작일
-              </FormLabel>
-              <Input
-                height="50px"
-                border="#E3E3E3 solid 1.3px"
-                focusBorderColor="#95A4FC"
-                type="date"
-              />
-            </FormControl>
-            <FormControl display="flex" alignItems="center" gap={3}>
-              <FormLabel
-                minWidth="25%"
-                m="0"
-                color="#727272"
-                fontSize={18}
-                fontWeight={800}
-              >
-                종료일
-              </FormLabel>
-              <Input
-                height="50px"
-                border="#E3E3E3 solid 1.3px"
-                focusBorderColor="#95A4FC"
-                type="date"
-              />
-            </FormControl>
+            <TextField label="프로젝트명" />
+            <DateField label="시작일" />
+            <DateField label="종료일" />
 
             <FormControl display="flex" alignItems="center" gap={3}>
               <FormLabel
@@ -88,9 +42,11 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
               >
                 기능 설정
               </FormLabel>
-              <ButtonGroup variant="outline" width="100%">
-                <StyledButton flex="1">기본</StyledButton>
-                <StyledButton flex="1">사용자 설정</StyledButton>
+              <ButtonGroup variant="outline" width={"100%"} minW={"50%"}>
+                <StyledButton flex={1}>기본</StyledButton>
+                <StyledButton flex={1} whiteSpace={"normal"}>
+                  사용자 설정
+                </StyledButton>
               </ButtonGroup>
             </FormControl>
           </Stack>
@@ -98,7 +54,9 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
         </ModalBody>
 
         <ModalFooter>
-          <StyledButton onClick={onClose}>수정</StyledButton>
+          <StyledButton onClick={onClose} width={"134px"}>
+            수정
+          </StyledButton>
         </ModalFooter>
       </StyledModalContent>
     </>
@@ -111,7 +69,6 @@ const StyledModalContent = styled(ModalContent)`
 `;
 
 const StyledButton = styled(Button)`
-  width: 134px;
   height: 50px;
   padding: 4px 8px; /* px, py */
   background-color: #95a4fc;
