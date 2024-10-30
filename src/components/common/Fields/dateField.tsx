@@ -5,6 +5,8 @@ interface DateFieldProps {
   height?: string;
   borderColor?: string;
   focusBorderColor?: string;
+  selectedDate: Date | null;
+  onChange: (date: Date | null) => void;
 }
 
 export const DateField = ({
@@ -29,7 +31,7 @@ export const DateField = ({
         height={height}
         border={borderColor}
         focusBorderColor={focusBorderColor}
-        type="date"
+        type="datetime-local"
       />
     </FormControl>
   );

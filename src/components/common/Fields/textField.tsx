@@ -2,6 +2,8 @@ import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 
 interface TextFieldProps {
   label: string;
+  value?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   height?: string;
   borderColor?: string;
   focusBorderColor?: string;
@@ -9,6 +11,8 @@ interface TextFieldProps {
 
 export const TextField = ({
   label,
+  value,
+  onChange,
   height = "50px",
   borderColor = "#E3E3E3 solid 1.3px",
   focusBorderColor = "#95A4FC",
@@ -30,6 +34,8 @@ export const TextField = ({
         border={borderColor}
         focusBorderColor={focusBorderColor}
         type="text"
+        value={value}
+        onChange={onChange}
       />
     </FormControl>
   );
