@@ -5,8 +5,8 @@ interface DateFieldProps {
   height?: string;
   borderColor?: string;
   focusBorderColor?: string;
-  selectedDate: Date | null;
-  onChange: (date: Date | null) => void;
+  selected?: string;
+  onChange?: ((event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
 }
 
 export const DateField = ({
@@ -14,6 +14,8 @@ export const DateField = ({
   height = "50px",
   borderColor = "#E3E3E3 solid 1.3px",
   focusBorderColor = "#95A4FC",
+  selected,
+  onChange,
 }: DateFieldProps) => {
   return (
     <FormControl display="flex" alignItems="center" gap={3}>
@@ -32,6 +34,8 @@ export const DateField = ({
         border={borderColor}
         focusBorderColor={focusBorderColor}
         type="datetime-local"
+        value={selected}
+        onChange={onChange}
       />
     </FormControl>
   );
