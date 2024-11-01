@@ -1,4 +1,10 @@
-import { Button, ButtonGroup, FormControl, FormLabel } from "@chakra-ui/react";
+import {
+  Button,
+  ButtonGroup,
+  FormControl,
+  FormLabel,
+  HStack,
+} from "@chakra-ui/react";
 import styled from "@emotion/styled";
 
 interface ToggleButtonGroupProps {
@@ -6,37 +12,43 @@ interface ToggleButtonGroupProps {
   options: string[];
   selectedOption: string;
   onChange: (option: string) => void;
+  id: string;
 }
 
 export const ToggleButtonGroup = ({
+  id,
   label,
   options,
   selectedOption,
   onChange,
 }: ToggleButtonGroupProps) => {
   return (
-    <FormControl display="flex" alignItems="center" gap={3}>
-      <FormLabel
-        minWidth="25%"
-        m="0"
-        color="#727272"
-        fontSize={18}
-        fontWeight={800}
-      >
-        {label}
-      </FormLabel>
-      <ButtonGroup variant="outline" width="100%" minW="50%">
-        {options.map((option) => (
-          <StyledButton
-            key={option}
-            flex={1}
-            isActive={selectedOption === option}
-            onClick={() => onChange(option)}
-          >
-            {option}
-          </StyledButton>
-        ))}
-      </ButtonGroup>
+    <FormControl as="fieldset" display="flex" alignItems="center" gap={3}>
+      <HStack width="100%">
+        <FormLabel
+          as="legend"
+          m="0"
+          minWidth="26%"
+          color="#727272"
+          fontSize={18}
+          fontWeight={800}
+        >
+          {label}
+        </FormLabel>
+        <ButtonGroup variant="outline" width="100%">
+          {options.map((option) => (
+            <StyledButton
+              key={option}
+              flex={1}
+              isActive={selectedOption === option}
+              onClick={() => onChange(option)}
+              id={`${id}-${option}`}
+            >
+              {option}
+            </StyledButton>
+          ))}
+        </ButtonGroup>
+      </HStack>
     </FormControl>
   );
 };

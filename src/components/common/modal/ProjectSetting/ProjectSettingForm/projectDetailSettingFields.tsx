@@ -48,6 +48,7 @@ export const ProjectDetailSettingFields = ({
         )}
       />
       <ToggleButtonGroup
+        id="projectOption"
         label="기능 설정"
         options={["기본", "사용자 설정"]}
         selectedOption={selectedFeature}

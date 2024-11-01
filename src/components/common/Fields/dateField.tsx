@@ -20,6 +20,7 @@ export const DateField = ({
   return (
     <FormControl display="flex" alignItems="center" gap={3}>
       <FormLabel
+        htmlFor={label}
         minWidth="25%"
         m="0"
         color="#727272"
