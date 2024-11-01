@@ -8,15 +8,19 @@ import {
   Flex,
   Progress,
   Text,
-} from '@chakra-ui/react';
+} from "@chakra-ui/react";
 
-export const ProgressAccordion = () => {
+import type { ProjectDetail } from "@/api/generated/data-contracts";
+
+export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
+  const { projectDetail } = props;
+
   return (
     <Flex
       alignItems="center"
       justifyContent="space-between"
-      borderRadius={'10px'}
-      border={'1px solid #D8DADC'}
+      borderRadius={"10px"}
+      border={"1px solid #D8DADC"}
       borderColor="#D8DADC"
     >
       <Accordion allowMultiple flex="1">
@@ -25,7 +29,7 @@ export const ProgressAccordion = () => {
             <AccordionIcon boxSize={10} />
             <Box minW="100px" flex="1">
               <Text fontSize="xl" fontWeight="bold">
-                프로젝트 이름
+                {projectDetail.name}
               </Text>
             </Box>
             <Progress
@@ -39,7 +43,7 @@ export const ProgressAccordion = () => {
             />
           </AccordionButton>
 
-          <AccordionPanel pb={4}>내용</AccordionPanel>
+          <AccordionPanel pb={4}>{projectDetail.name} 관련 내용</AccordionPanel>
         </AccordionItem>
       </Accordion>
     </Flex>
