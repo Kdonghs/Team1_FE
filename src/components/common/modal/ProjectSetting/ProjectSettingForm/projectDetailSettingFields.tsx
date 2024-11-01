@@ -10,7 +10,6 @@ import { ToggleButtonGroup } from "../toggleButtonGroup";
 type Props = {
   selectedFeature: string;
   setSelectedFeature: (feature: string) => void;
-  projectDetail: ProjectDetail;
 };
 
 export const ProjectDetailSettingFields = ({

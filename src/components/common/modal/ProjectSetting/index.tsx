@@ -6,7 +6,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Spacer,
-  VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
@@ -16,7 +15,7 @@ import { useParams } from "react-router-dom";
 import type { ProjectDetail } from "@/api/generated/data-contracts";
 
 import { Project as ProjectApi } from "../../../../api/generated/Project";
-import { SwitchField } from "../../Fields/switchField";
+import { ProjectOptionSettingFields } from "../ProjectSetting/ProjectSettingForm/projectOptionSettingFields";
 import { AnimatedPageTransition } from "./animatedPageTransition";
 import { ProjectDetailSettingFields } from "./ProjectSettingForm/projectDetailSettingFields";
 import { renderFooterButtons } from "./renderFooterButtons";
@@ -62,6 +61,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
               endDate: fetchedData.endDate
                 ? fetchedData.endDate.slice(0, 16)
                 : undefined,
+              optionIds: fetchedData.optionIds,
             });
           }
         }
@@ -96,35 +96,15 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
                 <ProjectDetailSettingFields
                   selectedFeature={selectedFeature}
                   setSelectedFeature={setSelectedFeature}
-                  projectDetail={projectDetail}
                 />
               </FormProvider>
               <Spacer height={50} />
             </ModalBody>
           ) : (
             <ModalBody>
-              <VStack spacing={6}>
-                <SwitchField
-                  title="진행률에 따른 나무 성장!"
-                  description="진행률이 오를수록 나무가 성장해요."
-                  id="treeGrowth"
-                />
-                <SwitchField
-                  title="진행률에 따른 빵빠레!"
-                  description="진행률이 50% 달성될 때 메인 화면에 빵빠레가 울려요!"
-                  id="celebration"
-                />
-                <SwitchField
-                  title="마감 기한에 따른 색 변화!"
-                  description="마감 기한이 1일 남았을 때 아이콘이 빨간색으로 바뀌어요!"
-                  id="colorChange"
-                />
-                <SwitchField
-                  title="이메일 전송!"
-                  description="마감기한이 3일 남았을 때 하루 간격으로 이메일이 전송돼요!"
-                  id="emailSend"
-                />
-              </VStack>
+              <FormProvider {...methods}>
+                <ProjectOptionSettingFields />
+              </FormProvider>
               <Spacer height="14px" />
             </ModalBody>
           )}
