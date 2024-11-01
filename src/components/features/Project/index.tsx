@@ -7,7 +7,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 
-import { ProjectSettingModal } from "../../common/modal/ProjectSetting";
+import { ProjectSettingModal } from "../../common/modal/ProjectSetting/";
 
 export const Project = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

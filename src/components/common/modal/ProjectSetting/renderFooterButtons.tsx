@@ -33,7 +33,7 @@ export const renderFooterButtons = (
       {currentConfig.map((buttonConfig, index) => (
         <StyledButton
           key={index}
-          width="134px"
+          action={buttonConfig.action}
           onClick={() => {
             if (buttonConfig.action === "close") onClose();
             else if (buttonConfig.action === "next") handleNextPage();
@@ -47,9 +47,12 @@ export const renderFooterButtons = (
   );
 };
 
-const StyledButton = styled(Button)`
+const StyledButton = styled(Button)<{ action: string }>`
   height: 50px;
   padding: 4px 8px;
-  background-color: #95a4fc;
-  color: white;
+  width: 134px;
+  background-color: ${({ action }) =>
+    action === "close" ? "#95a4fc" : "white"};
+  color: ${({ action }) => (action === "close" ? "white" : "#333")};
+  border: ${({ action }) => (action === "close" ? "none" : "1px solid #ddd")};
 `;
