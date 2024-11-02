@@ -5,7 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import type { ProjectDetail } from "@/api/generated/data-contracts";
 
 import { ProgressTracker } from "../..//components/features/Project/ProgressTracker";
-import { Project as ProjectApi } from "../../api/generated/Project";
+import { projectApi } from "../../api/projectApi";
 import { Project } from "../../components/features/Project";
 import { ProgressAccordion } from "../../components/features/Project/ProgressAccordion";
 
@@ -22,7 +22,6 @@ export const ProjectPage = () => {
         return;
       }
 
-      const projectApi = new ProjectApi();
       try {
         const response = await projectApi.getProject(parseInt(projectId));
         setProjectData(response.data.resultData || null);

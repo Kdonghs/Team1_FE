@@ -14,7 +14,7 @@ import { useParams } from "react-router-dom";
 
 import type { ProjectDetail } from "@/api/generated/data-contracts";
 
-import { Project as ProjectApi } from "../../../../api/generated/Project";
+import { projectApi } from "../../../../api/projectApi";
 import { ProjectOptionSettingFields } from "../ProjectSetting/ProjectSettingForm/projectOptionSettingFields";
 import { AnimatedPageTransition } from "./animatedPageTransition";
 import { ProjectDetailSettingFields } from "./ProjectSettingForm/projectDetailSettingFields";
@@ -45,7 +45,6 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
 
   useEffect(() => {
     const fetchProjectData = async () => {
-      const projectApi = new ProjectApi();
       try {
         if (projectId) {
           const response = await projectApi.getProject(parseInt(projectId));
