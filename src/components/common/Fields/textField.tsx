@@ -12,7 +12,7 @@ interface TextFieldProps extends InputProps {
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
   (
     {
-      label,
+      label = "",
       height = "50px",
       borderColor = "#E3E3E3 solid 1.3px",
       focusBorderColor = "#95A4FC",

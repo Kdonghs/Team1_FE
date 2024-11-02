@@ -14,7 +14,7 @@ export const DateField = ({
   height = "50px",
   borderColor = "#E3E3E3 solid 1.3px",
   focusBorderColor = "#95A4FC",
-  selected,
+  selected = "기본",
   onChange,
 }: DateFieldProps) => {
   return (

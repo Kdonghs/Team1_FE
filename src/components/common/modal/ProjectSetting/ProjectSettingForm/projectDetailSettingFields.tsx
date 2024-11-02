@@ -27,7 +27,7 @@ export const ProjectDetailSettingFields = ({
           <TextField
             ref={ref}
             label="프로젝트명"
-            value={value}
+            value={value || ""}
             onChange={onChange}
           />
         )}

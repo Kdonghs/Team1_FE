@@ -14,22 +14,22 @@ import { useParams } from "react-router-dom";
 
 import type { ProjectDetail } from "@/api/generated/data-contracts";
 
-import { projectApi } from "../../../../api/projectApi";
+import { useGetProjectDetail } from "../../../../api/hooks/useGetProjectDetail";
 import { ProjectOptionSettingFields } from "../ProjectSetting/ProjectSettingForm/projectOptionSettingFields";
 import { AnimatedPageTransition } from "./animatedPageTransition";
 import { ProjectDetailSettingFields } from "./ProjectSettingForm/projectDetailSettingFields";
 import { renderFooterButtons } from "./renderFooterButtons";
 
+const DEFAULT_FEATURE = "기본";
+
 export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
-  const [projectDetail, setProjectDetail] = useState<ProjectDetail | null>(
-    null
-  );
-  const projectId = useParams().id;
-  const [error, setError] = useState<string | null>(null);
+  const { id } = useParams<{ id: string }>();
+  const projectId = id ? parseInt(id, 10) : null;
 
   const methods = useForm<ProjectDetail>();
 
-  const [selectedFeature, setSelectedFeature] = useState("기본");
+  // TODO: 향후 기본 상태에 대한 논의 필요
+  const [selectedFeature, setSelectedFeature] = useState(DEFAULT_FEATURE);
   const [currentPage, setCurrentPage] = useState(1);
   const [back, setBack] = useState(false);
 
@@ -43,39 +43,23 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
     setBack(true);
   };
 
+  const { data, error, isLoading } = useGetProjectDetail(projectId);
+
   useEffect(() => {
-    const fetchProjectData = async () => {
-      try {
-        if (projectId) {
-          const response = await projectApi.getProject(parseInt(projectId));
-          const fetchedData = response.data.resultData;
-
-          if (fetchedData) {
-            setProjectDetail(fetchedData);
-            methods.reset({
-              name: fetchedData.name,
-              startDate: fetchedData.startDate
-                ? fetchedData.startDate.slice(0, 16)
-                : undefined,
-              endDate: fetchedData.endDate
-                ? fetchedData.endDate.slice(0, 16)
-                : undefined,
-              optionIds: fetchedData.optionIds,
-            });
-          }
-        }
-      } catch (err) {
-        setError("Failed to fetch project data");
-      }
-    };
-
-    fetchProjectData();
-  }, [projectId, methods]);
+    if (data) {
+      methods.reset({
+        name: data.name,
+        startDate: data.startDate ? data.startDate.slice(0, 16) : "",
+        endDate: data.endDate ? data.endDate.slice(0, 16) : "",
+        optionIds: data.optionIds,
+      });
+    }
+  }, [data, methods]);
 
   if (error) {
-    return <div>{error}</div>;
+    return <div>{error.message}</div>;
   }
-  if (!projectDetail) {
+  if (isLoading) {
     return <div>Loading...</div>;
   }
 
