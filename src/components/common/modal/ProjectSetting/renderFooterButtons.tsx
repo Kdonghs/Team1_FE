@@ -1,7 +1,13 @@
 import { Button, Flex } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 
-type FooterButtonConfig = { label: string; action: string };
+type FooterButtonConfig = { label: string; action: "close" | "next" | "prev" };
+
+type ButtonActionHandlers = {
+  close: () => void;
+  next: () => void;
+  prev: () => void;
+};
 
 const footerConfig: Record<number, Record<string, FooterButtonConfig[]>> = {
   1: {
@@ -16,6 +22,16 @@ const footerConfig: Record<number, Record<string, FooterButtonConfig[]>> = {
   },
 };
 
+const createButtonActions = (
+  onClose: () => void,
+  handleNextPage: () => void,
+  handlePreviousPage: () => void
+): ButtonActionHandlers => ({
+  close: onClose,
+  next: handleNextPage,
+  prev: handlePreviousPage,
+});
+
 export const renderFooterButtons = (
   currentPage: number,
   selectedFeature: string,
@@ -24,6 +40,12 @@ export const renderFooterButtons = (
   handlePreviousPage: () => void
 ) => {
   const currentConfig = footerConfig[currentPage]?.[selectedFeature] || [];
+
+  const buttonAction = createButtonActions(
+    onClose,
+    handleNextPage,
+    handlePreviousPage
+  );
 
   return (
     <Flex
@@ -34,11 +56,7 @@ export const renderFooterButtons = (
         <StyledButton
           key={index}
           action={buttonConfig.action}
-          onClick={() => {
-            if (buttonConfig.action === "close") onClose();
-            else if (buttonConfig.action === "next") handleNextPage();
-            else if (buttonConfig.action === "prev") handlePreviousPage();
-          }}
+          onClick={buttonAction[buttonConfig.action]}
         >
           {buttonConfig.label}
         </StyledButton>
