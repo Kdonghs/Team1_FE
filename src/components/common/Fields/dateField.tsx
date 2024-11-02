@@ -6,7 +6,7 @@ interface DateFieldProps {
   borderColor?: string;
   focusBorderColor?: string;
   selected?: string;
-  onChange?: ((event: React.ChangeEvent<HTMLInputElement>) => void) | undefined;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const DateField = ({
