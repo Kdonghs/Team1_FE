@@ -111,6 +111,15 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
     });
   });
 
+  const preventEnterKeySubmission = (
+    e: React.KeyboardEvent<HTMLFormElement>
+  ) => {
+    const target = e.target as HTMLFormElement;
+    if (e.key === "Enter" && !["TEXTAREA"].includes(target.tagName)) {
+      e.preventDefault();
+    }
+  };
+
   const [selectedFeature, setSelectedFeature] = useState("기본");
   const [currentPage, setCurrentPage] = useState(1);
   const [back, setBack] = useState(false);
@@ -144,7 +153,11 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
         </ModalHeader>
         <ModalCloseButton m={5} />
         <FormProvider {...methods}>
-          <form action="" onSubmit={onSubmit}>
+          <form
+            action=""
+            onSubmit={onSubmit}
+            onKeyDown={preventEnterKeySubmission}
+          >
             <AnimatedPageTransition currentPage={currentPage} back={back}>
               <ModalBody>
                 {currentPage === 1 ? (
