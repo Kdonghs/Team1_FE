@@ -35,6 +35,9 @@ export const ToggleButtonGroup = ({
           color="#727272"
           fontSize={18}
           fontWeight={800}
+          height="50px"
+          display="flex"
+          alignItems="center"
         >
           {label}
         </FormLabel>
@@ -52,7 +55,7 @@ export const ToggleButtonGroup = ({
               </StyledButton>
             ))}
           </ButtonGroup>
-          <Box height="42px">
+          <Box height="16px">
             {selectedOption === "기본" && (
               <Text fontSize="sm" color="gray.500" position="absolute">
                 이메일 전송, 빵빠레 기능이 포함됩니다.
