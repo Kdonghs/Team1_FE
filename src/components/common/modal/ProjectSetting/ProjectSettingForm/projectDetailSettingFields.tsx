@@ -19,6 +19,7 @@ export const ProjectDetailSettingFields = ({
   const { control, watch } = useFormContext<ProjectDetail>();
 
   const startDate = watch("startDate");
+  const endDate = watch("endDate");
 
   return (
     <Stack>
@@ -49,6 +50,15 @@ export const ProjectDetailSettingFields = ({
         control={control}
         rules={{
           required: "시작일은 필수 입력 사항입니다.",
+          validate: (value) => {
+            if (value && endDate) {
+              const start = new Date(value);
+              const end = new Date(endDate);
+
+              return start < end || "시작일은 종료일 이전이어야 합니다.";
+            }
+            return true;
+          },
         }}
         render={({ field, fieldState: { error, invalid } }) => (
           <DateField
@@ -66,18 +76,19 @@ export const ProjectDetailSettingFields = ({
           required: "종료일은 필수 입력 사항입니다.",
           validate: (value) => {
             if (!value) return "종료일은 필수 입력 사항입니다.";
-            if (!startDate) return "시작일은 필수 입력 사항입니다.";
 
-            const start = new Date(startDate);
-            const end = new Date(value);
+            if (startDate) {
+              const start = new Date(startDate);
+              const end = new Date(value);
 
-            if (end <= start) {
-              return "종료일은 시작일 이후여야 합니다.";
-            }
+              if (end <= start) {
+                return "종료일은 시작일 이후여야 합니다.";
+              }
 
-            const oneDayInMillis = 24 * 60 * 60 * 1000;
-            if (end.getTime() - start.getTime() < oneDayInMillis) {
-              return "시작일과 마감일 간격은 1일 이상이어야 합니다.";
+              const oneDayInMillis = 24 * 60 * 60 * 1000;
+              if (end.getTime() - start.getTime() < oneDayInMillis) {
+                return "시작일과 마감일 간격은 1일 이상이어야 합니다.";
+              }
             }
 
             return true;
