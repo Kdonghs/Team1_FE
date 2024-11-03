@@ -7,8 +7,8 @@ export const projectMockHandler = [
     const projectData = {
       id: projectId,
       name: `모킹 프로젝트 ${projectId}`,
-      startDate: new Date().toISOString(),
-      endDate: new Date(Date.now() + 86400000).toISOString(),
+      startDate: "2024-11-03T05:42:00.000Z",
+      endDate: "2024-11-04T05:42:00.000Z",
       optionIds: [1, 2, 3],
     };
 
@@ -19,4 +19,21 @@ export const projectMockHandler = [
       })
     );
   }),
+
+  rest.put(
+    `https://seamlessup.com/api/project/:projectId`,
+    async (req, res, ctx) => {
+      const { projectId } = req.params;
+      const updatedData = await req.json();
+      return res(
+        ctx.status(200),
+        ctx.json({
+          resultData: {
+            id: projectId,
+            ...updatedData,
+          },
+        })
+      );
+    }
+  ),
 ];

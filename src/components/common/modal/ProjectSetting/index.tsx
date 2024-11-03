@@ -7,14 +7,18 @@ import {
   ModalOverlay,
   Spacer,
 } from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
-import type { ProjectDetail } from "@/api/generated/data-contracts";
-
+import type {
+  ProjectDetail,
+  ProjectUpdate,
+} from "../../../../api/generated/data-contracts";
 import { useGetProjectDetail } from "../../../../api/hooks/useGetProjectDetail";
+import { useUpdateProject } from "../../../../api/hooks/useUpdateProject";
 import { ProjectOptionSettingFields } from "../ProjectSetting/ProjectSettingForm/projectOptionSettingFields";
 import { AnimatedPageTransition } from "./animatedPageTransition";
 import { ProjectDetailSettingFields } from "./ProjectSettingForm/projectDetailSettingFields";
@@ -40,6 +44,8 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
   } = methods;
 
   const { data, error, isLoading } = useGetProjectDetail(projectId);
+  const { mutate } = useUpdateProject(projectId);
+  const toast = useToast();
 
   useEffect(() => {
     if (data) {
@@ -74,20 +80,37 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
       ? new Date(updatedData.endDate).toISOString()
       : undefined;
 
-    const projectData: ProjectDetail = {
-      id: projectId || undefined,
-      name: newName,
-      startDate: newStartDate || undefined,
-      endDate: newEndDate || undefined,
-      optionIds: updatedData.optionIds,
+    const updatedProjectData: ProjectUpdate = {
+      name: newName || "",
+      startDate: newStartDate,
+      endDate: newEndDate,
+      optionIds: updatedData.optionIds ?? [],
     };
 
-    // TODO: API 호출 로직 구현
-    console.log(projectData);
-    onClose();
+    mutate(updatedProjectData, {
+      onSuccess: () => {
+        toast({
+          title: "프로젝트 업데이트 성공",
+          description: "프로젝트가 성공적으로 업데이트되었습니다.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+        onClose();
+      },
+      onError: (err) => {
+        toast({
+          title: "프로젝트 업데이트 오류",
+          description: "업데이트 중 오류가 발생했습니다.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+        console.log(err);
+      },
+    });
   });
 
-  // TODO: 향후 기본 상태에 대한 논의 필요
   const [selectedFeature, setSelectedFeature] = useState("기본");
   const [currentPage, setCurrentPage] = useState(1);
   const [back, setBack] = useState(false);
