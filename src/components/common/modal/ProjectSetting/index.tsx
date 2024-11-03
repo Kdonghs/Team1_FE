@@ -81,7 +81,6 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
                   setSelectedFeature={setSelectedFeature}
                 />
               </FormProvider>
-              <Spacer height={50} />
             </ModalBody>
           ) : (
             <ModalBody>
