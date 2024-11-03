@@ -35,7 +35,6 @@ export const ProjectDetailSettingFields = ({
         }}
         render={({ field, fieldState: { error, invalid } }) => (
           <TextField
-            id="name"
             label="프로젝트명"
             {...field}
             maxLength={20}
