@@ -5,7 +5,7 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
-import React, { forwardRef } from "react"; // React와 forwardRef를 import합니다.
+import React, { forwardRef } from "react";
 
 interface DateFieldProps {
   label: string;
@@ -79,6 +79,3 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
     );
   }
 );
-
-// DateField를 export합니다.
-export default DateField;
