@@ -8,7 +8,7 @@ const mockTeamProgressData = [
       id: 101,
       name: "춘식이",
       role: "developer" as Role,
-      imageURL: "https://via.placeholder.com/40",
+      imageURL: "",
     },
     progress: 3,
     activeTasks: [
@@ -27,7 +27,7 @@ const mockTeamProgressData = [
       id: 102,
       name: "라이언",
       role: "developer" as Role,
-      imageURL: "https://via.placeholder.com/40",
+      imageURL: "",
     },
     progress: 90,
     activeTasks: [
@@ -46,7 +46,7 @@ const mockTeamProgressData = [
       id: 103,
       name: "가나다라마바사아자차카타파하",
       role: "designer" as Role,
-      imageURL: "https://via.placeholder.com/40",
+      imageURL: "",
     },
     progress: 30,
     activeTasks: [],
