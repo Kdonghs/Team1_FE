@@ -2,8 +2,6 @@ import { rest } from "msw";
 
 import type { Role } from "@/types/index";
 
-import { getTeamProgressPath } from "./useTeamProgress";
-
 const mockTeamProgressData = [
   {
     teamMember: {
@@ -56,10 +54,13 @@ const mockTeamProgressData = [
 ];
 
 export const teamProgressMockHandler = [
-  rest.get(getTeamProgressPath(1), (_, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({ teamProgress: mockTeamProgressData })
-    );
-  }),
+  rest.get(
+    "http://seamplessup.com/api/project/:projectId/task/progress",
+    (_, res, ctx) => {
+      return res(
+        ctx.status(200),
+        ctx.json({ teamProgress: mockTeamProgressData })
+      );
+    }
+  ),
 ];

@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import type {
   ProjectUpdate,
@@ -6,11 +6,11 @@ import type {
 } from "../../api/generated/data-contracts";
 import { projectApi } from "../projectApi";
 
-// TODO: 변경이 생겼을 때 타 컴포넌트의 리렌더링이 일어나지 않는 듯
 export const useUpdateProject = (
   projectId: number | null,
   selectedFeature: string
 ) => {
+  const queryClient = useQueryClient();
   return useMutation<SingleResultProjectDetail, Error, ProjectUpdate>({
     mutationFn: async (data: ProjectUpdate) => {
       if (projectId === null) {
@@ -23,6 +23,7 @@ export const useUpdateProject = (
       return response.data;
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["project", projectId] });
       console.log("프로젝트 업데이트 성공:", data);
     },
     onError: (error) => {
