@@ -44,7 +44,8 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
   } = methods;
 
   const { data, error, isLoading } = useGetProjectDetail(projectId);
-  const { mutate } = useUpdateProject(projectId);
+  const [selectedFeature, setSelectedFeature] = useState("기본");
+  const { mutate } = useUpdateProject(projectId, selectedFeature);
   const toast = useToast();
 
   useEffect(() => {
@@ -120,7 +121,6 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
     }
   };
 
-  const [selectedFeature, setSelectedFeature] = useState("기본");
   const [currentPage, setCurrentPage] = useState(1);
   const [back, setBack] = useState(false);
 
