@@ -21,7 +21,9 @@ export const ProjectPage = () => {
     }
   }, [projectId, navigate]);
 
-  if (error) navigate("/");
+  if (error) {
+    console.log(error);
+  }
   if (isLoading) return <div>Loading...</div>;
 
   return (

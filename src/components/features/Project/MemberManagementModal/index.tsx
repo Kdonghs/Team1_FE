@@ -11,12 +11,15 @@ import {
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 
 import type { TeamMember } from "@/types";
 
 import { InviteMember } from "./InviteMember";
 import { MemberItem } from "./MemberItem";
 export const MemberManagementModal = () => {
+  const projectId = useParams().id;
+  console.log(projectId);
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [mockData] = useState<TeamMember[]>([
     {

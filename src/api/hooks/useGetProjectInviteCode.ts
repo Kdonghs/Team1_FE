@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 
-import type { ProjectDetail } from "@/api/generated/data-contracts";
+import type { GenerateInviteLinkData } from "@/api/generated/data-contracts";
 
-import { projectApi } from "../../api/projectApi";
+import { projectApi } from "../projectApi";
 
 const testToken = ``;
 
-const getProjectDetail = async (
+const getProjectInviteCode = async (
   projectId: number
-): Promise<ProjectDetail | null> => {
+): Promise<GenerateInviteLinkData | null> => {
   try {
-    const response = await projectApi.getProject(projectId, {
+    const response = await projectApi.generateInviteLink(projectId, {
       headers: {
         Authorization: `Bearer ${testToken}`,
       },
@@ -20,7 +20,7 @@ const getProjectDetail = async (
       throw new Error("Project data not found");
     }
 
-    return response.data.resultData;
+    return response.data;
   } catch (error) {
     throw new Error(
       error instanceof Error ? error.message : "Failed to fetch project details"
@@ -28,15 +28,15 @@ const getProjectDetail = async (
   }
 };
 
-export const useGetProjectDetail = (projectId: number | null) => {
-  return useQuery<ProjectDetail | null, Error>({
+export const useGetProjectInviteCode = (projectId: number | null) => {
+  return useQuery<GenerateInviteLinkData | null, Error>({
     queryKey: ["project", projectId],
     queryFn: () => {
       if (projectId === null) {
         throw new Error("Project ID cannot be null");
       }
 
-      return getProjectDetail(projectId);
+      return getProjectInviteCode(projectId);
     },
     enabled: !!projectId,
   });

@@ -9,8 +9,15 @@ import {
   useClipboard,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+
+import { useGetProjectInviteCode } from "../../../../api/hooks/useGetProjectInviteCode";
 export const InviteMember = () => {
-  const inviteLink = "https://example.com/invite/abc123";
+  const { id } = useParams<{ id: string }>();
+  const projectId = id ? parseInt(id, 10) : null;
+  const { data } = useGetProjectInviteCode(projectId);
+
+  const inviteLink = `https://seamless.com/invite/${data?.resultData}`;
 
   const { onCopy, value, setValue, hasCopied } = useClipboard("");
   useEffect(() => {
@@ -28,6 +35,7 @@ export const InviteMember = () => {
           bgColor="#F6F6F6"
           color="#5A5A5A"
           border="transparent"
+          pr="50px"
           readOnly
         />
         <IconButton
