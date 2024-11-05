@@ -249,7 +249,7 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    *
    * @tags 프로젝트 옵션
    * @name DeleteOption
-   * @summary 옵션 수정
+   * @summary 옵션 삭제
    * @request DELETE:/api/project/option/{optionId}
    * @secure
    * @response `200` `DeleteOptionData` OK
@@ -395,13 +395,13 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * @tags 참여 링크 생성
    * @name GenerateInviteLink
    * @summary 팀원초대 코드 생성
-   * @request POST:/api/project/{projectId}/invite-link/{userId}
+   * @request POST:/api/project/{projectId}/invite-link
    * @secure
    * @response `200` `GenerateInviteLinkData` OK
    */
-  generateInviteLink = (projectId: number, userId: number, params: RequestParams = {}) =>
+  generateInviteLink = (projectId: number, params: RequestParams = {}) =>
     this.request<GenerateInviteLinkData, any>({
-      path: `/api/project/${projectId}/invite-link/${userId}`,
+      path: `/api/project/${projectId}/invite-link`,
       method: "POST",
       secure: true,
       ...params,

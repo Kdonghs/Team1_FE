@@ -92,11 +92,18 @@ export interface SingleResultProjectDetail {
 
 export interface TaskUpdate {
   name?: string;
-  remark?: string;
-  /** @format int32 */
-  progress?: number;
+  description?: string;
   /** @format int64 */
-  memberId?: number;
+  ownerId?: number;
+  /**
+   * @format int32
+   * @min 0
+   * @max 100
+   */
+  progress?: number;
+  /** @format int32 */
+  status?: number;
+  priority?: "LOW" | "MEDIUM" | "HIGH";
   /** @format date-time */
   startDate?: string;
   /** @format date-time */
@@ -114,15 +121,18 @@ export interface TaskDetail {
   /** @format int64 */
   id?: number;
   name?: string;
-  remark?: string;
+  description?: string;
   /** @format int64 */
-  memberId?: number;
+  ownerId?: number;
   /** @format int32 */
   progress?: number;
   /** @format date-time */
   startDate?: string;
   /** @format date-time */
   endDate?: string;
+  priority?: "LOW" | "MEDIUM" | "HIGH";
+  /** @format int32 */
+  status?: number;
 }
 
 export interface UpdateOption {
@@ -196,13 +206,23 @@ export interface ProjectCreate {
 export interface CreateMember {
   email: string;
   code?: string;
+  name?: string;
 }
 
 export interface TaskCreate {
   name: string;
-  remark?: string;
+  description?: string;
   /** @format int64 */
-  memberId?: number;
+  ownerId: number;
+  /** @format int32 */
+  status: number;
+  priority: "LOW" | "MEDIUM" | "HIGH";
+  /**
+   * @format int32
+   * @min 0
+   * @max 100
+   */
+  progress: number;
   /** @format date-time */
   startDate: string;
   /** @format date-time */
@@ -378,9 +398,12 @@ export interface TaskEntity {
   /** @format int64 */
   id?: number;
   name?: string;
-  remark?: string;
+  description?: string;
   /** @format int32 */
   progress?: number;
+  /** @format int32 */
+  status?: number;
+  priority?: "LOW" | "MEDIUM" | "HIGH";
   isDeleted?: boolean;
   owner?: MemberEntity;
   /** @format date-time */
@@ -548,5 +571,7 @@ export type GetProjectMembersData = ListResultMemberResponseDTO;
 export type GetProjectPeriodData = PageResultProjectPeriod;
 
 export type MemberCodeJoinData = SingleResultToken;
+
+export type MemberCodeDecodeData = SingleResultString;
 
 export type MemberCodeCreate1Data = SingleResultString;
