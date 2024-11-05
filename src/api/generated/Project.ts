@@ -24,13 +24,14 @@ import {
   GetMemberData,
   GetMemberList,
   GetMemberListData,
+  GetMemberProgressData,
   GetOptionData,
   GetOptionListData,
   GetProjectData,
   GetProjectListData,
   GetProjectMembersData,
   GetProjectPeriodData,
-  GetTaskData,
+  GetProjectProgressData,
   GetTaskListData,
   InviteMemberToProjectData,
   InviteRequestDTO,
@@ -152,23 +153,6 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
     this.request<DeleteProjectData, any>({
       path: `/api/project/${projectId}`,
       method: "DELETE",
-      secure: true,
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags 태스크
-   * @name GetTask
-   * @summary 태스크 단건 조회
-   * @request GET:/api/project/task/{taskId}
-   * @secure
-   * @response `200` `GetTaskData` OK
-   */
-  getTask = (taskId: number, params: RequestParams = {}) =>
-    this.request<GetTaskData, any>({
-      path: `/api/project/task/${taskId}`,
-      method: "GET",
       secure: true,
       ...params,
     });
@@ -465,6 +449,54 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
       body: data,
       secure: true,
       type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 태스크
+   * @name GetMemberProgress
+   * @summary 팀 전체 진행도 확인
+   * @request GET:/api/project/{projectId}/task/progress
+   * @secure
+   * @response `200` `GetMemberProgressData` OK
+   */
+  getMemberProgress = (
+    projectId: number,
+    query: {
+      param: GetList;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<GetMemberProgressData, any>({
+      path: `/api/project/${projectId}/task/progress`,
+      method: "GET",
+      query: query,
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 태스크
+   * @name GetProjectProgress
+   * @summary 팀원 개별 진행도 및 할당된 태스크 확인
+   * @request GET:/api/project/{projectId}/progress
+   * @secure
+   * @response `200` `GetProjectProgressData` OK
+   */
+  getProjectProgress = (
+    projectId: number,
+    query: {
+      param: GetList;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<GetProjectProgressData, any>({
+      path: `/api/project/${projectId}/progress`,
+      method: "GET",
+      query: query,
+      secure: true,
       ...params,
     });
   /**
