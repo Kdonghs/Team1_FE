@@ -1,42 +1,38 @@
 import { useQuery } from "@tanstack/react-query";
 
-import type { TeamProgress } from "@/types";
-
-import { fetchInstance } from "../instance";
-
-export type TeamProgressResponseData = {
-  teamProgress: TeamProgress[];
-};
-
-export const getTeamProgressPath = (projectId: number, role?: string) => {
-  const url = new URL(
-    `http://seamplessup.com/api/project/${projectId}/task/progress`
-  );
-  if (role) {
-    url.searchParams.append("role", role);
-  }
-  return url.toString();
-};
-
-const TeamProgressQueryKey = (projectId: number, role?: string) => [
-  "teamProgress",
-  projectId,
-  role,
-];
+import type { PageResultMemberProgress } from "../generated/data-contracts";
+import { projectApi } from "../projectApi";
 
 export const getTeamProgress = async (
   projectId: number,
+  page: number,
+  size: number,
+  sort: string,
   role?: string
-): Promise<TeamProgressResponseData> => {
-  const response = await fetchInstance.get<TeamProgressResponseData>(
-    getTeamProgressPath(projectId, role)
-  );
+): Promise<PageResultMemberProgress> => {
+  // TODO: any 어떻게해결하지..
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const query: any = {
+    page,
+    size,
+    sort,
+    role,
+  };
+
+  const response = await projectApi.getMemberProgress(projectId, query);
+
   return response.data;
 };
 
-export const useGetTeamProgress = (projectId: number, role?: string) =>
-  useQuery<TeamProgressResponseData, Error>({
-    queryKey: TeamProgressQueryKey(projectId, role),
-    queryFn: () => getTeamProgress(projectId, role),
+export const useGetTeamProgress = (
+  projectId: number,
+  page: number,
+  size: number,
+  sort: string,
+  role?: string
+) =>
+  useQuery<PageResultMemberProgress, Error>({
+    queryKey: ["teamProgress", projectId, page, size, sort, role],
+    queryFn: () => getTeamProgress(projectId, page, size, sort, role),
     enabled: !!projectId,
   });
