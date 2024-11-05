@@ -8,7 +8,12 @@ const getProjectDetail = async (
   projectId: number
 ): Promise<ProjectDetail | null> => {
   try {
-    const response = await projectApi.getProject(projectId);
+    const response = await projectApi.getProject(projectId, {
+      headers: {
+        // Authorization: `Bearer ${token}`,
+        redirect: "follow",
+      },
+    });
 
     if (!response.data || !response.data.resultData) {
       throw new Error("Project data not found");
@@ -29,6 +34,7 @@ export const useGetProjectDetail = (projectId: number | null) => {
       if (projectId === null) {
         throw new Error("Project ID cannot be null");
       }
+
       return getProjectDetail(projectId);
     },
     enabled: !!projectId,

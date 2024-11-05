@@ -20,7 +20,7 @@ export const MemberItem = (member: TeamMember) => {
           <Text fontSize="md" fontWeight="bold">
             {member.name}
           </Text>
-          <Text fontSize="sm" color="gray">
+          <Text fontSize="xs" color="gray">
             {member.role}
           </Text>
         </Flex>
