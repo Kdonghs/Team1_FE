@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 
-import type { GenerateInviteLinkData } from "@/api/generated/data-contracts";
+import type { GetProjectMembersData } from "@/api/generated/data-contracts";
 
 import { projectApi } from "../projectApi";
 
 const testToken = process.env.TEST_TOKEN;
 
-const getProjectInviteCode = async (
+const getProjectMembers = async (
   projectId: number
-): Promise<GenerateInviteLinkData | null> => {
+): Promise<GetProjectMembersData | null> => {
   try {
-    const response = await projectApi.generateInviteLink(projectId, {
+    const response = await projectApi.getProjectMembers(projectId, {
       headers: {
         Authorization: `Bearer ${testToken}`,
       },
@@ -25,20 +25,20 @@ const getProjectInviteCode = async (
     throw new Error(
       error instanceof Error
         ? error.message
-        : "Failed to fetch project invite code"
+        : "Failed to fetch project members data"
     );
   }
 };
 
-export const useGetProjectInviteCode = (projectId: number | null) => {
-  return useQuery<GenerateInviteLinkData | null, Error>({
-    queryKey: ["projectInviteCode", projectId],
+export const useGetProjectMembers = (projectId: number | null) => {
+  return useQuery<GetProjectMembersData | null, Error>({
+    queryKey: ["projectMembers", projectId],
     queryFn: () => {
       if (projectId === null) {
         throw new Error("Project ID cannot be null");
       }
 
-      return getProjectInviteCode(projectId);
+      return getProjectMembers(projectId);
     },
     enabled: !!projectId,
   });

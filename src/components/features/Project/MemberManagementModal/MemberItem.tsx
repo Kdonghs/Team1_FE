@@ -2,9 +2,9 @@ import { Avatar, Flex, IconButton, Text } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { Ellipsis } from "lucide-react";
 
-import type { TeamMember } from "@/types";
+import type { MemberResponseDTO } from "../../../../api/generated/data-contracts";
 
-export const MemberItem = (member: TeamMember) => {
+export const MemberItem = (member: MemberResponseDTO) => {
   return (
     <Flex
       width="100%"
@@ -15,7 +15,8 @@ export const MemberItem = (member: TeamMember) => {
       transition="background-color 0.2s"
     >
       <MemberProfile>
-        <Avatar name={member.name} src={member.imageURL} size="sm" margin={2} />
+        {/* TODO: 이미지 URL 부분 src로 추가 필요 */}
+        <Avatar name={member.name} size="sm" margin={2} />
         <Flex flexDir="column" justifyContent="center">
           <Text fontSize="md" fontWeight="bold">
             {member.name}

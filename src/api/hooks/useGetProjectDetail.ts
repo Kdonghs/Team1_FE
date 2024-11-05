@@ -4,7 +4,7 @@ import type { ProjectDetail } from "@/api/generated/data-contracts";
 
 import { projectApi } from "../../api/projectApi";
 
-const testToken = ``;
+const testToken = process.env.TEST_TOKEN;
 
 const getProjectDetail = async (
   projectId: number

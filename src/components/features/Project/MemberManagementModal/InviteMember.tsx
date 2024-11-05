@@ -1,4 +1,3 @@
-import { CheckIcon, CopyIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Heading,
@@ -8,21 +7,19 @@ import {
   Text,
   useClipboard,
 } from "@chakra-ui/react";
+import { CheckIcon, CopyIcon } from "lucide-react";
 import { useEffect } from "react";
-import { useParams } from "react-router-dom";
 
-import { useGetProjectInviteCode } from "../../../../api/hooks/useGetProjectInviteCode";
-export const InviteMember = () => {
-  const { id } = useParams<{ id: string }>();
-  const projectId = id ? parseInt(id, 10) : null;
-  const { data } = useGetProjectInviteCode(projectId);
+import type { SingleResultString } from "@/api/generated/data-contracts";
 
-  const inviteLink = `https://seamless.com/invite/${data?.resultData}`;
+export const InviteMember = (inviteCode: SingleResultString) => {
+  const inviteLink = `https://seamless.com/invite/${inviteCode.resultData || ""}`;
 
   const { onCopy, value, setValue, hasCopied } = useClipboard("");
   useEffect(() => {
     setValue(inviteLink);
   }, [inviteLink, setValue]);
+
   return (
     <Flex width="100%" flexDirection="column" gap={3}>
       <Heading as="h4" size="md">
