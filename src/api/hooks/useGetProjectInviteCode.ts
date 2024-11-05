@@ -4,15 +4,13 @@ import type { GenerateInviteLinkData } from "@/api/generated/data-contracts";
 
 import { projectApi } from "../projectApi";
 
-const testToken = process.env.TEST_TOKEN;
-
 const getProjectInviteCode = async (
   projectId: number
 ): Promise<GenerateInviteLinkData | null> => {
   try {
     const response = await projectApi.generateInviteLink(projectId, {
       headers: {
-        Authorization: `Bearer ${testToken}`,
+        // Authorization: `Bearer ${testToken}`,
       },
     });
 

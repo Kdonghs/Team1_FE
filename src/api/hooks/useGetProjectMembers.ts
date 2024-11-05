@@ -4,15 +4,13 @@ import type { GetProjectMembersData } from "@/api/generated/data-contracts";
 
 import { projectApi } from "../projectApi";
 
-const testToken = process.env.TEST_TOKEN;
-
 const getProjectMembers = async (
   projectId: number
 ): Promise<GetProjectMembersData | null> => {
   try {
     const response = await projectApi.getProjectMembers(projectId, {
       headers: {
-        Authorization: `Bearer ${testToken}`,
+        // Authorization: `Bearer ${testToken}`,
       },
     });
 

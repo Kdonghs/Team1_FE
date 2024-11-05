@@ -101,6 +101,7 @@ export class HttpClient<SecurityDataType = unknown> {
           {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
+        // Authorization: `Bearer temp`,
       },
       withCredentials: true,
     };
