@@ -22,7 +22,7 @@ import { renderFooterButtons } from "./renderFooterButtons";
 
 export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
   const [projectDetail, setProjectDetail] = useState<ProjectDetail | null>(
-    null
+    null,
   );
   const projectId = useParams().id;
   const [error, setError] = useState<string | null>(null);
@@ -116,7 +116,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
             selectedFeature,
             onClose,
             handleNextPage,
-            handlePreviousPage
+            handlePreviousPage,
           )}
         </ModalFooter>
       </StyledModalContent>

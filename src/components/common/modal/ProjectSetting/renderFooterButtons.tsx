@@ -21,7 +21,7 @@ export const renderFooterButtons = (
   selectedFeature: string,
   onClose: () => void,
   handleNextPage: () => void,
-  handlePreviousPage: () => void
+  handlePreviousPage: () => void,
 ) => {
   const currentConfig = footerConfig[currentPage]?.[selectedFeature] || [];
 
