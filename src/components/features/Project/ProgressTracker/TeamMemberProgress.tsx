@@ -1,10 +1,11 @@
-import { Avatar, Box, Flex, Progress, Text, Tooltip } from "@chakra-ui/react";
+import { Box, Flex, Progress, Text, Tooltip } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import { useRef, useState } from "react";
 
 import type { MemberProgress } from "@/api/generated/data-contracts";
 
 import { ProgressLabel } from "./ProgressLabel";
+import { TeamMemberProfile } from "./TeamMemberProfile";
 
 const createFillAnimation = (progress: number) => keyframes`
   0% { width: 0%; }
@@ -36,15 +37,10 @@ export const TeamMemberProgress = ({ member }: { member: MemberProgress }) => {
       justifyContent="space-between"
       alignItems="center"
     >
-      <Flex alignItems="center">
-        <Avatar name={teamMember?.name} src={teamMember?.imageURL} size="sm" />
-        <Text fontWeight="bold" ml={4} width="100px" align="center">
-          {teamMember?.name}
-        </Text>
-      </Flex>
+      <TeamMemberProfile teamMember={teamMember} />
       <Tooltip
-        label={`${activeTasks[0]?.name ? `${activeTasks[0]?.name}${activeTasks.length > 1 ? `외 ${activeTasks.length - 1}건 진행 중` : " 진행 중"}` : "진행 중인 태스크 없음"}`}
-        placement="top-start"
+        label={`${activeTasks[0]?.name ? `${activeTasks[0]?.name}${activeTasks.length > 1 ? ` 외 ${activeTasks.length - 1}건 진행 중` : " 진행 중"}` : "진행 중인 태스크 없음"}`}
+        placement="auto-start"
         aria-label="activeTask"
         offset={[tooltipX, 0]}
         borderRadius={5}

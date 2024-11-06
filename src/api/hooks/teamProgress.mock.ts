@@ -91,7 +91,7 @@ export const mockTeamProgressData = {
     {
       teamMember: {
         id: 5,
-        name: "파하",
+        name: "가나다라마바사아자차카타파하",
         role: "팀원",
         imageURL: "",
       },

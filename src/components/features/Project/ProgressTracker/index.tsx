@@ -32,7 +32,7 @@ export const ProgressTracker = ({
       overflow="hidden"
     >
       {teamProgressData.length > 0 && (
-        <Stack spacing={4} align="center" width="100%">
+        <Stack spacing={1} align="center" width="100%">
           {teamProgressData.map((member) => (
             <TeamMemberProgress key={member.teamMember?.id} member={member} />
           ))}
