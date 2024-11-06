@@ -17,9 +17,19 @@ import { useGetProjectInviteCode } from "../../../../api/hooks/useGetProjectInvi
 import { useGetProjectMembers } from "../../../../api/hooks/useGetProjectMembers";
 import { InviteMember } from "./InviteMember";
 import { MemberItem } from "./MemberItem";
-export const MemberManagementModal = () => {
+export const MemberManagementModal = ({
+  page = 0,
+  size = 5,
+  sort = "string",
+  role = "",
+}: {
+  page?: number;
+  size?: number;
+  sort?: string;
+  role?: string;
+}) => {
   const { id } = useParams<{ id: string }>();
-  const projectId = id ? parseInt(id, 10) : null;
+  const projectId = id ? parseInt(id, 10) : 0;
 
   const {
     data: inviteData,
@@ -31,7 +41,7 @@ export const MemberManagementModal = () => {
     data: membersData,
     error: membersError,
     isLoading: membersLoading,
-  } = useGetProjectMembers(projectId);
+  } = useGetProjectMembers(projectId, page, size, sort, role);
 
   if (membersLoading || inviteLoading) {
     return <div>Loading...</div>;
