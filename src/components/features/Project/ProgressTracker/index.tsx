@@ -43,7 +43,7 @@ export const ProgressTracker = ({
       {teamProgressData && teamProgressData.length > 0 && (
         <Stack spacing={4} align="center" width="100%">
           {teamProgressData.map((member) => {
-            const fillAnimation = createFillAnimation(member.progress || 0); // 기본값 0 사용
+            const fillAnimation = createFillAnimation(member.progress || 0);
 
             return (
               <Flex

@@ -1,5 +1,14 @@
 import { rest } from "msw";
 
+export const teamProgressMockHandler = [
+  rest.get(
+    `https://seamlessup.com/api/project/:projectId/task/progress`,
+    (_, res, ctx) => {
+      return res(ctx.status(200), ctx.json(mockTeamProgressData));
+    }
+  ),
+];
+
 export const mockTeamProgressData = {
   errorCode: 200,
   errorMessage: "Success",
@@ -7,7 +16,7 @@ export const mockTeamProgressData = {
     {
       teamMember: {
         id: 1,
-        name: "김",
+        name: "가나다",
         role: "팀원",
         imageURL: "",
       },
@@ -29,7 +38,7 @@ export const mockTeamProgressData = {
     {
       teamMember: {
         id: 2,
-        name: "이",
+        name: "라마바",
         role: "팀원",
         imageURL: "",
       },
@@ -39,7 +48,7 @@ export const mockTeamProgressData = {
     {
       teamMember: {
         id: 3,
-        name: "박",
+        name: "사아자",
         role: "팀원",
         imageURL: "",
       },
@@ -53,12 +62,3 @@ export const mockTeamProgressData = {
   hasNext: false,
   total: 3,
 };
-
-export const teamProgressMockHandler = [
-  rest.get(
-    `https://seamlessup.com/api/project/:projectId/task/progress`,
-    (_, res, ctx) => {
-      return res(ctx.status(200), ctx.json(mockTeamProgressData));
-    }
-  ),
-];

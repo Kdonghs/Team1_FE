@@ -36,3 +36,20 @@ export const useGetTeamProgress = (
     queryFn: () => getTeamProgress(projectId, page, size, sort, role),
     enabled: !!projectId,
   });
+
+// 페이지네이션 반환 오류 => 보류
+// export const useGetTeamProgress = (
+//   projectId: number,
+//   size: number,
+//   sort: string,
+//   role?: string
+// ) =>
+//   useInfiniteQuery<PageResultMemberProgress, Error>({
+//     queryKey: ["teamProgress", projectId, size, sort, role],
+//     queryFn: ({ page = 0 }) => getTeamProgress(projectId, page, size, sort, role),
+//     initialPageParam: 0,
+//     getNextPageParam: (lastPage) => {
+//       return lastPage.hasNext ? lastPage.nextPage : undefined;
+//     },
+//     enabled: !!projectId,
+//   });
