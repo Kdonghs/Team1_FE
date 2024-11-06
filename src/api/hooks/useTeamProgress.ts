@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { getTestToken } from "../../components/features/Project/TokenTest";
 import type { PageResultMemberProgress } from "../generated/data-contracts";
 import { projectApi } from "../projectApi";
 
@@ -18,8 +19,12 @@ export const getTeamProgress = async (
     sort,
     role,
   };
-
-  const response = await projectApi.getMemberProgress(projectId, query);
+  const testToken = getTestToken();
+  const response = await projectApi.getMemberProgress(projectId, query, {
+    headers: {
+      Authorization: `Bearer ${testToken}`, // Authorization 헤더에 토큰 추가
+    },
+  });
 
   return response.data;
 };

@@ -2,15 +2,17 @@ import { useQuery } from "@tanstack/react-query";
 
 import type { GetProjectMembersData } from "@/api/generated/data-contracts";
 
+import { getTestToken } from "../../components/features/Project/TokenTest";
 import { projectApi } from "../projectApi";
 
 const getProjectMembers = async (
   projectId: number
 ): Promise<GetProjectMembersData | null> => {
   try {
+    const testToken = getTestToken();
     const response = await projectApi.getProjectMembers(projectId, {
       headers: {
-        // Authorization: `Bearer ${testToken}`,
+        Authorization: `Bearer ${testToken}`,
       },
     });
 

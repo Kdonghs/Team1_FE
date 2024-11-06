@@ -3,14 +3,16 @@ import { useQuery } from "@tanstack/react-query";
 import type { ProjectDetail } from "@/api/generated/data-contracts";
 
 import { projectApi } from "../../api/projectApi";
+import { getTestToken } from "../../components/features/Project/TokenTest";
 
 const getProjectDetail = async (
   projectId: number
 ): Promise<ProjectDetail | null> => {
   try {
+    const testToken = getTestToken();
     const response = await projectApi.getProject(projectId, {
       headers: {
-        // Authorization: `Bearer ${testToken}`,
+        Authorization: `Bearer ${testToken}`,
       },
     });
 

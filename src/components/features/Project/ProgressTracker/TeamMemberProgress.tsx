@@ -1,5 +1,6 @@
 import { Box, Flex, Progress, Text, Tooltip } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
+import styled from "@emotion/styled";
 import { useRef, useState } from "react";
 
 import type { MemberProgress } from "@/api/generated/data-contracts";
@@ -73,25 +74,24 @@ export const TeamMemberProgress = ({ member }: { member: MemberProgress }) => {
             />
           )}
 
-          <Text
-            position="absolute"
-            right="10px"
-            top="50%"
-            width={12}
-            height={7}
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-            transform="translateY(-50%)"
-            fontWeight="bold"
-            color="black"
-            backgroundColor="rgba(255, 255, 255, 0.8)"
-            borderRadius="full"
-          >
+          <ProgressText width={12} height={7} borderRadius="full">
             {progress}%
-          </Text>
+          </ProgressText>
         </Box>
       </Tooltip>
     </Flex>
   );
 };
+
+const ProgressText = styled(Text)`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-50%);
+  font-weight: bold;
+  color: black;
+  background-color: rgba(255, 255, 255, 0.8);
+`;

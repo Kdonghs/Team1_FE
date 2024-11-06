@@ -2,15 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 
 import type { GenerateInviteLinkData } from "@/api/generated/data-contracts";
 
+import { getTestToken } from "../../components/features/Project/TokenTest";
 import { projectApi } from "../projectApi";
 
 const getProjectInviteCode = async (
   projectId: number
 ): Promise<GenerateInviteLinkData | null> => {
   try {
+    const testToken = getTestToken();
+
     const response = await projectApi.generateInviteLink(projectId, {
       headers: {
-        // Authorization: `Bearer ${testToken}`,
+        Authorization: `Bearer ${testToken}`,
       },
     });
 

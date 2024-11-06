@@ -4,6 +4,7 @@ import type {
   ProjectUpdate,
   SingleResultProjectDetail,
 } from "../../api/generated/data-contracts";
+import { getTestToken } from "../../components/features/Project/TokenTest";
 import { projectApi } from "../projectApi";
 
 export const useUpdateProject = (
@@ -19,7 +20,13 @@ export const useUpdateProject = (
       const updateData =
         selectedFeature === "기본" ? { ...data, optionIds: [2, 4] } : data;
 
-      const response = await projectApi.updateProject(projectId, updateData);
+      const testToken = getTestToken();
+
+      const response = await projectApi.updateProject(projectId, updateData, {
+        headers: {
+          Authorization: `Bearer ${testToken}`,
+        },
+      });
       return response.data;
     },
     onSuccess: (data) => {
