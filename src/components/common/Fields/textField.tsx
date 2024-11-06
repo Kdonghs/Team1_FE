@@ -28,7 +28,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       errorMessage = "",
       ...inputProps
     },
-    ref
+    ref,
   ) => {
     return (
       <FormControl
@@ -69,5 +69,5 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         </VStack>
       </FormControl>
     );
-  }
+  },
 );
