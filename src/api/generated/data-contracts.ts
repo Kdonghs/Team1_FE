@@ -47,7 +47,7 @@ export interface MemberResponseDTO {
   name?: string;
   role?: string;
   email?: string;
-  code?: string;
+  getattendURL?: string;
 }
 
 export interface SingleResultMemberResponseDTO {
@@ -92,11 +92,18 @@ export interface SingleResultProjectDetail {
 
 export interface TaskUpdate {
   name?: string;
-  remark?: string;
-  /** @format int32 */
-  progress?: number;
+  description?: string;
   /** @format int64 */
-  memberId?: number;
+  ownerId?: number;
+  /**
+   * @format int32
+   * @min 0
+   * @max 100
+   */
+  progress?: number;
+  /** @format int32 */
+  status?: number;
+  priority?: "LOW" | "MEDIUM" | "HIGH";
   /** @format date-time */
   startDate?: string;
   /** @format date-time */
@@ -114,15 +121,18 @@ export interface TaskDetail {
   /** @format int64 */
   id?: number;
   name?: string;
-  remark?: string;
+  description?: string;
   /** @format int64 */
-  memberId?: number;
+  ownerId?: number;
   /** @format int32 */
   progress?: number;
   /** @format date-time */
   startDate?: string;
   /** @format date-time */
   endDate?: string;
+  priority?: "LOW" | "MEDIUM" | "HIGH";
+  /** @format int32 */
+  status?: number;
 }
 
 export interface UpdateOption {
@@ -195,14 +205,24 @@ export interface ProjectCreate {
 
 export interface CreateMember {
   email: string;
-  code?: string;
+  attendURL?: string;
+  name?: string;
 }
 
 export interface TaskCreate {
   name: string;
-  remark?: string;
+  description?: string;
   /** @format int64 */
-  memberId?: number;
+  ownerId: number;
+  /** @format int32 */
+  status: number;
+  priority: "LOW" | "MEDIUM" | "HIGH";
+  /**
+   * @format int32
+   * @min 0
+   * @max 100
+   */
+  progress: number;
   /** @format date-time */
   startDate: string;
   /** @format date-time */
@@ -378,9 +398,12 @@ export interface TaskEntity {
   /** @format int64 */
   id?: number;
   name?: string;
-  remark?: string;
+  description?: string;
   /** @format int32 */
   progress?: number;
+  /** @format int32 */
+  status?: number;
+  priority?: "LOW" | "MEDIUM" | "HIGH";
   isDeleted?: boolean;
   owner?: MemberEntity;
   /** @format date-time */
@@ -405,11 +428,19 @@ export interface UserEntity {
   updatedAt?: string;
 }
 
-export interface PageResultTaskDetail {
+export interface OwnerDetail {
+  /** @format int64 */
+  id?: number;
+  name?: string;
+  role?: string;
+  imageURL?: string;
+}
+
+export interface PageResultTaskWithOwnerDetail {
   /** @format int32 */
   errorCode?: number;
   errorMessage?: string;
-  resultData?: TaskDetail[];
+  resultData?: TaskWithOwnerDetail[];
   /** @format int32 */
   size?: number;
   /** @format int32 */
@@ -419,6 +450,62 @@ export interface PageResultTaskDetail {
   hasNext?: boolean;
   /** @format int64 */
   total?: number;
+}
+
+export interface TaskWithOwnerDetail {
+  /** @format int64 */
+  id?: number;
+  name?: string;
+  description?: string;
+  owner?: OwnerDetail;
+  /** @format int32 */
+  progress?: number;
+  /** @format date-time */
+  startDate?: string;
+  /** @format date-time */
+  endDate?: string;
+  priority?: "LOW" | "MEDIUM" | "HIGH";
+  /** @format int32 */
+  status?: number;
+}
+
+export interface MemberProgress {
+  teamMember?: OwnerDetail;
+  /** @format int32 */
+  progress?: number;
+  activeTasks?: TaskDetail[];
+}
+
+export interface PageResultMemberProgress {
+  /** @format int32 */
+  errorCode?: number;
+  errorMessage?: string;
+  resultData?: MemberProgress[];
+  /** @format int32 */
+  size?: number;
+  /** @format int32 */
+  page?: number;
+  /** @format int32 */
+  pages?: number;
+  hasNext?: boolean;
+  /** @format int64 */
+  total?: number;
+}
+
+export interface ProjectProgress {
+  /** @format int64 */
+  projectId?: number;
+  /** @format int32 */
+  projectProgress?: number;
+  treeGrowthStage?: string;
+  description?: string;
+}
+
+export interface SingleResultProjectProgress {
+  /** @format int32 */
+  errorCode?: number;
+  errorMessage?: string;
+  resultData?: ProjectProgress;
 }
 
 export interface ListResultMemberResponseDTO {
@@ -503,8 +590,6 @@ export type UpdateProjectData = SingleResultProjectDetail;
 
 export type DeleteProjectData = SingleResultLong;
 
-export type GetTaskData = SingleResultTaskDetail;
-
 export type UpdateTaskData = SingleResultTaskDetail;
 
 export type DeleteTaskData = SingleResultLong;
@@ -529,7 +614,7 @@ export type GetMemberListData = PageResultMemberEntity;
 
 export type CreateMemberData = SingleResultMemberResponseDTO;
 
-export type GetTaskListData = PageResultTaskDetail;
+export type GetTaskListData = PageResultTaskWithOwnerDetail;
 
 export type CreateTaskData = SingleResultTaskDetail;
 
@@ -543,10 +628,16 @@ export type InviteMemberToProjectData = SingleResultString;
 
 export type GetTestData = SingleResultTestEntity;
 
+export type GetMemberProgressData = PageResultMemberProgress;
+
+export type GetProjectProgressData = SingleResultProjectProgress;
+
 export type GetProjectMembersData = ListResultMemberResponseDTO;
 
 export type GetProjectPeriodData = PageResultProjectPeriod;
 
 export type MemberCodeJoinData = SingleResultToken;
+
+export type MemberCodeDecodeData = SingleResultString;
 
 export type MemberCodeCreate1Data = SingleResultString;
