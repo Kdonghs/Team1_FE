@@ -1,4 +1,4 @@
-import { AddIcon,ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { AddIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -19,7 +19,7 @@ import {
 import React, { useState } from "react";
 
 import { ScheduleList } from "../../components/common/ScheduleCard";
-import { SearchInput } from "../../components/common/SearchInput";
+import { SearchInput } from "../../components/common/SearchInput/ProjectCode";
 import { ProjectCard } from "../../components/features/Home/ProjectCard";
 
 type Project = {
@@ -41,40 +41,46 @@ const initialProjects: Project[] = [
   {
     id: 1,
     name: "디자인 시스템 개발",
-    startDate: new Date().toISOString().split('T')[0],
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
+    startDate: new Date().toISOString().split("T")[0],
+    endDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
+      .toISOString()
+      .split("T")[0],
     option: {
       type: "custom",
       customOption: {
         celebrationEffect: true,
         colorChange: true,
-        emailNotification: true
-      }
-    }
+        emailNotification: true,
+      },
+    },
   },
   {
     id: 2,
     name: "프론트엔드 리팩토링",
-    startDate: new Date().toISOString().split('T')[0],
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 2)).toISOString().split('T')[0],
+    startDate: new Date().toISOString().split("T")[0],
+    endDate: new Date(new Date().setMonth(new Date().getMonth() + 2))
+      .toISOString()
+      .split("T")[0],
     option: {
-      type: "basic"
-    }
+      type: "basic",
+    },
   },
   {
     id: 3,
     name: "백엔드 API 개발",
-    startDate: new Date().toISOString().split('T')[0],
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 1)).toISOString().split('T')[0],
+    startDate: new Date().toISOString().split("T")[0],
+    endDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
+      .toISOString()
+      .split("T")[0],
     option: {
       type: "custom",
       customOption: {
         celebrationEffect: false,
         colorChange: true,
-        emailNotification: false
-      }
-    }
-  }
+        emailNotification: false,
+      },
+    },
+  },
 ];
 
 const handleJoinSuccess = (projectId: number, guestId: number) => {
@@ -98,11 +104,11 @@ export const ProjectListPage: React.FC = () => {
       const newProject: Project = {
         id: projects.length + 1,
         name: newProjectTitle,
-        startDate: today.toISOString().split('T')[0],
-        endDate: endDate.toISOString().split('T')[0],
+        startDate: today.toISOString().split("T")[0],
+        endDate: endDate.toISOString().split("T")[0],
         option: {
-          type: "basic"
-        }
+          type: "basic",
+        },
       };
 
       setProjects([...projects, newProject]);
@@ -111,7 +117,10 @@ export const ProjectListPage: React.FC = () => {
     }
   };
 
-  const visibleProjects = projects.slice(startIndex, startIndex + projectsPerView);
+  const visibleProjects = projects.slice(
+    startIndex,
+    startIndex + projectsPerView,
+  );
 
   const shouldShowNavigation = projects.length > projectsPerView;
 
@@ -120,13 +129,15 @@ export const ProjectListPage: React.FC = () => {
 
   const handlePrevious = () => {
     if (canGoPrevious) {
-      setStartIndex(prev => Math.max(0, prev - 1));
+      setStartIndex((prev) => Math.max(0, prev - 1));
     }
   };
 
   const handleNext = () => {
     if (canGoNext) {
-      setStartIndex(prev => Math.min(projects.length - projectsPerView, prev + 1));
+      setStartIndex((prev) =>
+        Math.min(projects.length - projectsPerView, prev + 1),
+      );
     }
   };
 
@@ -143,8 +154,15 @@ export const ProjectListPage: React.FC = () => {
 
       <Box mt={10}>
         <Flex alignItems="center" justifyContent="center" gap="800">
-          <Text fontSize="20px" fontWeight="bold" mb={6}>프로젝트</Text>
-          <Button backgroundColor="#95A4FC" color="#FFFFFF" onClick={onOpen} leftIcon={<AddIcon />}>
+          <Text fontSize="20px" fontWeight="bold" mb={6}>
+            프로젝트
+          </Text>
+          <Button
+            backgroundColor="#95A4FC"
+            color="#FFFFFF"
+            onClick={onOpen}
+            leftIcon={<AddIcon />}
+          >
             생성
           </Button>
         </Flex>

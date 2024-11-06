@@ -84,7 +84,7 @@ const StyledImage = styled.img`
 const PurpleBackground = styled.div`
   width: 100%;
   height: 100%;
-  background-color: #D9D9FF;
+  background-color: #d9d9ff;
 `;
 
 const SettingsButton = styled.button`
