@@ -24,13 +24,14 @@ import {
   GetMemberData,
   GetMemberList,
   GetMemberListData,
+  GetMemberProgressData,
   GetOptionData,
   GetOptionListData,
   GetProjectData,
   GetProjectListData,
   GetProjectMembersData,
   GetProjectPeriodData,
-  GetTaskData,
+  GetProjectProgressData,
   GetTaskListData,
   InviteMemberToProjectData,
   InviteRequestDTO,
@@ -159,23 +160,6 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * No description
    *
    * @tags 태스크
-   * @name GetTask
-   * @summary 태스크 단건 조회
-   * @request GET:/api/project/task/{taskId}
-   * @secure
-   * @response `200` `GetTaskData` OK
-   */
-  getTask = (taskId: number, params: RequestParams = {}) =>
-    this.request<GetTaskData, any>({
-      path: `/api/project/task/${taskId}`,
-      method: "GET",
-      secure: true,
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags 태스크
    * @name UpdateTask
    * @summary 태스크 수정
    * @request PUT:/api/project/task/{taskId}
@@ -249,7 +233,7 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    *
    * @tags 프로젝트 옵션
    * @name DeleteOption
-   * @summary 옵션 수정
+   * @summary 옵션 삭제
    * @request DELETE:/api/project/option/{optionId}
    * @secure
    * @response `200` `DeleteOptionData` OK
@@ -395,13 +379,13 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * @tags 참여 링크 생성
    * @name GenerateInviteLink
    * @summary 팀원초대 코드 생성
-   * @request POST:/api/project/{projectId}/invite-link/{userId}
+   * @request POST:/api/project/{projectId}/invite-link
    * @secure
    * @response `200` `GenerateInviteLinkData` OK
    */
-  generateInviteLink = (projectId: number, userId: number, params: RequestParams = {}) =>
+  generateInviteLink = (projectId: number, params: RequestParams = {}) =>
     this.request<GenerateInviteLinkData, any>({
-      path: `/api/project/${projectId}/invite-link/${userId}`,
+      path: `/api/project/${projectId}/invite-link`,
       method: "POST",
       secure: true,
       ...params,
@@ -465,6 +449,54 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
       body: data,
       secure: true,
       type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 태스크
+   * @name GetMemberProgress
+   * @summary 팀 전체 진행도 확인
+   * @request GET:/api/project/{projectId}/task/progress
+   * @secure
+   * @response `200` `GetMemberProgressData` OK
+   */
+  getMemberProgress = (
+    projectId: number,
+    query: {
+      param: GetList;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<GetMemberProgressData, any>({
+      path: `/api/project/${projectId}/task/progress`,
+      method: "GET",
+      query: query,
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 태스크
+   * @name GetProjectProgress
+   * @summary 팀원 개별 진행도 및 할당된 태스크 확인
+   * @request GET:/api/project/{projectId}/progress
+   * @secure
+   * @response `200` `GetProjectProgressData` OK
+   */
+  getProjectProgress = (
+    projectId: number,
+    query: {
+      param: GetList;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<GetProjectProgressData, any>({
+      path: `/api/project/${projectId}/progress`,
+      method: "GET",
+      query: query,
+      secure: true,
       ...params,
     });
   /**
