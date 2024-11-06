@@ -1,10 +1,27 @@
-import { Avatar, Flex, IconButton, Text } from "@chakra-ui/react";
-import styled from "@emotion/styled";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
+import {
+  Flex,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { Ellipsis } from "lucide-react";
 
 import type { MemberResponseDTO } from "../../../../api/generated/data-contracts";
+import { ProfileDeleteModal } from "./MemberDeleteModal";
+import { MemberProfile } from "./MemberProfile";
 
 export const MemberItem = (member: MemberResponseDTO) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleDelete = () => {
+    console.log("멤버 삭제");
+    onClose();
+  };
+
   return (
     <Flex
       width="100%"
@@ -13,31 +30,45 @@ export const MemberItem = (member: MemberResponseDTO) => {
       _hover={{ backgroundColor: "#F6F6F6", borderRadius: "0.375rem" }}
       height="60px"
       transition="background-color 0.2s"
+      p={2}
+      py={8}
     >
-      <MemberProfile>
-        {/* TODO: 이미지 URL 부분 src로 추가 필요 */}
-        <Avatar name={member.name} size="sm" margin={2} />
-        <Flex flexDir="column" justifyContent="center">
-          <Text fontSize="md" fontWeight="bold">
-            {member.name}
-          </Text>
-          <Text fontSize="xs" color="gray">
-            {member.role}
-          </Text>
-        </Flex>
-      </MemberProfile>
-      <IconButton
-        bgColor="transparent"
-        aria-label="More member options"
-        icon={<Ellipsis color="#5A5A5A" />}
-        size="sm"
-        m={1}
-      />
+      <MemberProfile {...member} />
+      <Menu>
+        <MenuButton
+          as={IconButton}
+          bgColor="transparent"
+          aria-label="More member options"
+          icon={<Ellipsis color="#5A5A5A" />}
+          size="sm"
+          m={1}
+        />
+        <MenuList
+          minW="120px"
+          boxShadow="md"
+          border="1px solid"
+          borderColor="gray.100"
+          z-index={10}
+        >
+          <MenuItem textAlign="center" icon={<EditIcon />}>
+            정보 수정
+          </MenuItem>
+          <MenuItem
+            textAlign="center"
+            icon={<DeleteIcon />}
+            onClick={onOpen}
+            _hover={{ color: "red.500" }}
+          >
+            팀원 삭제
+          </MenuItem>
+          <ProfileDeleteModal
+            isOpen={isOpen}
+            onClose={onClose}
+            onDelete={handleDelete}
+            {...member}
+          />
+        </MenuList>
+      </Menu>
     </Flex>
   );
 };
-
-const MemberProfile = styled.div`
-  display: flex;
-  align-items: center;
-`;
