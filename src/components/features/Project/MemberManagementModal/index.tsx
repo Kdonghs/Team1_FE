@@ -13,8 +13,8 @@ import {
 import styled from "@emotion/styled";
 import { useParams } from "react-router-dom";
 
-import { useGetProjectInviteCode } from "../../../../api/hooks/useGetProjectInviteCode";
 import { useGetProjectMembers } from "../../../../api/hooks/useGetProjectMembers";
+import { usePostProjectInviteCode } from "../../../../api/hooks/usePostProjectInviteCode";
 import { InviteMember } from "./InviteMember";
 import { MemberItem } from "./MemberItem";
 
@@ -36,7 +36,7 @@ export const MemberManagementModal = ({
     data: inviteData,
     error: inviteError,
     isLoading: inviteLoading,
-  } = useGetProjectInviteCode(projectId);
+  } = usePostProjectInviteCode(projectId);
 
   const {
     data: membersData,
