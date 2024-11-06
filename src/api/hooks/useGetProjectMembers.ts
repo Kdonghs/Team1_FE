@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 
 import { getTestToken } from "../../components/features/Project/TokenTest";
-import type { PageResultMemberResponseDTO } from "../generated/data-contracts";
+import type { GetMemberListData } from "../generated/data-contracts";
 import { projectApi } from "../projectApi";
 
 export const getProjectMembers = async (
@@ -10,7 +10,7 @@ export const getProjectMembers = async (
   size: number,
   sort: string,
   role?: string
-): Promise<PageResultMemberResponseDTO> => {
+): Promise<GetMemberListData> => {
   // TODO: any 어떻게해결하지..
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const query: any = {
@@ -36,7 +36,7 @@ export const useGetProjectMembers = (
   sort: string,
   role?: string
 ) =>
-  useQuery<PageResultMemberResponseDTO, Error>({
+  useQuery<GetMemberListData, Error>({
     queryKey: ["projectMembers", projectId, page, size, sort, role],
     queryFn: () => getProjectMembers(projectId, page, size, sort, role),
     enabled: !!projectId,

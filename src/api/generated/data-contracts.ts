@@ -81,6 +81,8 @@ export interface MemberResponseDTO {
   role?: string;
   email?: string;
   getattendURL?: string;
+  /** @format int64 */
+  id?: number;
 }
 
 export interface SingleResultMemberResponseDTO {
