@@ -1,4 +1,15 @@
 import { Text } from "@chakra-ui/react";
+import { keyframes } from "@emotion/react";
+
+const fadeInDelay = keyframes`
+  0% { opacity: 0; }
+  100% { opacity: 0; }
+`;
+
+const fadeIn = keyframes`
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+`;
 
 export const ProgressLabel = ({
   progress,
@@ -19,6 +30,8 @@ export const ProgressLabel = ({
     textOverflow="ellipsis"
     maxWidth={`${progress}%`}
     p={1}
+    textShadow="1px 1px 2px rgba(0, 0, 0, 0.5), -1px -1px 2px rgba(0, 0, 0, 0.5)"
+    animation={`${fadeInDelay} 1s ease-in-out, ${fadeIn} 2s 0.5s ease-in-out`}
   >
     {label}
   </Text>
