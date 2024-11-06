@@ -1,21 +1,12 @@
 import { rest } from "msw";
 
 export const teamProgressMockHandler = [
-<<<<<<< HEAD
-  rest.get(getTeamProgressPath(1), (_, res, ctx) => {
-    return res(
-      ctx.status(200),
-      ctx.json({ teamProgress: mockTeamProgressData }),
-    );
-  }),
-=======
   rest.get(
     `https://seamlessup.com/api/project/:projectId/task/progress`,
     (_, res, ctx) => {
       return res(ctx.status(200), ctx.json(mockTeamProgressData));
     }
   ),
->>>>>>> 064f9b18b49b9fc74d8351e54dcc734af6cf94cd
 ];
 
 export const mockTeamProgressData = {
