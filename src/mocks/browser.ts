@@ -7,5 +7,5 @@ import { userMockHandler } from "../api/hooks/userDetail.mock";
 export const worker = setupWorker(
   ...teamProgressMockHandler,
   ...projectMockHandler,
-  ...userMockHandler
+  ...userMockHandler,
 );

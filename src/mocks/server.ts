@@ -7,5 +7,5 @@ import { userMockHandler } from "@/api/hooks/userDetail.mock";
 export const server = setupServer(
   ...teamProgressMockHandler,
   ...projectMockHandler,
-  ...userMockHandler
+  ...userMockHandler,
 );

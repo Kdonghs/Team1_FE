@@ -18,7 +18,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       focusBorderColor = "#95A4FC",
       ...inputProps
     },
-    ref
+    ref,
   ) => {
     return (
       <FormControl display="flex" alignItems="center" gap={3}>
@@ -41,5 +41,5 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         />
       </FormControl>
     );
-  }
+  },
 );
