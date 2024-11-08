@@ -13,25 +13,36 @@ import {
 import styled from "@emotion/styled";
 import { useParams } from "react-router-dom";
 
-import { useGetProjectInviteCode } from "../../../../api/hooks/useGetProjectInviteCode";
 import { useGetProjectMembers } from "../../../../api/hooks/useGetProjectMembers";
+import { usePostProjectInviteCode } from "../../../../api/hooks/usePostProjectInviteCode";
 import { InviteMember } from "./InviteMember";
 import { MemberItem } from "./MemberItem";
-export const MemberManagementModal = () => {
+
+export const MemberManagementModal = ({
+  page = 0,
+  size = 5,
+  sort = "string",
+  role = "",
+}: {
+  page?: number;
+  size?: number;
+  sort?: string;
+  role?: string;
+}) => {
   const { id } = useParams<{ id: string }>();
-  const projectId = id ? parseInt(id, 10) : null;
+  const projectId = id ? parseInt(id, 10) : 0;
 
   const {
     data: inviteData,
     error: inviteError,
     isLoading: inviteLoading,
-  } = useGetProjectInviteCode(projectId);
+  } = usePostProjectInviteCode(projectId);
 
   const {
     data: membersData,
     error: membersError,
     isLoading: membersLoading,
-  } = useGetProjectMembers(projectId);
+  } = useGetProjectMembers(projectId, page, size, sort, role);
 
   if (membersLoading || inviteLoading) {
     return <div>Loading...</div>;
@@ -44,7 +55,7 @@ export const MemberManagementModal = () => {
   if (inviteError) {
     return <div>{inviteError.message}</div>;
   }
-  console.log(membersData);
+
   return (
     <>
       <ModalOverlay />
@@ -67,9 +78,11 @@ export const MemberManagementModal = () => {
               <Flex flexDirection="column" width="100%" gap={2}>
                 {membersData?.resultData &&
                 Array.isArray(membersData.resultData) ? (
-                  membersData.resultData.map((member) => (
-                    <MemberItem key={member.email} {...member} />
-                  ))
+                  membersData.resultData.map((member, index) =>
+                    member.id ? (
+                      <MemberItem key={`${member.id}-${index}`} {...member} />
+                    ) : null
+                  )
                 ) : (
                   <Text>팀원이 없습니다.</Text>
                 )}
@@ -78,7 +91,7 @@ export const MemberManagementModal = () => {
           </VStack>
         </ModalBody>
 
-        <ModalFooter></ModalFooter>
+        <ModalFooter />
       </StyledModalContent>
     </>
   );

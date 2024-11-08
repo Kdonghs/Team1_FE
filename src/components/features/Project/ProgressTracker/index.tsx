@@ -1,7 +1,7 @@
 import { Box, Stack, Text } from "@chakra-ui/react";
 
 import type { MemberProgress } from "../../../../api/generated/data-contracts";
-import { useGetTeamProgress } from "../../../../api/hooks/useTeamProgress";
+import { useGetTeamProgress } from "../../../../api/hooks/useGetTeamProgress";
 import { TeamMemberProgress } from "./TeamMemberProgress";
 
 export const ProgressTracker = ({

@@ -13,6 +13,7 @@ export const TokenTest = () => {
   const handleSaveTestToken = () => {
     localStorage.setItem("testToken", testToken);
     console.log("testToken saved:", testToken);
+    window.location.reload();
   };
 
   const handleDeleteTestToken = () => {

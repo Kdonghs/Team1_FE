@@ -25,6 +25,7 @@ import { ProjectDetailSettingFields } from "./ProjectSettingForm/projectDetailSe
 import { renderFooterButtons } from "./renderFooterButtons";
 
 export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
+  //TODO: 프로젝트에 옵션을 저장하는 방법 알아본 뒤 로직 변경 필요할듯
   const { id } = useParams<{ id: string }>();
   const projectId = id ? parseInt(id, 10) : null;
 
@@ -45,7 +46,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
 
   const { data, error, isLoading } = useGetProjectDetail(projectId);
   const [selectedFeature, setSelectedFeature] = useState("기본");
-  const { mutate } = useUpdateProject(projectId, selectedFeature);
+  const { mutate } = useUpdateProject(projectId);
   const toast = useToast();
 
   useEffect(() => {
@@ -80,14 +81,15 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
     const newEndDate = updatedData.endDate
       ? new Date(updatedData.endDate).toISOString()
       : undefined;
-
+    const newOptionIds =
+      selectedFeature === "기본" ? [2, 4] : updatedData.optionIds || [];
     const updatedProjectData: ProjectUpdate = {
       name: newName || "",
       startDate: newStartDate,
       endDate: newEndDate,
-      optionIds: updatedData.optionIds ?? [],
+      optionIds: newOptionIds,
     };
-
+    console.log(updatedProjectData.optionIds);
     mutate(updatedProjectData, {
       onSuccess: () => {
         toast({

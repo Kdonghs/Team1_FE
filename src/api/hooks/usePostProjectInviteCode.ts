@@ -5,7 +5,7 @@ import type { GenerateInviteLinkData } from "@/api/generated/data-contracts";
 import { getTestToken } from "../../components/features/Project/TokenTest";
 import { projectApi } from "../projectApi";
 
-const getProjectInviteCode = async (
+const postProjectInviteCode = async (
   projectId: number
 ): Promise<GenerateInviteLinkData | null> => {
   try {
@@ -31,7 +31,7 @@ const getProjectInviteCode = async (
   }
 };
 
-export const useGetProjectInviteCode = (projectId: number | null) => {
+export const usePostProjectInviteCode = (projectId: number | null) => {
   return useQuery<GenerateInviteLinkData | null, Error>({
     queryKey: ["projectInviteCode", projectId],
     queryFn: () => {
@@ -39,7 +39,7 @@ export const useGetProjectInviteCode = (projectId: number | null) => {
         throw new Error("Project ID cannot be null");
       }
 
-      return getProjectInviteCode(projectId);
+      return postProjectInviteCode(projectId);
     },
     enabled: !!projectId,
   });

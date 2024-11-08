@@ -7,18 +7,14 @@ import type {
 import { getTestToken } from "../../components/features/Project/TokenTest";
 import { projectApi } from "../projectApi";
 
-export const useUpdateProject = (
-  projectId: number | null,
-  selectedFeature: string
-) => {
+export const useUpdateProject = (projectId: number | null) => {
   const queryClient = useQueryClient();
   return useMutation<SingleResultProjectDetail, Error, ProjectUpdate>({
     mutationFn: async (data: ProjectUpdate) => {
       if (projectId === null) {
         throw new Error("Invalid project ID");
       }
-      const updateData =
-        selectedFeature === "기본" ? { ...data, optionIds: [2, 4] } : data;
+      const updateData = data;
 
       const testToken = getTestToken();
 
