@@ -44,7 +44,7 @@ const mockProjectMembers: GetMemberListData = {
       role: "팀원",
       email: "ex5@gmail.com",
       getattendURL: "",
-      id: 3,
+      id: 5,
     },
   ],
   size: 10,
@@ -59,6 +59,32 @@ export const memberMockHandler = [
     "https://seamlessup.com/api/project/:projectId/member",
     (_, res, ctx) => {
       return res(ctx.status(200), ctx.json(mockProjectMembers));
+    }
+  ),
+  rest.delete(
+    "https://seamlessup.com/api/project/:projectId/member/:memberId",
+    (req, res, ctx) => {
+      const { projectId, memberId } = req.params;
+      const deleteMemberId = parseInt(memberId as string, 10);
+
+      if (mockProjectMembers.resultData) {
+        const updatedMembers = mockProjectMembers.resultData.filter(
+          (member) => member.id !== deleteMemberId
+        );
+
+        return res(
+          ctx.status(200),
+          ctx.json({
+            message: `프로젝트 ${projectId}번의 ${deleteMemberId}번 멤버 삭제 성공`,
+            updatedMembers,
+          })
+        );
+      }
+
+      return res(
+        ctx.status(404),
+        ctx.json({ message: "멤버 리스트를 찾을 수 없습니다." })
+      );
     }
   ),
 ];
