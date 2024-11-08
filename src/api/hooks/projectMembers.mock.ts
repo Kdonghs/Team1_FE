@@ -61,6 +61,7 @@ export const memberMockHandler = [
       return res(ctx.status(200), ctx.json(mockProjectMembers));
     }
   ),
+
   rest.delete(
     "https://seamlessup.com/api/project/:projectId/member/:memberId",
     (req, res, ctx) => {
@@ -68,7 +69,7 @@ export const memberMockHandler = [
       const deleteMemberId = parseInt(memberId as string, 10);
 
       if (mockProjectMembers.resultData) {
-        const updatedMembers = mockProjectMembers.resultData.filter(
+        mockProjectMembers.resultData = mockProjectMembers.resultData.filter(
           (member) => member.id !== deleteMemberId
         );
 
@@ -76,7 +77,7 @@ export const memberMockHandler = [
           ctx.status(200),
           ctx.json({
             message: `프로젝트 ${projectId}번의 ${deleteMemberId}번 멤버 삭제 성공`,
-            updatedMembers,
+            updatedMembers: mockProjectMembers.resultData,
           })
         );
       }
