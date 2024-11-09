@@ -12,9 +12,7 @@
 import { MemberCodeCreate1Data, MemberCodeDecodeData, MemberCodeJoinData } from "./data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
-export class Auth<
-  SecurityDataType = unknown,
-> extends HttpClient<SecurityDataType> {
+export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
