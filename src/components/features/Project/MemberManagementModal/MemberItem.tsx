@@ -13,8 +13,15 @@ import { Ellipsis } from "lucide-react";
 import type { MemberResponseDTO } from "../../../../api/generated/data-contracts";
 import { MemberDeleteModal } from "./MemberDeleteModal";
 import { MemberProfile } from "./MemberProfile";
+import { MemberUpdateModal } from "./MemberUpdateModal";
 
 export const MemberItem = ({ ...member }: MemberResponseDTO) => {
+  const {
+    isOpen: isMemberUpdateModalOpen,
+    onOpen: onMemberUpdateModalOpen,
+    onClose: onMemberUpdateModalClose,
+  } = useDisclosure();
+
   const {
     isOpen: isMemberDeleteModalOpen,
     onOpen: onMemberDeleteModalOpen,
@@ -49,9 +56,19 @@ export const MemberItem = ({ ...member }: MemberResponseDTO) => {
           borderColor="gray.100"
           zIndex={10}
         >
-          <MenuItem textAlign="center" icon={<EditIcon />}>
+          <MenuItem
+            textAlign="center"
+            icon={<EditIcon />}
+            onClick={onMemberUpdateModalOpen}
+          >
             정보 수정
           </MenuItem>
+
+          <MemberUpdateModal
+            isOpen={isMemberUpdateModalOpen}
+            onClose={onMemberUpdateModalClose}
+            {...member}
+          />
           <MenuItem
             textAlign="center"
             icon={<DeleteIcon />}
