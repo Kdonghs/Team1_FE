@@ -318,8 +318,7 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
   getTaskList = (
     projectId: number,
     query: {
-      /** @format int32 */
-      status?: number;
+      status?: string;
       priority?: string;
       owner?: string;
       param: GetList;
