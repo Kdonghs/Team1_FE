@@ -1,4 +1,4 @@
-import { Box, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Stack, Text } from "@chakra-ui/react";
 
 import type { MemberProgress } from "../../../../api/generated/data-contracts";
 import { useGetTeamProgress } from "../../../../api/hooks/useGetTeamProgress";
@@ -6,21 +6,32 @@ import { TeamMemberProgress } from "./TeamMemberProgress";
 
 export const ProgressTracker = ({
   projectId,
-  page = 0,
-  size = 5,
+  size = 2,
   sort = "string",
+  role = "",
 }: {
   projectId: number;
   page?: number;
   size?: number;
   sort?: string;
+  role?: string;
 }) => {
-  // TODO: 페이지네이션 구현
-  const { data, isLoading } = useGetTeamProgress(projectId, page, size, sort);
+  const {
+    data,
+    isLoading,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useGetTeamProgress(projectId, size, sort, role);
 
   if (isLoading) return <Text>Loading...</Text>;
+  if (isError) return <Text>Error loading data</Text>;
 
-  const teamProgressData: MemberProgress[] = data?.resultData || [];
+  const teamProgressData: MemberProgress[] =
+    data?.pages
+      .flatMap((page) => page.resultData)
+      .filter((item): item is MemberProgress => item !== undefined) || [];
 
   return (
     <Box
@@ -38,6 +49,20 @@ export const ProgressTracker = ({
           ))}
         </Stack>
       )}
+
+      <Stack spacing={4} direction="row" align="center" justify="center" mt={4}>
+        <Button
+          onClick={() => fetchNextPage()}
+          isLoading={isFetchingNextPage}
+          disabled={!hasNextPage || isFetchingNextPage}
+        >
+          {isFetchingNextPage
+            ? "Loading..."
+            : hasNextPage
+              ? "Load More"
+              : "No more"}
+        </Button>
+      </Stack>
     </Box>
   );
 };
