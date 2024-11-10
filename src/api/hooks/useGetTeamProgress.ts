@@ -9,6 +9,8 @@ export const getTeamProgress = async (
   query: { page: number; size: number; sort: string },
   role?: string
 ): Promise<PageResultMemberProgress> => {
+  //TODO: any 해결방법 찾기
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queryParams: any = {
     page: query.page,
     size: query.size,
@@ -25,8 +27,6 @@ export const getTeamProgress = async (
 
   return response.data;
 };
-
-// getNextPageParam을 확인
 
 export const useGetTeamProgress = (
   projectId: number,

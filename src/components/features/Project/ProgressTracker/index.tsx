@@ -1,4 +1,5 @@
-import { Box, Button, Stack, Text } from "@chakra-ui/react";
+import { Box, Stack, Text } from "@chakra-ui/react";
+import { useEffect, useRef } from "react";
 
 import type { MemberProgress } from "../../../../api/generated/data-contracts";
 import { useGetTeamProgress } from "../../../../api/hooks/useGetTeamProgress";
@@ -6,12 +7,11 @@ import { TeamMemberProgress } from "./TeamMemberProgress";
 
 export const ProgressTracker = ({
   projectId,
-  size = 2,
+  size = 10,
   sort = "string",
   role = "",
 }: {
   projectId: number;
-  page?: number;
   size?: number;
   sort?: string;
   role?: string;
@@ -25,8 +25,33 @@ export const ProgressTracker = ({
     fetchNextPage,
   } = useGetTeamProgress(projectId, size, sort, role);
 
-  if (isLoading) return <Text>Loading...</Text>;
-  if (isError) return <Text>Error loading data</Text>;
+  const loaderRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const currentLoader = loaderRef.current;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [fetchNextPage, hasNextPage]);
+
+  if (isLoading) return <Text>로딩 중...</Text>;
+  if (isError) return <Text>에러 발생</Text>;
 
   const teamProgressData: MemberProgress[] =
     data?.pages
@@ -50,19 +75,12 @@ export const ProgressTracker = ({
         </Stack>
       )}
 
-      <Stack spacing={4} direction="row" align="center" justify="center" mt={4}>
-        <Button
-          onClick={() => fetchNextPage()}
-          isLoading={isFetchingNextPage}
-          disabled={!hasNextPage || isFetchingNextPage}
-        >
-          {isFetchingNextPage
-            ? "Loading..."
-            : hasNextPage
-              ? "Load More"
-              : "No more"}
-        </Button>
-      </Stack>
+      <div ref={loaderRef} />
+      {isFetchingNextPage && (
+        <Text mt={4} textAlign="center">
+          Loading more...
+        </Text>
+      )}
     </Box>
   );
 };
