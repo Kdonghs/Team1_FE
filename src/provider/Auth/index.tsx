@@ -18,10 +18,6 @@ type AuthContextType = {
   handleGoogleCallback: (code: string) => Promise<void>;
 };
 
-const API_URL = process.env.REACT_APP_API_URL;
-const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
-
 const AuthContext = createContext<AuthContextType>({
   user: null,
   login: () => {},
@@ -90,18 +86,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const login = () => {
     console.log("Initiating Google login");
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&response_type=code&scope=email%20profile&redirect_uri=${encodeURIComponent(
-      REDIRECT_URI,
-    )}`;
+    const googleAuthUrl = `https://seamlessup.com/api/login`;
     window.location.href = googleAuthUrl;
   };
 
   const handleGoogleCallback = async (code: string) => {
     try {
       console.log("Starting Google callback process with code:", code);
-      const response = await axios.post(`${API_URL}/api/v1/login/google`, {
-        code,
-      });
+      const response = await axios.post(
+        `https://seamlessup.com/api/v2/login/google`,
+        {
+          code,
+        }
+      );
       console.log("Received response from backend:", response.data);
 
       const { accessToken, userData } = response.data;
