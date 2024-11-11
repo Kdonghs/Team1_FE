@@ -32,7 +32,7 @@ export const useGetTeamProgress = (
   projectId: number,
   size: number,
   sort: string,
-  role?: string
+  role?: string,
 ) =>
   useInfiniteQuery<PageResultMemberProgress, Error>({
     queryKey: ["teamProgress", projectId, size, sort, role],

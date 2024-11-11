@@ -32,7 +32,7 @@ export const useGetProjectMembers = (
   projectId: number,
   size: number,
   sort: string,
-  role?: string
+  role?: string,
 ) =>
   useInfiniteQuery<GetMemberListData, Error>({
     queryKey: ["projectMembers", projectId, size, sort, role],

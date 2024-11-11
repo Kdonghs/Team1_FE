@@ -32,7 +32,7 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
       isInvalid,
       errorMessage,
     },
-    ref
+    ref,
   ) => {
     return (
       <FormControl
@@ -77,5 +77,5 @@ export const DateField = forwardRef<HTMLInputElement, DateFieldProps>(
         </VStack>
       </FormControl>
     );
-  }
+  },
 );

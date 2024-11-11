@@ -6,7 +6,7 @@ import { projectApi } from "../../api/projectApi";
 import { getTestToken } from "../../components/features/Project/TokenTest";
 
 const getProjectDetail = async (
-  projectId: number
+  projectId: number,
 ): Promise<ProjectDetail | null> => {
   try {
     const testToken = getTestToken();
@@ -23,7 +23,9 @@ const getProjectDetail = async (
     return response.data.resultData;
   } catch (error) {
     throw new Error(
-      error instanceof Error ? error.message : "Failed to fetch project details"
+      error instanceof Error
+        ? error.message
+        : "Failed to fetch project details",
     );
   }
 };

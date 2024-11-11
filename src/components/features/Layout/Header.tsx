@@ -1,21 +1,21 @@
 import { Box, Button, Container, Flex, Modal, Text } from "@chakra-ui/react";
 import { useDisclosure } from "@chakra-ui/react";
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import { useAuth } from "../../../provider/Auth";
 import { RouterPath } from "../../../routes/path";
 import { LoginModal } from "../../common/modal/Login";
-
 export const Header: React.FC = () => {
   const { user, logout } = useAuth();
   const { onOpen, isOpen, onClose } = useDisclosure();
-  const navigate = useNavigate();
+
+  console.log("Header user state:", user);
 
   const handleAuthAction = () => {
     if (user) {
+      console.log("Logging out user:", user);
       logout();
-      navigate(RouterPath.root);
     } else {
       onOpen();
     }
@@ -37,6 +37,7 @@ export const Header: React.FC = () => {
             py={4}
             height="auto"
             variant="outline"
+            colorScheme="blue"
           >
             {user ? "로그아웃" : "로그인"}
           </Button>

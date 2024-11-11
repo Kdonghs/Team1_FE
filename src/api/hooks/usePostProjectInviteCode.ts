@@ -6,7 +6,7 @@ import { getTestToken } from "../../components/features/Project/TokenTest";
 import { projectApi } from "../projectApi";
 
 const postProjectInviteCode = async (
-  projectId: number
+  projectId: number,
 ): Promise<GenerateInviteLinkData | null> => {
   try {
     const testToken = getTestToken();
@@ -26,7 +26,7 @@ const postProjectInviteCode = async (
     throw new Error(
       error instanceof Error
         ? error.message
-        : "Failed to fetch project invite code"
+        : "Failed to fetch project invite code",
     );
   }
 };
