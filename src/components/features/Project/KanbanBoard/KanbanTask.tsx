@@ -1,16 +1,20 @@
+import "dayjs/locale/ko";
+
 import {
+  Avatar,
   Badge,
   Card,
   CardBody,
   CardHeader,
   Flex,
   Heading,
+  Spacer,
   Text,
 } from "@chakra-ui/react";
+import dayjs from "dayjs";
 
 import type { TaskWithOwnerDetail } from "@/api/generated/data-contracts";
 import type { TaskPriority } from "@/types/index";
-
 interface TaskProps {
   task: TaskWithOwnerDetail;
 }
@@ -37,9 +41,22 @@ export const KanbanTask = ({ task }: TaskProps) => {
         <Text fontSize="sm" color="#6D7280">
           {task.description}
         </Text>
-        <Text fontSize="sm" color="#666666">
-          {task.startDate}
+        <Spacer h={1} />
+        <Text fontSize="xs" color="#666666">
+          {dayjs(task.endDate).locale("ko").format("YYYY.M.D H시 m분")}
         </Text>
+        <Spacer h={1} />
+        <Flex gap={1}>
+          <Avatar name={task.owner?.name} size="xs" />
+          <Text
+            textAlign={"right"}
+            alignContent="center"
+            fontSize="sm"
+            color="#666666"
+          >
+            {task.owner?.name}
+          </Text>
+        </Flex>
       </CardBody>
     </Card>
   );

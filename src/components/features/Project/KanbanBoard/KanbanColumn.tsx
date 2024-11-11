@@ -21,30 +21,15 @@ interface ColumnProps {
   column: {
     id: string;
     status: TaskStatus;
-    tasks: (TaskWithOwnerDetail & { id?: number })[]; // id는 옵셔널로 처리
+    tasks: (TaskWithOwnerDetail & { id?: number })[];
   };
 }
 
-// Status와 Badge Color 매핑
-const statusLabels: Record<TaskStatus, string> = {
-  PENDING: "시작 전",
-  IN_PROGRESS: "진행 중",
-  COMPLETED: "완료",
-};
-
-const statusBadgeColor: Record<TaskStatus, string> = {
-  PENDING: "#D9D9D9",
-  IN_PROGRESS: "#D3E5EF",
-  COMPLETED: "#DBEDDB",
-};
-
-// Badge Color 가져오기 함수
 const getStatusBadgeColor = (status: TaskStatus): string => {
   return statusBadgeColor[status] || "#D9D9D9";
 };
 
 export const KanbanColumn = ({ column }: ColumnProps) => {
-  // id가 undefined가 아닌 task들만 필터링
   const filteredTasks = column.tasks.filter(
     (task): task is TaskWithOwnerDetail & { id: number } =>
       task.id !== undefined
@@ -92,4 +77,16 @@ export const KanbanColumn = ({ column }: ColumnProps) => {
       </Flex>
     </Card>
   );
+};
+
+const statusLabels: Record<TaskStatus, string> = {
+  PENDING: "시작 전",
+  IN_PROGRESS: "진행 중",
+  COMPLETED: "완료",
+};
+
+const statusBadgeColor: Record<TaskStatus, string> = {
+  PENDING: "#D9D9D9",
+  IN_PROGRESS: "#D3E5EF",
+  COMPLETED: "#DBEDDB",
 };
