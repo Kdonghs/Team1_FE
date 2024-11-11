@@ -8,6 +8,12 @@ let projectData: ProjectDetail = {
   startDate: "2024-11-03T05:42:00.000Z",
   endDate: "2024-11-04T05:42:00.000Z",
   optionIds: [1, 2, 3],
+  totalMembers: 6,
+  projectManager: {
+    name: "김정윤",
+    imageURL:
+      "https://lh3.googleusercontent.com/a/ACg8ocKg3btC-yMTis-owaGVzgnUA_MPIcjWaRhjicq-eidbxqjgWg=s96-c",
+  },
 };
 
 export const projectMockHandler = [
@@ -22,7 +28,7 @@ export const projectMockHandler = [
       ctx.status(200),
       ctx.json({
         resultData: projectData,
-      }),
+      })
     );
   }),
 

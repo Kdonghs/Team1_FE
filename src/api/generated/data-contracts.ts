@@ -33,6 +33,13 @@ export interface ProjectUpdate {
    * @maxLength 15
    */
   name: string;
+  /**
+   * @minLength 0
+   * @maxLength 50
+   */
+  description?: string;
+  /** @pattern ^https?://.*\.(jpg|jpeg|png|gif|bmp|webp)$ */
+  imageURL?: string;
   optionIds: number[];
   /** @format date-time */
   startDate?: string;
@@ -46,11 +53,21 @@ export interface ProjectDetail {
   /** @format int64 */
   id?: number;
   name?: string;
+  description?: string;
+  imageURL?: string;
   /** @format date-time */
   startDate?: string;
   /** @format date-time */
   endDate?: string;
   optionIds?: number[];
+  /** @format int32 */
+  totalMembers?: number;
+  projectManager?: ProjectManager;
+}
+
+export interface ProjectManager {
+  name?: string;
+  imageURL?: string;
 }
 
 export interface SingleResultProjectDetail {
@@ -103,8 +120,7 @@ export interface TaskUpdate {
    * @max 100
    */
   progress?: number;
-  /** @format int32 */
-  status?: number;
+  status?: "PENDING" | "IN_PROGRESS" | "COMPLETED";
   priority?: "LOW" | "MEDIUM" | "HIGH";
   /** @format date-time */
   startDate?: string;
@@ -133,8 +149,7 @@ export interface TaskDetail {
   /** @format date-time */
   endDate?: string;
   priority?: "LOW" | "MEDIUM" | "HIGH";
-  /** @format int32 */
-  status?: number;
+  status?: "PENDING" | "IN_PROGRESS" | "COMPLETED";
 }
 
 export interface OptionUpdate {
@@ -196,6 +211,13 @@ export interface ProjectCreate {
    * @maxLength 15
    */
   name: string;
+  /**
+   * @minLength 0
+   * @maxLength 50
+   */
+  description?: string;
+  /** @pattern ^https?://.*\.(jpg|jpeg|png|gif|bmp|webp)$ */
+  imageURL?: string;
   optionIds: number[];
   /** @format date-time */
   startDate: string;
@@ -210,8 +232,7 @@ export interface TaskCreate {
   description?: string;
   /** @format int64 */
   ownerId: number;
-  /** @format int32 */
-  status: number;
+  status: "PENDING" | "IN_PROGRESS" | "COMPLETED";
   priority: "LOW" | "MEDIUM" | "HIGH";
   /**
    * @format int32
@@ -344,8 +365,7 @@ export interface TaskWithOwnerDetail {
   /** @format date-time */
   endDate?: string;
   priority?: "LOW" | "MEDIUM" | "HIGH";
-  /** @format int32 */
-  status?: number;
+  status?: "PENDING" | "IN_PROGRESS" | "COMPLETED";
 }
 
 export interface MemberProgress {
@@ -492,6 +512,8 @@ export type GetMemberData = SingleResultMemberResponseDTO;
 export type UpdateMemberData = SingleResultMemberResponseDTO;
 
 export type DeleteMemberData = SingleResultMemberResponseDTO;
+
+export type GetTaskData = SingleResultTaskDetail;
 
 export type UpdateTaskData = SingleResultTaskDetail;
 

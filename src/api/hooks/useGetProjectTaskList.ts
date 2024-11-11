@@ -1,25 +1,29 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 import { getTestToken } from "../../components/features/Project/TokenTest";
-import type { GetMemberListData } from "../generated/data-contracts";
+import type { GetTaskListData } from "../generated/data-contracts";
 import { projectApi } from "../projectApi";
 
-export const getProjectMembers = async (
+export const getProjectTaskList = async (
   projectId: number,
   query: { page: number; size: number; sort: string },
-  role?: string
-): Promise<GetMemberListData> => {
-  // TODO: any 해결
+  status?: string,
+  priority?: string,
+  owner?: string
+): Promise<GetTaskListData> => {
+  //TODO: any 해결방법 찾기
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const queryParams: any = {
     page: query.page,
     size: query.size,
     sort: query.sort,
-    role,
+    status,
+    priority,
+    owner,
   };
 
   const testToken = getTestToken();
-  const response = await projectApi.getMemberList(projectId, queryParams, {
+  const response = await projectApi.getTaskList(projectId, queryParams, {
     headers: {
       Authorization: `Bearer ${testToken}`,
     },
@@ -28,19 +32,23 @@ export const getProjectMembers = async (
   return response.data;
 };
 
-export const useGetProjectMembers = (
+export const useGetProjectTaskList = (
   projectId: number,
   size: number,
   sort: string,
-  role?: string,
+  status?: string,
+  priority?: string,
+  owner?: string
 ) =>
-  useInfiniteQuery<GetMemberListData, Error>({
-    queryKey: ["projectMembers", projectId, size, sort, role],
+  useInfiniteQuery<GetTaskListData, Error>({
+    queryKey: ["taskList", projectId, size, sort, status, priority, owner],
     queryFn: ({ pageParam = 0 }) => {
-      return getProjectMembers(
+      return getProjectTaskList(
         projectId,
         { page: Number(pageParam), size, sort },
-        role
+        status,
+        priority,
+        owner
       );
     },
     getNextPageParam: (lastPage) => {

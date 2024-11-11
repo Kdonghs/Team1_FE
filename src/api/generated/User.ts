@@ -9,17 +9,10 @@
  * ---------------------------------------------------------------
  */
 
-import {
-  DeleteUserData,
-  GetUserData,
-  UpdateUserData,
-  UserUpdate,
-} from "./data-contracts";
+import { DeleteUserData, GetUserData, UpdateUserData, UserUpdate } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
-export class User<
-  SecurityDataType = unknown,
-> extends HttpClient<SecurityDataType> {
+export class User<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
