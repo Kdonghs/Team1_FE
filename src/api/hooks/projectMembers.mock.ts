@@ -59,7 +59,7 @@ export const memberMockHandler = [
     "https://seamlessup.com/api/project/:projectId/member",
     (_, res, ctx) => {
       return res(ctx.status(200), ctx.json(mockProjectMembers));
-    }
+    },
   ),
 
   rest.delete(
@@ -69,6 +69,7 @@ export const memberMockHandler = [
       const deleteMemberId = parseInt(memberId as string, 10);
 
       if (mockProjectMembers.resultData) {
+
         mockProjectMembers.resultData = mockProjectMembers.resultData.filter(
           (member) => member.id !== deleteMemberId
         );
@@ -84,9 +85,9 @@ export const memberMockHandler = [
 
       return res(
         ctx.status(404),
-        ctx.json({ message: "멤버 리스트를 찾을 수 없습니다." })
+        ctx.json({ message: "멤버 리스트를 찾을 수 없습니다." }),
       );
-    }
+    },
   ),
 
   rest.put(

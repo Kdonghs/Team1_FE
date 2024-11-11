@@ -13,6 +13,6 @@ export const inviteCodeMockHandler = [
     "https://seamlessup.com/api/project/:projectId/invite-link",
     (_, res, ctx) => {
       return res(ctx.status(200), ctx.json(mockInviteCode));
-    }
+    },
   ),
 ];

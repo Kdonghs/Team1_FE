@@ -5,6 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+import { GoogleCallback } from "../components/common/modal/Login/GoogleCallback";
 import { Layout } from "../components/features/Layout";
 import { ProjectSidebar } from "../components/features/Project/ProjectSidebar";
 import { HomePage } from "../pages/Home";
@@ -15,13 +16,18 @@ import { ProjectPage } from "../pages/Project";
 import { ProjectKanbanPage } from "../pages/ProjectKanban";
 import { ProjectListPage } from "../pages/ProjectList";
 import { SignupPage } from "../pages/Signup";
+import { AuthProvider } from "../provider/Auth";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { RouterPath } from "./path";
 
 const router = createBrowserRouter([
   {
     path: RouterPath.root,
-    element: <Layout />,
+    element: (
+      <AuthProvider>
+        <Layout />
+      </AuthProvider>
+    ),
     children: [
       {
         index: true,
@@ -45,11 +51,19 @@ const router = createBrowserRouter([
   },
   {
     path: RouterPath.memberDetails,
-    element: <MemberDetailsPage />,
+    element: (
+      <AuthProvider>
+        <MemberDetailsPage />
+      </AuthProvider>
+    ),
   },
   {
     path: RouterPath.project,
-    element: <ProjectSidebar />,
+    element: (
+      <AuthProvider>
+        <ProjectSidebar />
+      </AuthProvider>
+    ),
     children: [
       {
         index: true,
@@ -63,11 +77,23 @@ const router = createBrowserRouter([
   },
   {
     path: RouterPath.login,
-    element: <LoginPage />,
+    element: (
+      <AuthProvider>
+        <LoginPage />
+      </AuthProvider>
+    ),
   },
   {
     path: RouterPath.signup,
-    element: <SignupPage />,
+    element: (
+      <AuthProvider>
+        <SignupPage />
+      </AuthProvider>
+    ),
+  },
+  {
+    path: RouterPath.callback,
+    element: <GoogleCallback />,
   },
   {
     path: RouterPath.notFound,

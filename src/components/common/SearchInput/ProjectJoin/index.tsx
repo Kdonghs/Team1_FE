@@ -1,6 +1,6 @@
 import { Button } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState } from "react";
 
 const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -17,7 +17,7 @@ interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 const mockJoinProject = async (email: string): Promise<JoinResponse> => {
-  console.log('Sending invitation to:', email);
+  console.log("Sending invitation to:", email);
   return { projectId: 1, guestId: 1 };
 };
 
@@ -28,22 +28,25 @@ export const EmailInput: React.FC<SearchInputProps> = ({
   const [email, setEmail] = useState("");
   const [isValid, setIsValid] = useState(false);
 
-  const handleEmailChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const newEmail = e.target.value;
-    setEmail(newEmail);
-    setIsValid(validateEmail(newEmail));
-  }, []);
+  const handleEmailChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const newEmail = e.target.value;
+      setEmail(newEmail);
+      setIsValid(validateEmail(newEmail));
+    },
+    [],
+  );
 
   const handleJoin = useCallback(async () => {
     if (!isValid) return;
 
-    console.log('Attempting to send invitation to:', email);
+    console.log("Attempting to send invitation to:", email);
     try {
       const response = await mockJoinProject(email);
-      console.log('Invitation sent successfully:', response);
+      console.log("Invitation sent successfully:", response);
       onJoinSuccess?.(response.projectId, response.guestId);
     } catch (error) {
-      console.error('Failed to send invitation:', error);
+      console.error("Failed to send invitation:", error);
     }
   }, [email, isValid, onJoinSuccess]);
 
@@ -64,15 +67,15 @@ export const EmailInput: React.FC<SearchInputProps> = ({
         bg={isValid ? "#7B7FF6" : "#E2E8F0"}
         color="white"
         _hover={{
-          bg: isValid ? "#6972F0" : "#E2E8F0"
+          bg: isValid ? "#6972F0" : "#E2E8F0",
         }}
         _active={{
-          bg: isValid ? "#5A63E6" : "#E2E8F0"
+          bg: isValid ? "#5A63E6" : "#E2E8F0",
         }}
         _disabled={{
           bg: "#E2E8F0",
           cursor: "not-allowed",
-          opacity: 1
+          opacity: 1,
         }}
         borderRadius="8px"
       >
@@ -100,7 +103,7 @@ const StyledInput = styled.input`
     box-shadow: outline;
   }
   &::placeholder {
-    color: #A0AEC0;
+    color: #a0aec0;
   }
 `;
 
