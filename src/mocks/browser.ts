@@ -11,5 +11,5 @@ export const worker = setupWorker(
   ...projectMockHandler,
   ...userMockHandler,
   ...memberMockHandler,
-  ...inviteCodeMockHandler
+  ...inviteCodeMockHandler,
 );

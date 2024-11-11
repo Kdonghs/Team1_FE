@@ -115,7 +115,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
   });
 
   const preventEnterKeySubmission = (
-    e: React.KeyboardEvent<HTMLFormElement>
+    e: React.KeyboardEvent<HTMLFormElement>,
   ) => {
     const target = e.target as HTMLFormElement;
     if (e.key === "Enter" && !["TEXTAREA"].includes(target.tagName)) {
@@ -183,7 +183,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
                 handleNextPage,
                 handlePreviousPage,
                 onSubmit,
-                isValid
+                isValid,
               )}
             </ModalFooter>
           </form>

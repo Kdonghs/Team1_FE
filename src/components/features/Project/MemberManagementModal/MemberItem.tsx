@@ -52,7 +52,7 @@ export const MemberItem = (member: MemberResponseDTO) => {
               isClosable: true,
             });
           },
-        }
+        },
       );
     } else {
       console.error("프로젝트 ID 또는 멤버 ID가 없습니다.");
