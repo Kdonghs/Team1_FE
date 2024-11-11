@@ -1,13 +1,14 @@
 import { Navigate, Outlet } from "react-router-dom";
 
 import { useAuth } from "../../provider/Auth";
-import { getDynamicPath } from "../path";
+import { RouterPath } from "../path";
 
 export const PrivateRoute = () => {
-  const authInfo = useAuth();
+  const { user } = useAuth();
+  const token = localStorage.getItem("token");
 
-  if (!authInfo) {
-    return <Navigate to={getDynamicPath.login()} />;
+  if (!user || !token) {
+    return <Navigate to={RouterPath.root} />;
   }
 
   return <Outlet />;
