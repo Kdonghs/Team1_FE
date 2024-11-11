@@ -7,6 +7,7 @@ export const RouterPath = {
   projectKanban: "/projects/:id/kanban",
   memberDetails: "/members/:id",
   joinProject: "/join-project",
+  callback: "/auth/google/callback",
   notFound: "*",
 } as const;
 

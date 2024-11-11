@@ -59,8 +59,9 @@ export const memberMockHandler = [
     "https://seamlessup.com/api/project/:projectId/member",
     (_, res, ctx) => {
       return res(ctx.status(200), ctx.json(mockProjectMembers));
-    }
+    },
   ),
+
   rest.delete(
     "https://seamlessup.com/api/project/:projectId/member/:memberId",
     (req, res, ctx) => {
@@ -68,7 +69,8 @@ export const memberMockHandler = [
       const deleteMemberId = parseInt(memberId as string, 10);
 
       if (mockProjectMembers.resultData) {
-        const updatedMembers = mockProjectMembers.resultData.filter(
+
+        mockProjectMembers.resultData = mockProjectMembers.resultData.filter(
           (member) => member.id !== deleteMemberId
         );
 
@@ -76,14 +78,55 @@ export const memberMockHandler = [
           ctx.status(200),
           ctx.json({
             message: `프로젝트 ${projectId}번의 ${deleteMemberId}번 멤버 삭제 성공`,
-            updatedMembers,
+            updatedMembers: mockProjectMembers.resultData,
           })
         );
       }
 
       return res(
         ctx.status(404),
-        ctx.json({ message: "멤버 리스트를 찾을 수 없습니다." })
+        ctx.json({ message: "멤버 리스트를 찾을 수 없습니다." }),
+      );
+    },
+  ),
+
+  rest.put(
+    "https://seamlessup.com/api/project/:projectId/member/:memberId",
+    (req, res, ctx) => {
+      const { memberId } = req.params;
+      const { name, role, email } = req.body as {
+        name?: string;
+        role?: string;
+        email?: string;
+      };
+      const updateMemberId = parseInt(memberId as string, 10);
+
+      if (mockProjectMembers.resultData) {
+        const memberIndex = mockProjectMembers.resultData.findIndex(
+          (member) => member.id === updateMemberId
+        );
+
+        if (memberIndex !== -1) {
+          mockProjectMembers.resultData[memberIndex] = {
+            ...mockProjectMembers.resultData[memberIndex],
+            name: name || mockProjectMembers.resultData[memberIndex].name,
+            role: role || mockProjectMembers.resultData[memberIndex].role,
+            email: email || mockProjectMembers.resultData[memberIndex].email,
+          };
+
+          return res(
+            ctx.status(200),
+            ctx.json({
+              message: `멤버 ${updateMemberId}번 정보가 성공적으로 업데이트되었습니다.`,
+              updatedMember: mockProjectMembers.resultData[memberIndex],
+            })
+          );
+        }
+      }
+
+      return res(
+        ctx.status(404),
+        ctx.json({ message: "업데이트할 멤버를 찾을 수 없습니다." })
       );
     }
   ),

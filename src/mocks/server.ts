@@ -11,5 +11,5 @@ export const server = setupServer(
   ...projectMockHandler,
   ...userMockHandler,
   ...memberMockHandler,
-  ...inviteCodeMockHandler
+  ...inviteCodeMockHandler,
 );

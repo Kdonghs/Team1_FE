@@ -1,4 +1,5 @@
 import { Box, Stack, Text } from "@chakra-ui/react";
+import { useEffect, useRef } from "react";
 
 import type { MemberProgress } from "../../../../api/generated/data-contracts";
 import { useGetTeamProgress } from "../../../../api/hooks/useGetTeamProgress";
@@ -6,21 +7,56 @@ import { TeamMemberProgress } from "./TeamMemberProgress";
 
 export const ProgressTracker = ({
   projectId,
-  page = 0,
-  size = 5,
+  size = 10,
   sort = "string",
+  role = "",
 }: {
   projectId: number;
-  page?: number;
   size?: number;
   sort?: string;
+  role?: string;
 }) => {
-  // TODO: 페이지네이션 구현
-  const { data, isLoading } = useGetTeamProgress(projectId, page, size, sort);
+  const {
+    data,
+    isLoading,
+    isError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useGetTeamProgress(projectId, size, sort, role);
 
-  if (isLoading) return <Text>Loading...</Text>;
+  const loaderRef = useRef<HTMLDivElement | null>(null);
 
-  const teamProgressData: MemberProgress[] = data?.resultData || [];
+  useEffect(() => {
+    const currentLoader = loaderRef.current;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    if (currentLoader) {
+      observer.observe(currentLoader);
+    }
+
+    return () => {
+      if (currentLoader) {
+        observer.unobserve(currentLoader);
+      }
+    };
+  }, [fetchNextPage, hasNextPage]);
+
+  if (isLoading) return <Text>로딩 중...</Text>;
+  if (isError) return <Text>에러 발생</Text>;
+
+  const teamProgressData: MemberProgress[] =
+    data?.pages
+      .flatMap((page) => page.resultData)
+      .filter((item): item is MemberProgress => item !== undefined) || [];
 
   return (
     <Box
@@ -37,6 +73,13 @@ export const ProgressTracker = ({
             <TeamMemberProgress key={member.teamMember?.id} member={member} />
           ))}
         </Stack>
+      )}
+
+      <div ref={loaderRef} />
+      {isFetchingNextPage && (
+        <Text mt={4} textAlign="center">
+          Loading more...
+        </Text>
       )}
     </Box>
   );
