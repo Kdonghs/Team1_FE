@@ -10,7 +10,7 @@ export const ProjectKanbanPage = () => {
       <Container maxW="container.xl" padding={6}>
         <Stack spacing={6}>
           {/* <ProgressAccordion projectDetail={projectData} /> */}
-          <KanbanBoard />
+          <KanbanBoard projectId={1} />
         </Stack>
       </Container>
     </>

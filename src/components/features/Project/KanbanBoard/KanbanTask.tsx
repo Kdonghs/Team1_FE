@@ -7,40 +7,21 @@ import {
   Heading,
   Text,
 } from "@chakra-ui/react";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 
-import type { TaskPriority, TaskType } from "@/types/index";
+import type { TaskWithOwnerDetail } from "@/api/generated/data-contracts";
+import type { TaskPriority } from "@/types/index";
 
 interface TaskProps {
-  task: TaskType;
+  task: TaskWithOwnerDetail;
 }
 
 export const KanbanTask = ({ task }: TaskProps) => {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: task.id });
-
-  const style = {
-    transition,
-    transform: CSS.Transform.toString(transform),
-    touchAction: "none",
-  };
   return (
-    <Card
-      ref={setNodeRef}
-      {...attributes}
-      {...listeners}
-      style={style}
-      key={task.id}
-      size="sm"
-      mb={10}
-      borderRadius="30px"
-      p={2}
-    >
+    <Card key={task.id} size="sm" mb={10} borderRadius="30px" p={2}>
       <CardHeader pb={1}>
         <Flex direction="column" gap={2}>
           <Badge
-            bg={getPriorityBadgeColor(task.priority)}
+            bg={getPriorityBadgeColor(task.priority || "LOW")}
             p="1"
             maxW="65px"
             textAlign="center"
