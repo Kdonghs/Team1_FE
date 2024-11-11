@@ -11,6 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import { useGetProjectMembers } from "../../../../api/hooks/useGetProjectMembers";
@@ -19,12 +20,10 @@ import { InviteMember } from "./InviteMember";
 import { MemberItem } from "./MemberItem";
 
 export const MemberManagementModal = ({
-  page = 0,
   size = 5,
   sort = "string",
   role = "",
 }: {
-  page?: number;
   size?: number;
   sort?: string;
   role?: string;
@@ -42,7 +41,22 @@ export const MemberManagementModal = ({
     data: membersData,
     error: membersError,
     isLoading: membersLoading,
-  } = useGetProjectMembers(projectId, page, size, sort, role);
+    fetchNextPage,
+    hasNextPage,
+  } = useGetProjectMembers(projectId, size, sort, role);
+
+  const [loadingMore, setLoadingMore] = useState(false);
+
+  const loadMoreMembers = () => {
+    if (hasNextPage && !loadingMore) {
+      setLoadingMore(true);
+      fetchNextPage();
+    }
+  };
+
+  useEffect(() => {
+    setLoadingMore(false);
+  }, [membersData]);
 
   if (membersLoading || inviteLoading) {
     return <div>Loading...</div>;
@@ -74,19 +88,50 @@ export const MemberManagementModal = ({
               <Heading as="h4" size="md">
                 팀원 편집
               </Heading>
-              {/* TODO: 페이지네이션으로 팀원 받아오기 구현 */}
-              <Flex flexDirection="column" width="100%" gap={2}>
-                {membersData?.resultData &&
-                Array.isArray(membersData.resultData) ? (
-                  membersData.resultData.map((member, index) =>
-                    member.id ? (
-                      <MemberItem key={`${member.id}-${index}`} {...member} />
-                    ) : null
-                  )
-                ) : (
+              <StyledFlex>
+                {membersData?.pages?.length === 0 ||
+                membersData?.pages?.every(
+                  (page) => page.resultData?.length === 0
+                ) ? (
                   <Text>팀원이 없습니다.</Text>
+                ) : (
+                  membersData?.pages?.map((page, pageIndex) => (
+                    <div key={pageIndex}>
+                      {page.resultData?.map((member, index) => {
+                        if (member.id) {
+                          return (
+                            <MemberItem
+                              key={`${member.id}-${index}`}
+                              {...member}
+                            />
+                          );
+                        }
+                        return null;
+                      })}
+                    </div>
+                  ))
                 )}
-              </Flex>
+
+                {loadingMore && <Text>Loading more...</Text>}
+
+                {hasNextPage && (
+                  <div
+                    ref={(ref) => {
+                      if (ref) {
+                        const observer = new IntersectionObserver(
+                          (entries) => {
+                            if (entries[0].isIntersecting) {
+                              loadMoreMembers();
+                            }
+                          },
+                          { threshold: 1.0 }
+                        );
+                        observer.observe(ref);
+                      }
+                    }}
+                  />
+                )}
+              </StyledFlex>
             </Flex>
           </VStack>
         </ModalBody>
@@ -101,4 +146,30 @@ const StyledModalContent = styled(ModalContent)`
   border-radius: 16.23px;
   padding: 0.5em;
   overflow: hidden;
+`;
+
+const StyledFlex = styled(Flex)`
+  flex-direction: column;
+  width: 100%;
+  gap: 2;
+  overflow-y: auto;
+  max-height: 320px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #cdd0ff;
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #95a4fc;
+  }
 `;
