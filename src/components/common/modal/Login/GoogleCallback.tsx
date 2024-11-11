@@ -1,27 +1,34 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { useAuth } from '../../../../provider/Auth';
+import { useAuth } from "../../../../provider/Auth";
 
 export const GoogleCallback = () => {
-  const navigate = useNavigate();
+  const location = useLocation();
   const { handleGoogleCallback } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const code = params.get('code');
+    const handleCallback = async () => {
+      try {
+        const searchParams = new URLSearchParams(location.search);
+        const code = searchParams.get("code");
 
-    if (code) {
-      handleGoogleCallback(code)
-        .then(() => {
-          navigate('/projectList');
-        })
-        .catch((err) => {
-          console.error('Error handling Google callback:', err);
-          navigate('/login');
-        });
-    }
-  }, [handleGoogleCallback, navigate]);
+        if (!code) {
+          console.error("No code found in URL");
+          navigate("/");
+          return;
+        }
 
-  return <div>로그인 처리중...</div>;
+        await handleGoogleCallback(code);
+      } catch (error) {
+        console.error("Error during callback handling:", error);
+        navigate("/");
+      }
+    };
+
+    handleCallback();
+  }, [location, handleGoogleCallback, navigate]);
+
+  return <div>Loading...</div>; // 로딩 상태를 보여줄 수 있음
 };

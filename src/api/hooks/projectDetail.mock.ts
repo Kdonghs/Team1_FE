@@ -43,8 +43,8 @@ export const projectMockHandler = [
             id: projectId,
             ...updatedData,
           },
-        })
+        }),
       );
-    }
+    },
   ),
 ];

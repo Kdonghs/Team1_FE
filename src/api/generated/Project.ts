@@ -82,7 +82,7 @@ export class Project<
   updateProject = (
     projectId: number,
     data: ProjectUpdate,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<UpdateProjectData, any>({
       path: `/api/project/${projectId}`,
@@ -122,7 +122,7 @@ export class Project<
   getMember = (
     projectId: number,
     memberId: number,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<GetMemberData, any>({
       path: `/api/project/${projectId}/member/${memberId}`,
@@ -144,7 +144,7 @@ export class Project<
     projectId: number,
     memberId: number,
     data: UpdateMember,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<UpdateMemberData, any>({
       path: `/api/project/${projectId}/member/${memberId}`,
@@ -167,7 +167,7 @@ export class Project<
   deleteMember = (
     projectId: number,
     memberId: number,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<DeleteMemberData, any>({
       path: `/api/project/${projectId}/member/${memberId}`,
@@ -241,7 +241,7 @@ export class Project<
   updateOption = (
     optionId: number,
     data: OptionUpdate,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<UpdateOptionData, any>({
       path: `/api/project/option/${optionId}`,
@@ -282,7 +282,7 @@ export class Project<
     query: {
       param: GetList;
     },
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<GetProjectListData, any>({
       path: `/api/project`,
@@ -329,7 +329,7 @@ export class Project<
       owner?: string;
       param: GetList;
     },
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<GetTaskListData, any>({
       path: `/api/project/${projectId}/task`,
@@ -351,7 +351,7 @@ export class Project<
   createTask = (
     projectId: number,
     data: TaskCreate,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<CreateTaskData, any>({
       path: `/api/project/${projectId}/task`,
@@ -376,7 +376,7 @@ export class Project<
     query: {
       memberListRequestDTO: GetMemberList;
     },
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<GetMemberListData, any>({
       path: `/api/project/${projectId}/member`,
@@ -398,7 +398,7 @@ export class Project<
   createMember = (
     projectId: string,
     data: CreateMember,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<CreateMemberData, any>({
       path: `/api/project/${projectId}/member`,
@@ -439,7 +439,7 @@ export class Project<
     query: {
       param: GetList;
     },
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<GetOptionListData, any>({
       path: `/api/project/option`,
@@ -479,7 +479,7 @@ export class Project<
    */
   inviteMemberToProject = (
     data: InviteRequestDTO,
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<InviteMemberToProjectData, any>({
       path: `/api/project/invite`,
@@ -504,7 +504,7 @@ export class Project<
     query: {
       param: GetList;
     },
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<GetMemberProgressData, any>({
       path: `/api/project/${projectId}/task/progress`,
@@ -528,7 +528,7 @@ export class Project<
     query: {
       param: GetList;
     },
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<GetProjectProgressData, any>({
       path: `/api/project/${projectId}/progress`,
@@ -568,7 +568,7 @@ export class Project<
     query: {
       param: GetList;
     },
-    params: RequestParams = {}
+    params: RequestParams = {},
   ) =>
     this.request<GetProjectDateData, any>({
       path: `/api/project/date`,

@@ -81,7 +81,7 @@ export const MemberManagementModal = ({
                   membersData.resultData.map((member, index) =>
                     member.id ? (
                       <MemberItem key={`${member.id}-${index}`} {...member} />
-                    ) : null
+                    ) : null,
                   )
                 ) : (
                   <Text>팀원이 없습니다.</Text>

@@ -35,8 +35,8 @@ export const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     try {
       await login();
     } catch (error) {
-      console.error('Google login error:', error);
-      alert('로그인 중 오류가 발생했습니다.');
+      console.error("Google login error:", error);
+      alert("로그인 중 오류가 발생했습니다.");
     }
   };
 

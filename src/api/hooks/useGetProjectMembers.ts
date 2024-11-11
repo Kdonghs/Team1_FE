@@ -9,7 +9,7 @@ export const getProjectMembers = async (
   page: number,
   size: number,
   sort: string,
-  role?: string
+  role?: string,
 ): Promise<GetMemberListData> => {
   // TODO: any 어떻게해결하지..
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -34,7 +34,7 @@ export const useGetProjectMembers = (
   page: number,
   size: number,
   sort: string,
-  role?: string
+  role?: string,
 ) =>
   useQuery<GetMemberListData, Error>({
     queryKey: ["projectMembers", projectId, page, size, sort, role],

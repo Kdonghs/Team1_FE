@@ -9,7 +9,11 @@
  * ---------------------------------------------------------------
  */
 
-import { MemberCodeCreate1Data, MemberCodeDecodeData, MemberCodeJoinData } from "./data-contracts";
+import {
+  MemberCodeCreate1Data,
+  MemberCodeDecodeData,
+  MemberCodeJoinData,
+} from "./data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
 export class Auth<
