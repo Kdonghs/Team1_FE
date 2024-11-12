@@ -37,6 +37,7 @@ interface TaskModalProps {
   isOpen: boolean;
   onUpdateTask?: (updatedTask: TaskWithOwnerDetail) => void;
   onAddTask?: (newTask: TaskWithOwnerDetail) => void;
+  taskStatus?: TaskStatus;
 }
 
 export const TaskModal = ({
@@ -45,6 +46,7 @@ export const TaskModal = ({
   initialData,
   onClose,
   isOpen,
+  taskStatus,
 }: TaskModalProps) => {
   const { mutate: createTask } = usePostProjectTask(projectId);
   const { mutate: updateTask } = useUpdateProjectTask(taskId);
@@ -64,7 +66,7 @@ export const TaskModal = ({
       endDate:
         initialData?.endDate ||
         dayjs().add(7, "day").startOf("day").format("YYYY-MM-DDTHH:mm"),
-      taskStatus: initialData?.status || "PENDING",
+      taskStatus: initialData?.status || taskStatus,
     },
   });
   const [previousStatus, setPreviousStatus] = useState<TaskStatus>(

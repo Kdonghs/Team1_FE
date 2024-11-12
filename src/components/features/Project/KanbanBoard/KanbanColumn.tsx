@@ -51,7 +51,7 @@ export const KanbanColumn = ({ column, onDeleteTask }: ColumnProps) => {
             <KanbanTask key={task.id} task={task} onDeleteTask={onDeleteTask} />
           ))}
 
-          <AddTaskButton projectId={projectId} />
+          <AddTaskButton projectId={projectId} taskStatus={column.taskStatus} />
         </CardBody>
       </Flex>
     </Card>

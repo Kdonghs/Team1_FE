@@ -1,9 +1,17 @@
 import { AddIcon } from "@chakra-ui/icons";
 import { Flex, IconButton, useDisclosure } from "@chakra-ui/react";
 
+import type { TaskStatus } from "@/types";
+
 import { TaskModal } from "./modal/TaskModal";
 
-export const AddTaskButton = ({ projectId }: { projectId: number }) => {
+export const AddTaskButton = ({
+  projectId,
+  taskStatus,
+}: {
+  projectId: number;
+  taskStatus: TaskStatus;
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -21,7 +29,12 @@ export const AddTaskButton = ({ projectId }: { projectId: number }) => {
         />
       </Flex>
 
-      <TaskModal isOpen={isOpen} onClose={onClose} projectId={projectId} />
+      <TaskModal
+        isOpen={isOpen}
+        onClose={onClose}
+        projectId={projectId}
+        taskStatus={taskStatus}
+      />
     </>
   );
 };
