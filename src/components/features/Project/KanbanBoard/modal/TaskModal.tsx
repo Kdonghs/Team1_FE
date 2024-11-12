@@ -42,7 +42,6 @@ export const TaskModal = ({
   const { mutate: createTask } = usePostProjectTask(projectId);
   const { mutate: updateTask } = useUpdateProjectTask(taskId);
   const toast = useToast();
-
   const { control, handleSubmit, reset, watch } = useForm<TaskCreate>({
     defaultValues: {
       name: initialData?.name || "",
@@ -124,11 +123,12 @@ export const TaskModal = ({
         reset();
       }}
       isCentered
+      autoFocus={true}
     >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{taskId ? "태스크 수정" : "태스크 생성"}</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton autoFocus={true} />
         <form onSubmit={handleSubmit(onSubmit)}>
           <ModalBody>
             <Controller

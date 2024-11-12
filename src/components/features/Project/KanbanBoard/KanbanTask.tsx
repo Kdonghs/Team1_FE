@@ -29,6 +29,7 @@ import type {
 } from "@/api/generated/data-contracts";
 import type { TaskPriority } from "@/types/index";
 
+import { useDeleteProjectTask } from "../../../../api/hooks/useDeleteProjectTask";
 import { TaskModal } from "./modal/TaskModal";
 interface TaskProps {
   task: TaskWithOwnerDetail;
@@ -39,6 +40,14 @@ export const KanbanTask = ({ task }: TaskProps) => {
   const projectId = id ? parseInt(id, 10) : 0;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { mutate: deleteTaskMutate } = useDeleteProjectTask();
+
+  const handleDeleteTask = () => {
+    if (task.id) {
+      deleteTaskMutate({ taskId: task.id });
+    }
+  };
 
   const taskForModal: TaskUpdate = {
     name: task.name || "",
@@ -114,6 +123,7 @@ export const KanbanTask = ({ task }: TaskProps) => {
                   textAlign="center"
                   icon={<DeleteIcon />}
                   _hover={{ color: "red.500" }}
+                  onClick={handleDeleteTask}
                 >
                   태스크 삭제
                 </MenuItem>
