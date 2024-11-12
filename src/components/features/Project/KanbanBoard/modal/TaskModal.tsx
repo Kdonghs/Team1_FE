@@ -192,6 +192,13 @@ export const TaskModal = ({
                 />
               )}
             />
+            <Controller
+              name="description"
+              control={control}
+              render={({ field, fieldState: { invalid } }) => (
+                <TextField label="태스크 설명" {...field} isInvalid={invalid} />
+              )}
+            />
 
             <Controller
               name="ownerId"
