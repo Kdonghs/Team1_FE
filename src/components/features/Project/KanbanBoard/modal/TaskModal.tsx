@@ -43,22 +43,6 @@ export const TaskModal = ({
   const { mutate: updateTask } = useUpdateProjectTask(taskId);
   const toast = useToast();
 
-  // const { control, handleSubmit, reset, watch } = useForm<TaskCreate>({
-  //   defaultValues: {
-  //     name: task?.name || "",
-  //     description: task?.description || "",
-  //     ownerId: task?.ownerId || undefined,
-  //     priority: task?.priority || "LOW",
-  //     progress: task?.progress || 0,
-  //     startDate:
-  //       task?.startDate || dayjs().startOf("day").format("YYYY-MM-DDTHH:mm"),
-  //     endDate:
-  //       task?.endDate ||
-  //       dayjs().add(7, "day").startOf("day").format("YYYY-MM-DDTHH:mm"),
-  //     taskStatus: task?.taskStatus || "PENDING",
-  //   },
-  // });
-
   const { control, handleSubmit, reset, watch } = useForm<TaskCreate>({
     defaultValues: {
       name: initialData?.name || "",
@@ -79,30 +63,6 @@ export const TaskModal = ({
   const startDate = watch("startDate");
   const endDate = watch("endDate");
 
-  // const onSubmit = (data: TaskCreate) => {
-  //   mutate(data, {
-  //     onSuccess: () => {
-  //       toast({
-  //         title: "태스크 생성 성공",
-  //         description: "태스크가 성공적으로 생성되었습니다.",
-  //         status: "success",
-  //         duration: 3000,
-  //         isClosable: true,
-  //       });
-  //       onClose();
-  //       reset();
-  //     },
-  //     onError: () => {
-  //       toast({
-  //         title: "태스크 생성 실패",
-  //         description: "태스크 생성 중 오류가 발생했습니다.",
-  //         status: "error",
-  //         duration: 3000,
-  //         isClosable: true,
-  //       });
-  //     },
-  //   });
-  // };
   const onSubmit = (data: TaskCreate) => {
     if (taskId) {
       updateTask(
@@ -303,7 +263,7 @@ export const TaskModal = ({
 
           <ModalFooter>
             <Button mr={3} bg="#95A4FC" color="white" type="submit">
-              {taskId ? "태스크 수정" : "태스크 생성"}
+              {taskId ? "수정" : "생성"}
             </Button>
           </ModalFooter>
         </form>
