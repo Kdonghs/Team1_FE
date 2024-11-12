@@ -31,10 +31,6 @@ export const AddTaskButton = ({ projectId }: { projectId: number }) => {
 
   const toast = useToast();
 
-  const formatDateForInput = (dateString: string) => {
-    return dayjs(dateString).format("YYYY-MM-DDTHH:mm");
-  };
-
   const {
     control,
     handleSubmit,
@@ -48,11 +44,9 @@ export const AddTaskButton = ({ projectId }: { projectId: number }) => {
       ownerId: undefined,
       priority: "LOW",
       progress: 0,
-      startDate: formatDateForInput(new Date().toISOString()),
-      endDate: formatDateForInput(
-        new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000).toISOString()
-      ),
-      status: "PENDING",
+      startDate: dayjs().startOf("day").format("YYYY-MM-DDTHH:mm"),
+      endDate: dayjs().add(7, "day").startOf("day").format("YYYY-MM-DDTHH:mm"),
+      taskStatus: "PENDING",
     },
   });
 
@@ -231,7 +225,7 @@ export const AddTaskButton = ({ projectId }: { projectId: number }) => {
               />
 
               <Controller
-                name="status"
+                name="taskStatus"
                 control={control}
                 defaultValue="PENDING"
                 render={({ field }) => (
@@ -240,9 +234,9 @@ export const AddTaskButton = ({ projectId }: { projectId: number }) => {
                     value={field.value}
                     onChange={field.onChange}
                     options={[
-                      { label: "낮음", value: "PENDING" },
-                      { label: "보통", value: "IN_PROGRESS" },
-                      { label: "높음", value: "COMPLETE" },
+                      { label: "시작 전", value: "PENDING" },
+                      { label: "진행 중", value: "IN_PROGRESS" },
+                      { label: "완료", value: "COMPLETED" },
                     ]}
                   />
                 )}

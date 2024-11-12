@@ -244,6 +244,7 @@ export interface TaskCreate {
   /** @format date-time */
   endDate: string;
   status?: "PENDING" | "IN_PROGRESS" | "COMPLETED";
+  taskStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED";
 }
 
 export interface CreateMember {

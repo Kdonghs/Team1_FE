@@ -9,7 +9,7 @@ import { KanbanColumn } from "./KanbanColumn";
 
 interface Column {
   id: string;
-  status: TaskStatus;
+  taskStatus: TaskStatus;
   tasks: TaskWithOwnerDetail[];
 }
 
@@ -52,17 +52,17 @@ export const KanbanBoard = ({
     return [
       {
         id: "pending",
-        status: "PENDING",
+        taskStatus: "PENDING",
         tasks: tasks.filter((task) => task.status === "PENDING"),
       },
       {
         id: "in-progress",
-        status: "IN_PROGRESS",
+        taskStatus: "IN_PROGRESS",
         tasks: tasks.filter((task) => task.status === "IN_PROGRESS"),
       },
       {
         id: "completed",
-        status: "COMPLETED",
+        taskStatus: "COMPLETED",
         tasks: tasks.filter((task) => task.status === "COMPLETED"),
       },
     ];

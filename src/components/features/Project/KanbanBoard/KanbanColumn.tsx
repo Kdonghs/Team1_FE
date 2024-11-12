@@ -3,6 +3,7 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { useParams } from "react-router-dom";
 
 import type { TaskWithOwnerDetail } from "@/api/generated/data-contracts";
 import type { TaskStatus } from "@/types/index";
@@ -13,17 +14,20 @@ import { AddTaskButton } from "./NewTaskButton";
 interface ColumnProps {
   column: {
     id: string;
-    status: TaskStatus;
+    taskStatus: TaskStatus;
     tasks: (TaskWithOwnerDetail & { id?: number })[];
   };
   onTaskAdded: (task: TaskWithOwnerDetail) => void;
 }
 
-const getStatusBadgeColor = (status: TaskStatus): string => {
-  return statusBadgeColor[status] || "#D9D9D9";
+const getStatusBadgeColor = (taskStatus: TaskStatus): string => {
+  return statusBadgeColor[taskStatus] || "#D9D9D9";
 };
 
 export const KanbanColumn = ({ column }: ColumnProps) => {
+  const { id } = useParams<{ id: string }>();
+  const projectId = id ? parseInt(id, 10) : 0;
+
   const filteredTasks = column.tasks.filter(
     (task): task is TaskWithOwnerDetail & { id: number } =>
       task.id !== undefined
@@ -35,14 +39,14 @@ export const KanbanColumn = ({ column }: ColumnProps) => {
         <CardHeader>
           <Flex>
             <Badge
-              bg={getStatusBadgeColor(column.status)}
+              bg={getStatusBadgeColor(column.taskStatus)}
               p="1"
               width="90px"
               textAlign="center"
               borderRadius="10px"
               fontSize="16px"
             >
-              {statusLabels[column.status]}
+              {statusLabels[column.taskStatus]}
             </Badge>
           </Flex>
         </CardHeader>
@@ -56,7 +60,7 @@ export const KanbanColumn = ({ column }: ColumnProps) => {
             ))}
           </SortableContext>
 
-          <AddTaskButton projectId={2} />
+          <AddTaskButton projectId={projectId} />
         </CardBody>
       </Flex>
     </Card>
