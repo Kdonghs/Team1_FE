@@ -1,12 +1,4 @@
-import { AddIcon } from "@chakra-ui/icons";
-import {
-  Badge,
-  Card,
-  CardBody,
-  CardHeader,
-  Flex,
-  IconButton,
-} from "@chakra-ui/react";
+import { Badge, Card, CardBody, CardHeader, Flex } from "@chakra-ui/react";
 import {
   SortableContext,
   verticalListSortingStrategy,
@@ -16,6 +8,7 @@ import type { TaskWithOwnerDetail } from "@/api/generated/data-contracts";
 import type { TaskStatus } from "@/types/index";
 
 import { KanbanTask } from "./KanbanTask";
+import { AddTaskButton } from "./NewTaskButton";
 
 interface ColumnProps {
   column: {
@@ -23,6 +16,7 @@ interface ColumnProps {
     status: TaskStatus;
     tasks: (TaskWithOwnerDetail & { id?: number })[];
   };
+  onTaskAdded: (task: TaskWithOwnerDetail) => void;
 }
 
 const getStatusBadgeColor = (status: TaskStatus): string => {
@@ -54,7 +48,7 @@ export const KanbanColumn = ({ column }: ColumnProps) => {
         </CardHeader>
         <CardBody>
           <SortableContext
-            items={filteredTasks.map((task) => task.id)} // id는 이제 확실히 존재하므로 단언이 필요 없음
+            items={filteredTasks.map((task) => task.id)}
             strategy={verticalListSortingStrategy}
           >
             {filteredTasks.map((task) => (
@@ -62,17 +56,7 @@ export const KanbanColumn = ({ column }: ColumnProps) => {
             ))}
           </SortableContext>
 
-          <Flex justifyContent="center">
-            <IconButton
-              isRound={true}
-              variant="solid"
-              aria-label="AddTask"
-              fontSize="20px"
-              icon={<AddIcon />}
-              bg="transparent"
-              color="#727272"
-            />
-          </Flex>
+          <AddTaskButton projectId={2} />
         </CardBody>
       </Flex>
     </Card>

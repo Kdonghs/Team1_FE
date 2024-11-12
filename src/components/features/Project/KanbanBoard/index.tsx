@@ -44,6 +44,10 @@ export const KanbanBoard = ({
     }
   }, [data]);
 
+  const handleTaskAdded = (newTask: TaskWithOwnerDetail) => {
+    setTasks((prevTasks) => [...prevTasks, newTask]);
+  };
+
   const getColumns: Column[] = useMemo(() => {
     return [
       {
@@ -75,7 +79,7 @@ export const KanbanBoard = ({
     >
       <SimpleGrid columns={3} spacing={4} width="100%" p={4}>
         {getColumns.map((column) => (
-          <KanbanColumn key={column.id} column={column} />
+          <KanbanColumn column={column} onTaskAdded={handleTaskAdded} />
         ))}
       </SimpleGrid>
     </Flex>
