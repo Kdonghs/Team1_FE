@@ -1,29 +1,31 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
+import qs from "qs";
 
 import { getTestToken } from "../../components/features/Project/TokenTest";
-import type { GetMemberListData } from "../generated/data-contracts";
+import type {
+  GetList,
+  GetMemberList,
+  GetMemberListData,
+} from "../generated/data-contracts";
 import { projectApi } from "../projectApi";
 
 export const getProjectMembers = async (
   projectId: number,
-  query: { page: number; size: number; sort: string },
-  role?: string
+  query: { param: GetList; memberListRequestDTO: GetMemberList }
 ): Promise<GetMemberListData> => {
-  // TODO: any 해결
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const queryParams: any = {
-    page: query.page,
-    size: query.size,
-    sort: query.sort,
-    role,
-  };
-
   const testToken = getTestToken();
-  const response = await projectApi.getMemberList(projectId, queryParams, {
-    headers: {
-      Authorization: `Bearer ${testToken}`,
-    },
-  });
+
+  const response = await projectApi.getMemberList(
+    projectId,
+    { memberListRequestDTO: query.memberListRequestDTO },
+    {
+      headers: {
+        Authorization: `Bearer ${testToken}`,
+      },
+      paramsSerializer: (params) =>
+        qs.stringify(params, { arrayFormat: "brackets" }),
+    }
+  );
 
   return response.data;
 };
@@ -32,16 +34,23 @@ export const useGetProjectMembers = (
   projectId: number,
   size: number,
   sort: string,
-  role?: string,
+  role?: string
 ) =>
   useInfiniteQuery<GetMemberListData, Error>({
     queryKey: ["projectMembers", projectId, size, sort, role],
     queryFn: ({ pageParam = 0 }) => {
-      return getProjectMembers(
-        projectId,
-        { page: Number(pageParam), size, sort },
-        role
-      );
+      const query = {
+        param: {
+          page: Number(pageParam),
+          size,
+          sort,
+        },
+        memberListRequestDTO: {
+          role: role || "",
+        } as GetMemberList,
+      };
+
+      return getProjectMembers(projectId, query);
     },
     getNextPageParam: (lastPage) => {
       if (lastPage.page !== undefined && lastPage.hasNext) {
