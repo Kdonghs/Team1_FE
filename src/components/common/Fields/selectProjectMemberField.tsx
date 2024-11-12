@@ -69,6 +69,7 @@ export const SelectProjectMemberField = ({
           onChange={(e) => onChange(parseInt(e.target.value, 10))}
           height="50px"
           color="#727272"
+          border="#E3E3E3 solid 1.3px"
         >
           <option value="">선택</option>
           {members.map((member: MemberResponseDTO) => (

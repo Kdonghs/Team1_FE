@@ -1,5 +1,6 @@
 import "dayjs/locale/ko";
 
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Badge,
@@ -8,32 +9,117 @@ import {
   CardHeader,
   Flex,
   Heading,
+  HStack,
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Spacer,
   Text,
+  useDisclosure,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
+import { EllipsisVertical } from "lucide-react";
+import { useParams } from "react-router-dom";
 
-import type { TaskWithOwnerDetail } from "@/api/generated/data-contracts";
+import type {
+  TaskUpdate,
+  TaskWithOwnerDetail,
+} from "@/api/generated/data-contracts";
 import type { TaskPriority } from "@/types/index";
+
+import { TaskModal } from "./modal/TaskModal";
 interface TaskProps {
   task: TaskWithOwnerDetail;
 }
 
 export const KanbanTask = ({ task }: TaskProps) => {
+  const { id } = useParams<{ id: string }>();
+  const projectId = id ? parseInt(id, 10) : 0;
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const taskForModal: TaskUpdate = {
+    name: task.name || "",
+    description: task.description,
+    ownerId: task.owner?.id || undefined,
+    priority: task.priority || "LOW",
+    progress: task.progress || 0,
+    startDate:
+      task.startDate || dayjs().startOf("day").format("YYYY-MM-DDTHH:mm"),
+    endDate:
+      task.endDate ||
+      dayjs().add(7, "day").startOf("day").format("YYYY-MM-DDTHH:mm"),
+    status: task.status || "PENDING",
+  };
+
   return (
-    <Card key={task.id} size="sm" mb={10} borderRadius="30px" p={2}>
+    <Card
+      key={task.id}
+      size="sm"
+      mb={10}
+      borderRadius="30px"
+      p={2}
+      _hover={{ ".menu-icon": { visibility: "visible" } }}
+    >
       <CardHeader pb={1}>
         <Flex direction="column" gap={2}>
-          <Badge
-            bg={getPriorityBadgeColor(task.priority || "LOW")}
-            p="1"
-            maxW="65px"
-            textAlign="center"
-            borderRadius="20px"
-            fontSize="11px"
-          >
-            {task.priority}
-          </Badge>
+          <HStack justifyContent={"space-between"}>
+            <Badge
+              bg={getPriorityBadgeColor(task.priority || "LOW")}
+              p="1"
+              maxW="65px"
+              textAlign="center"
+              borderRadius="20px"
+              fontSize="11px"
+            >
+              {task.priority}
+            </Badge>
+            <Menu>
+              <MenuButton
+                as={IconButton}
+                className="menu-icon"
+                bgColor="transparent"
+                aria-label="More member options"
+                icon={<EllipsisVertical color="#5A5A5A" />}
+                size="sm"
+                m={1}
+                visibility="hidden"
+              />
+              <MenuList
+                minW="120px"
+                boxShadow="md"
+                border="1px solid"
+                borderColor="gray.100"
+                zIndex={10}
+              >
+                <MenuItem
+                  textAlign="center"
+                  onClick={onOpen}
+                  icon={<EditIcon />}
+                >
+                  태스크 수정
+                </MenuItem>
+
+                <TaskModal
+                  isOpen={isOpen}
+                  onClose={onClose}
+                  projectId={projectId}
+                  taskId={task.id}
+                  initialData={taskForModal}
+                />
+
+                <MenuItem
+                  textAlign="center"
+                  icon={<DeleteIcon />}
+                  _hover={{ color: "red.500" }}
+                >
+                  태스크 삭제
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </HStack>
           <Heading size="15px">{task.name}</Heading>
         </Flex>
       </CardHeader>
