@@ -1,8 +1,4 @@
 import { Badge, Card, CardBody, CardHeader, Flex } from "@chakra-ui/react";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
 import { useParams } from "react-router-dom";
 
 import type { TaskWithOwnerDetail } from "@/api/generated/data-contracts";
@@ -17,14 +13,14 @@ interface ColumnProps {
     taskStatus: TaskStatus;
     tasks: (TaskWithOwnerDetail & { id?: number })[];
   };
-  onTaskAdded: (task: TaskWithOwnerDetail) => void;
+  onDeleteTask: (taskId: number, taskStatus: TaskStatus) => void;
 }
 
 const getStatusBadgeColor = (taskStatus: TaskStatus): string => {
   return statusBadgeColor[taskStatus] || "#D9D9D9";
 };
 
-export const KanbanColumn = ({ column }: ColumnProps) => {
+export const KanbanColumn = ({ column, onDeleteTask }: ColumnProps) => {
   const { id } = useParams<{ id: string }>();
   const projectId = id ? parseInt(id, 10) : 0;
 
@@ -51,14 +47,9 @@ export const KanbanColumn = ({ column }: ColumnProps) => {
           </Flex>
         </CardHeader>
         <CardBody>
-          <SortableContext
-            items={filteredTasks.map((task) => task.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            {filteredTasks.map((task) => (
-              <KanbanTask key={task.id} task={task} />
-            ))}
-          </SortableContext>
+          {filteredTasks.map((task) => (
+            <KanbanTask key={task.id} task={task} onDeleteTask={onDeleteTask} />
+          ))}
 
           <AddTaskButton projectId={projectId} />
         </CardBody>

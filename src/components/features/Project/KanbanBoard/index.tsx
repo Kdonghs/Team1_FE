@@ -1,5 +1,5 @@
 import { Flex, SimpleGrid } from "@chakra-ui/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 import type { TaskStatus } from "@/types";
 
@@ -16,9 +16,7 @@ interface Column {
 export const KanbanBoard = ({
   projectId = 1,
   size = 0,
-  sort = "string",
-  priority,
-  owner,
+  sort = "",
 }: {
   projectId: number;
   page?: number;
@@ -28,47 +26,79 @@ export const KanbanBoard = ({
   priority?: string;
   owner?: string;
 }) => {
-  const { data } = useGetProjectTaskList(
+  const { data: pendingData } = useGetProjectTaskList(
     projectId,
     size,
     sort,
-    priority,
-    owner
+    "PENDING"
+  );
+  const { data: inProgressData } = useGetProjectTaskList(
+    projectId,
+    size,
+    sort,
+    "IN_PROGRESS"
+  );
+  const { data: completedData } = useGetProjectTaskList(
+    projectId,
+    size,
+    sort,
+    "COMPLETED"
   );
 
-  const [tasks, setTasks] = useState<TaskWithOwnerDetail[]>([]);
+  const [pendingTasks, setPendingTasks] = useState<TaskWithOwnerDetail[]>([]);
+  const [inProgressTasks, setInProgressTasks] = useState<TaskWithOwnerDetail[]>(
+    []
+  );
+  const [completedTasks, setCompletedTasks] = useState<TaskWithOwnerDetail[]>(
+    []
+  );
 
   useEffect(() => {
-    if (data && data.pages[0].resultData) {
-      setTasks(data.pages[0].resultData);
+    if (pendingData && pendingData.pages[0].resultData) {
+      setPendingTasks(pendingData.pages[0].resultData);
     }
-  }, [data]);
+  }, [pendingData]);
 
-  const handleTaskAdded = (newTask: TaskWithOwnerDetail) => {
-    setTasks((prevTasks) => [...prevTasks, newTask]);
+  useEffect(() => {
+    if (inProgressData && inProgressData.pages[0].resultData) {
+      setInProgressTasks(inProgressData.pages[0].resultData);
+    }
+  }, [inProgressData]);
+
+  useEffect(() => {
+    if (completedData && completedData.pages[0].resultData) {
+      setCompletedTasks(completedData.pages[0].resultData);
+    }
+  }, [completedData]);
+
+  const removeTaskFromColumn = (taskId: number, taskStatus: TaskStatus) => {
+    if (taskStatus === "PENDING") {
+      setPendingTasks((prev) => prev.filter((task) => task.id !== taskId));
+    } else if (taskStatus === "IN_PROGRESS") {
+      setInProgressTasks((prev) => prev.filter((task) => task.id !== taskId));
+    } else if (taskStatus === "COMPLETED") {
+      setCompletedTasks((prev) => prev.filter((task) => task.id !== taskId));
+    }
   };
 
-  const getColumns: Column[] = useMemo(() => {
-    return [
-      {
-        id: "pending",
-        taskStatus: "PENDING",
-        tasks: tasks.filter((task) => task.status === "PENDING"),
-      },
-      {
-        id: "in-progress",
-        taskStatus: "IN_PROGRESS",
-        tasks: tasks.filter((task) => task.status === "IN_PROGRESS"),
-      },
-      {
-        id: "completed",
-        taskStatus: "COMPLETED",
-        tasks: tasks.filter((task) => task.status === "COMPLETED"),
-      },
-    ];
-  }, [tasks]);
+  const getColumns: Column[] = [
+    {
+      id: "pending",
+      taskStatus: "PENDING",
+      tasks: pendingTasks,
+    },
+    {
+      id: "in-progress",
+      taskStatus: "IN_PROGRESS",
+      tasks: inProgressTasks,
+    },
+    {
+      id: "completed",
+      taskStatus: "COMPLETED",
+      tasks: completedTasks,
+    },
+  ];
 
-  console.log(getColumns);
   return (
     <Flex
       alignItems="center"
@@ -79,7 +109,7 @@ export const KanbanBoard = ({
     >
       <SimpleGrid columns={3} spacing={4} width="100%" p={4}>
         {getColumns.map((column) => (
-          <KanbanColumn column={column} onTaskAdded={handleTaskAdded} />
+          <KanbanColumn column={column} onDeleteTask={removeTaskFromColumn} />
         ))}
       </SimpleGrid>
     </Flex>

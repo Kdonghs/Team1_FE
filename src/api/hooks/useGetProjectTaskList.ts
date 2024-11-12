@@ -39,7 +39,7 @@ export const useGetProjectTaskList = (
   owner?: string
 ) =>
   useInfiniteQuery<GetTaskListData, Error>({
-    queryKey: ["taskList", projectId, size, sort, status, priority, owner],
+    queryKey: ["taskList", projectId, status, priority, owner],
     queryFn: ({ pageParam = 0 }) => {
       return getProjectTaskList(
         projectId,

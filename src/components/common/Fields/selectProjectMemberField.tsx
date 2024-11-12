@@ -74,7 +74,7 @@ export const SelectProjectMemberField = ({
           <option value="">선택</option>
           {members.map((member: MemberResponseDTO) => (
             <option key={member.id} value={member.id}>
-              {member.id} - {member.name}
+              {member.name}
             </option>
           ))}
         </Select>

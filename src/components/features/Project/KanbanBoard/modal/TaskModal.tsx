@@ -9,12 +9,17 @@ import {
   ModalOverlay,
   useToast,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+
+import type { TaskStatus } from "@/types";
 
 import type {
   TaskCreate,
   TaskUpdate,
+  TaskWithOwnerDetail,
 } from "../../../../../api/generated/data-contracts";
 import { usePostProjectTask } from "../../../../../api/hooks/usePostProjectTask";
 import { useUpdateProjectTask } from "../../../../../api/hooks/useUpdateProjectTask";
@@ -30,6 +35,8 @@ interface TaskModalProps {
   initialData?: TaskUpdate;
   onClose: () => void;
   isOpen: boolean;
+  onUpdateTask?: (updatedTask: TaskWithOwnerDetail) => void;
+  onAddTask?: (newTask: TaskWithOwnerDetail) => void;
 }
 
 export const TaskModal = ({
@@ -41,6 +48,8 @@ export const TaskModal = ({
 }: TaskModalProps) => {
   const { mutate: createTask } = usePostProjectTask(projectId);
   const { mutate: updateTask } = useUpdateProjectTask(taskId);
+  const queryClient = useQueryClient();
+
   const toast = useToast();
   const { control, handleSubmit, reset, watch } = useForm<TaskCreate>({
     defaultValues: {
@@ -58,11 +67,14 @@ export const TaskModal = ({
       taskStatus: initialData?.status || "PENDING",
     },
   });
+  const [previousStatus, setPreviousStatus] = useState<TaskStatus>(
+    initialData?.status || "PENDING"
+  );
 
   const startDate = watch("startDate");
   const endDate = watch("endDate");
 
-  const onSubmit = (data: TaskCreate) => {
+  const handleUpdateTask = (data: TaskCreate, prevStatus: TaskStatus) => {
     if (taskId) {
       updateTask(
         { ...data },
@@ -75,6 +87,17 @@ export const TaskModal = ({
               duration: 3000,
               isClosable: true,
             });
+
+            const updatedStatus = data.taskStatus;
+
+            const statusesToRefetch: TaskStatus[] = [prevStatus, updatedStatus];
+
+            statusesToRefetch.forEach((status) => {
+              queryClient.refetchQueries({
+                queryKey: ["taskList", projectId, status],
+              });
+            });
+
             onClose();
             reset();
           },
@@ -89,32 +112,53 @@ export const TaskModal = ({
           },
         }
       );
-    } else {
-      createTask(data, {
-        onSuccess: () => {
-          toast({
-            title: "태스크 생성 성공",
-            description: "태스크가 성공적으로 생성되었습니다.",
-            status: "success",
-            duration: 3000,
-            isClosable: true,
-          });
-          onClose();
-          reset();
-        },
-        onError: () => {
-          toast({
-            title: "생성 실패",
-            description: "태스크 생성 중 오류가 발생했습니다.",
-            status: "error",
-            duration: 3000,
-            isClosable: true,
-          });
-        },
-      });
     }
-    reset();
   };
+
+  const handleCreateTask = (data: TaskCreate) => {
+    createTask(data, {
+      onSuccess: () => {
+        toast({
+          title: "태스크 생성 성공",
+          description: "태스크가 성공적으로 생성되었습니다.",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+
+        queryClient.refetchQueries({
+          queryKey: ["taskList", projectId, data.taskStatus],
+        });
+
+        onClose();
+        reset();
+      },
+      onError: () => {
+        toast({
+          title: "생성 실패",
+          description: "태스크 생성 중 오류가 발생했습니다.",
+          status: "error",
+          duration: 3000,
+          isClosable: true,
+        });
+      },
+    });
+  };
+
+  const onSubmit = (data: TaskCreate) => {
+    if (taskId) {
+      handleUpdateTask(data, previousStatus);
+    } else {
+      handleCreateTask(data);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen && initialData?.status) {
+      setPreviousStatus(initialData.status);
+    }
+  }, [isOpen, initialData?.status]);
+
   return (
     <Modal
       isOpen={isOpen}

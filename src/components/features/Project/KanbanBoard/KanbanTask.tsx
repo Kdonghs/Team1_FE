@@ -18,6 +18,7 @@ import {
   Spacer,
   Text,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { EllipsisVertical } from "lucide-react";
@@ -27,25 +28,50 @@ import type {
   TaskUpdate,
   TaskWithOwnerDetail,
 } from "@/api/generated/data-contracts";
-import type { TaskPriority } from "@/types/index";
+import type { TaskPriority, TaskStatus } from "@/types/index";
 
 import { useDeleteProjectTask } from "../../../../api/hooks/useDeleteProjectTask";
 import { TaskModal } from "./modal/TaskModal";
 interface TaskProps {
   task: TaskWithOwnerDetail;
+  onDeleteTask: (taskId: number, taskStatus: TaskStatus) => void;
 }
 
-export const KanbanTask = ({ task }: TaskProps) => {
+export const KanbanTask = ({ task, onDeleteTask }: TaskProps) => {
   const { id } = useParams<{ id: string }>();
   const projectId = id ? parseInt(id, 10) : 0;
-
+  const toast = useToast();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { mutate: deleteTaskMutate } = useDeleteProjectTask();
 
   const handleDeleteTask = () => {
-    if (task.id) {
-      deleteTaskMutate({ taskId: task.id });
+    if (task.id !== undefined) {
+      deleteTaskMutate(
+        { taskId: task.id },
+        {
+          onSuccess: () => {
+            onDeleteTask(task.id as number, task.status as TaskStatus);
+
+            toast({
+              title: "태스크 삭제 성공",
+              description: "태스크가 성공적으로 삭제되었습니다.",
+              status: "success",
+              duration: 3000,
+              isClosable: true,
+            });
+          },
+          onError: (error) => {
+            toast({
+              title: "태스크 삭제 실패",
+              description: `태스크 삭제 중 오류가 발생했습니다: ${error.message}`,
+              status: "error",
+              duration: 3000,
+              isClosable: true,
+            });
+          },
+        }
+      );
     }
   };
 
@@ -118,7 +144,6 @@ export const KanbanTask = ({ task }: TaskProps) => {
                   taskId={task.id}
                   initialData={taskForModal}
                 />
-
                 <MenuItem
                   textAlign="center"
                   icon={<DeleteIcon />}
