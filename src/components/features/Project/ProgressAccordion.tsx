@@ -8,12 +8,40 @@ import {
   Flex,
   Progress,
   Text,
+  useToast,
 } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 import type { ProjectDetail } from "@/api/generated/data-contracts";
 
 export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
   const { projectDetail } = props;
+  const [confettiVisible, setConfettiVisible] = useState(false);
+  const toast = useToast();
+  const progress = 10;
+
+  useEffect(() => {
+    if (progress >= 50 && projectDetail?.optionIds?.includes(3)) {
+      if (!localStorage.getItem("celebration")) {
+        setConfettiVisible(true);
+        localStorage.setItem("celebration", "true");
+
+        setTimeout(() => {
+          setConfettiVisible(false);
+        }, 10000);
+
+        toast({
+          title: `축하합니다!`,
+          description:
+            "프로젝트 진행률이 50%를 넘었습니다! 지금 이 순간을 놓치지 마시고, 계속해서 힘차게 나아가세요!",
+          duration: 8000,
+          position: "bottom-right",
+          isClosable: true,
+        });
+      }
+    }
+  }, [progress, projectDetail, toast]);
 
   return (
     <Flex
@@ -33,7 +61,7 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
               </Text>
             </Box>
             <Progress
-              value={60}
+              value={progress}
               size="lg"
               colorScheme="gray"
               width="80%"
@@ -46,6 +74,15 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
           <AccordionPanel pb={4}>{projectDetail.name} 관련 내용</AccordionPanel>
         </AccordionItem>
       </Accordion>
+      {confettiVisible && (
+        <>
+          <Fireworks
+            width={window.innerWidth}
+            height={window.innerHeight}
+            autorun={{ speed: 1 }}
+          />
+        </>
+      )}
     </Flex>
   );
 };
