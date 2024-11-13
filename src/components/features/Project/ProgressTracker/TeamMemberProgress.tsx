@@ -40,8 +40,12 @@ export const TeamMemberProgress = ({ member }: { member: MemberProgress }) => {
     >
       <TeamMemberProfile teamMember={teamMember} />
       <Tooltip
-        label={`${activeTasks[0]?.name ? `${activeTasks[0]?.name}${activeTasks.length > 1 ? ` 외 ${activeTasks.length - 1}건 진행 중` : " 진행 중"}` : "진행 중인 태스크 없음"}`}
-        placement="auto-start"
+        label={
+          activeTasks.length === 0
+            ? "진행 중인 태스크 없음"
+            : `${activeTasks[0]?.name}${activeTasks.length > 1 ? ` 외 ${activeTasks.length - 1}건` : ""}`
+        }
+        placement="top-start"
         aria-label="activeTask"
         offset={[tooltipX, 0]}
         borderRadius={5}

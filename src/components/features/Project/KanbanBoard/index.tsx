@@ -1,6 +1,6 @@
 import { Flex, Select, SimpleGrid, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import type { TaskStatus } from "@/types";
 
@@ -35,6 +35,7 @@ export const KanbanBoard = ({
     undefined
   );
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { data: pendingData } = useGetProjectTaskList(
     projectId,
@@ -68,6 +69,14 @@ export const KanbanBoard = ({
   const [completedTasks, setCompletedTasks] = useState<TaskWithOwnerDetail[]>(
     []
   );
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const ownerParam = queryParams.get("owner");
+    if (ownerParam) {
+      setSelectedOwner(ownerParam);
+    }
+  }, [location.search]);
 
   useEffect(() => {
     if (pendingData && pendingData.pages[0].resultData) {
@@ -136,7 +145,6 @@ export const KanbanBoard = ({
     },
   ];
 
-  //TODO: 정렬 기능 추가, 멤버별 필터링 기능 추가(주소에 쿼리스트링 넣어서?)
   return (
     <Flex
       justifyContent="space-between"
