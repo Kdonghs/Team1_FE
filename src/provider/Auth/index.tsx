@@ -1,4 +1,3 @@
-import axios from "axios";
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 
@@ -15,18 +14,14 @@ type AuthContextType = {
   user: User | null;
   login: () => void;
   logout: () => void;
-  handleGoogleCallback: (code: string) => Promise<void>;
+  handleGoogleCallback: (responseData: { errorCode: number; errorMessage: string; resultData: { token: string } }) => void;
 };
-
-const API_URL = process.env.REACT_APP_API_URL;
-const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   login: () => {},
   logout: () => {},
-  handleGoogleCallback: async () => {},
+  handleGoogleCallback: () => {},
 });
 
 export const useAuth = () => {
@@ -53,18 +48,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const token = localStorage.getItem("token");
       const storedUser = localStorage.getItem("user");
 
-      console.log("Checking auth - Token:", token);
-      console.log("Checking auth - Stored user:", storedUser);
-
       if (!token || !storedUser) {
-        console.log("No token or user found, clearing user state");
         setUser(null);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
       } else {
         try {
           const parsedUser = JSON.parse(storedUser);
-          console.log("Setting user from stored data:", parsedUser);
           setUser(parsedUser);
         } catch (error) {
           console.error("Error parsing stored user:", error);
@@ -78,63 +68,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     checkAuth();
   }, []);
 
-  useEffect(() => {
-    console.log("User state changed:", user);
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-    }
-  }, [user]);
-
   const login = () => {
-    console.log("Initiating Google login");
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&response_type=code&scope=email%20profile&redirect_uri=${encodeURIComponent(
-      REDIRECT_URI,
-    )}`;
+    const googleAuthUrl = `https://seamlessup.com/api/login`;
     window.location.href = googleAuthUrl;
   };
 
-  const handleGoogleCallback = async (code: string) => {
-    try {
-      console.log("Starting Google callback process with code:", code);
-      const response = await axios.post(`${API_URL}/api/v1/login/google`, {
-        code,
-      });
-      console.log("Received response from backend:", response.data);
+  const handleGoogleCallback = (responseData: { errorCode: number; errorMessage: string; resultData: { token: string } }) => {
+    if (responseData.errorCode === 200 && responseData.resultData?.token) {
+      // 토큰 저장
+      localStorage.setItem("token", responseData.resultData.token);
 
-      const { accessToken, userData } = response.data;
-
-      if (!accessToken || !userData) {
-        console.error("Missing token or user data in response");
-        throw new Error("Invalid response format");
-      }
-
-      localStorage.setItem("token", accessToken);
-      const newUser = {
-        id: userData.id,
-        name: userData.name,
-        email: userData.email,
-        picture: userData.picture,
+      // 임시 유저 데이터 설정 (실제 유저 정보는 나중에 API 호출로 가져올 수 있음)
+      const tempUser = {
+        id: "temp",
+        name: "User",
+        email: "user@example.com",
       };
+      setUser(tempUser);
+      localStorage.setItem("user", JSON.stringify(tempUser));
 
-      console.log("Setting user state to:", newUser);
-      setUser(newUser);
-      localStorage.setItem("user", JSON.stringify(newUser));
-
+      // 프로젝트 목록 페이지로 리다이렉트
       window.location.href = RouterPath.projectList;
-    } catch (error) {
-      console.error("Google login error:", error);
-      if (axios.isAxiosError(error)) {
-        console.error("Response data:", error.response?.data);
-      }
-      throw error;
+    } else {
+      console.error("Invalid response format or error in response");
+      window.location.href = RouterPath.root;
     }
   };
 
   const logout = () => {
-    console.log("Logging out");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);

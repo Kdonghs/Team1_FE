@@ -20,7 +20,7 @@ export const GoogleCallback = () => {
           return;
         }
 
-        await handleGoogleCallback(code);
+        // await handleGoogleCallback(code);
       } catch (error) {
         console.error("Error during callback handling:", error);
         navigate("/");
