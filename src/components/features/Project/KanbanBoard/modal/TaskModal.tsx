@@ -149,6 +149,7 @@ export const TaskModal = ({
 
   const onSubmit = (data: TaskCreate) => {
     if (taskId) {
+      if (data?.description == null) data.description = "";
       handleUpdateTask(data, previousStatus);
     } else {
       handleCreateTask(data);
@@ -156,10 +157,24 @@ export const TaskModal = ({
   };
 
   useEffect(() => {
-    if (isOpen && initialData?.status) {
-      setPreviousStatus(initialData.status);
+    if (isOpen) {
+      reset({
+        name: initialData?.name || "",
+        description: initialData?.description || "",
+        ownerId: initialData?.ownerId || undefined,
+        priority: initialData?.priority || "LOW",
+        progress: initialData?.progress || 0,
+        startDate:
+          initialData?.startDate ||
+          dayjs().startOf("day").format("YYYY-MM-DDTHH:mm"),
+        endDate:
+          initialData?.endDate ||
+          dayjs().add(7, "day").startOf("day").format("YYYY-MM-DDTHH:mm"),
+        taskStatus: initialData?.status || taskStatus,
+      });
+      setPreviousStatus(initialData?.status || "PENDING");
     }
-  }, [isOpen, initialData?.status]);
+  }, [isOpen, initialData, taskStatus, reset]);
 
   return (
     <Modal

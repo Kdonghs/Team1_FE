@@ -99,6 +99,7 @@ export const KanbanBoard = ({
     },
   ];
 
+  //TODO: 정렬 기능 추가, 멤버별 필터링 기능 추가(주소에 쿼리스트링 넣어서?)
   return (
     <Flex
       alignItems="center"
