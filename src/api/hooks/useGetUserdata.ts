@@ -2,14 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 
 import type { GetUserData } from "../../api/generated/data-contracts";
 import { userApi } from "../../api/userApi";
-import { getTestToken } from "../../components/features/Project/TokenTest";
+import { authSessionStorage } from "../../utils/storage";
 
 const getUserData = async (): Promise<GetUserData | null> => {
   try {
-    const testToken = getTestToken();
+    const token = authSessionStorage.get();
     const response = await userApi.getUser({
       headers: {
-        Authorization: `Bearer ${testToken}`,
+        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -20,7 +20,7 @@ const getUserData = async (): Promise<GetUserData | null> => {
     return response.data;
   } catch (error) {
     throw new Error(
-      error instanceof Error ? error.message : "Failed to fetch user data",
+      error instanceof Error ? error.message : "Failed to fetch user data"
     );
   }
 };

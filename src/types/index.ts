@@ -22,6 +22,15 @@ export type TeamMember = {
   imageURL: string;
 };
 
+export interface MemberCodeResponse {
+  errorCode: number;
+  errorMessage: string;
+  resultData: {
+    token: string;
+    projectId: string;
+  };
+}
+
 export type ActiveTask = {
   id: number;
   name: string;
