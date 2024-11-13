@@ -28,7 +28,7 @@ export const projectMockHandler = [
       ctx.status(200),
       ctx.json({
         resultData: projectData,
-      })
+      }),
     );
   }),
 

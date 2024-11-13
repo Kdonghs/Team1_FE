@@ -6,7 +6,7 @@ import { projectApi } from "../projectApi";
 
 export const getProjectMember = async (
   projectId: number,
-  memberId: number
+  memberId: number,
 ): Promise<SingleResultMemberResponseDTO> => {
   const testToken = getTestToken();
   const response = await projectApi.getMember(projectId, memberId, {

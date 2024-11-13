@@ -47,6 +47,10 @@ const router = createBrowserRouter([
         path: RouterPath.joinProject,
         element: <JoinProjectPage />,
       },
+      {
+        path: RouterPath.test,
+        element: <ProjectListPage />,
+      },
     ],
   },
   {

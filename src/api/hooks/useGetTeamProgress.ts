@@ -7,7 +7,7 @@ import { projectApi } from "../projectApi";
 export const getTeamProgress = async (
   projectId: number,
   query: { page: number; size: number; sort: string },
-  role?: string
+  role?: string,
 ): Promise<PageResultMemberProgress> => {
   //TODO: any 해결방법 찾기
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,7 +40,7 @@ export const useGetTeamProgress = (
       return getTeamProgress(
         projectId,
         { page: Number(pageParam), size, sort },
-        role
+        role,
       );
     },
     getNextPageParam: (lastPage) => {

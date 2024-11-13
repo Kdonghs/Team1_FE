@@ -8,6 +8,7 @@ export const RouterPath = {
   memberDetails: "/members/:id",
   joinProject: "/join-project",
   callback: "/api/auth/success",
+  test: "/test",
   notFound: "*",
 } as const;
 

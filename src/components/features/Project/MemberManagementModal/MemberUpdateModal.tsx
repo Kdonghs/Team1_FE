@@ -96,13 +96,13 @@ export const MemberUpdateModal = ({
               isClosable: true,
             });
           },
-        }
+        },
       );
     }
   };
 
   const preventEnterKeySubmission = (
-    e: React.KeyboardEvent<HTMLFormElement>
+    e: React.KeyboardEvent<HTMLFormElement>,
   ) => {
     const target = e.target as HTMLFormElement;
     if (e.key === "Enter" && !["TEXTAREA"].includes(target.tagName)) {

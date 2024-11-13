@@ -7,7 +7,7 @@ import { projectApi } from "../projectApi";
 export const getProjectMembers = async (
   projectId: number,
   query: { page: number; size: number; sort: string },
-  role?: string
+  role?: string,
 ): Promise<GetMemberListData> => {
   // TODO: any 해결
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -40,7 +40,7 @@ export const useGetProjectMembers = (
       return getProjectMembers(
         projectId,
         { page: Number(pageParam), size, sort },
-        role
+        role,
       );
     },
     getNextPageParam: (lastPage) => {

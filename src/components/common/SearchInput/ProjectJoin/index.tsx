@@ -32,34 +32,38 @@ interface FormValidity {
   email: boolean;
   name: boolean;
 }
-const inviteToProject = async (projectId: number, email: string, name: string): Promise<JoinResponse> => {
+const inviteToProject = async (
+  projectId: number,
+  email: string,
+  name: string,
+): Promise<JoinResponse> => {
   try {
-    const response = await fetch('/api/project/invite', {
-      method: 'POST',
-      credentials: 'include',
+    const response = await fetch("/api/project/invite", {
+      method: "POST",
+      credentials: "include",
       headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
+        "Content-Type": "application/json",
+        Accept: "application/json",
       },
       body: JSON.stringify({
         projectId,
         email,
-        name
-      })
+        name,
+      }),
     });
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.errorMessage || '초대 발송에 실패했습니다.');
+      throw new Error(errorData?.errorMessage || "초대 발송에 실패했습니다.");
     }
 
     return await response.json();
   } catch (error) {
-    console.error('Error sending invitation:', error);
+    console.error("Error sending invitation:", error);
     if (error instanceof Error) {
       throw error;
     }
-    throw new Error('초대 발송 중 오류가 발생했습니다.');
+    throw new Error("초대 발송 중 오류가 발생했습니다.");
   }
 };
 
@@ -71,12 +75,12 @@ export const JoinInput: React.FC<FormInputProps> = ({
 }) => {
   const [formData, setFormData] = useState<FormData>({
     email: "",
-    name: ""
+    name: "",
   });
 
   const [validity, setValidity] = useState<FormValidity>({
     email: false,
-    name: false
+    name: false,
   });
 
   const [isLoading, setIsLoading] = useState(false);
@@ -84,17 +88,17 @@ export const JoinInput: React.FC<FormInputProps> = ({
   const handleInputChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const { name, value } = e.target;
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        [name]: value
+        [name]: value,
       }));
 
-      setValidity(prev => ({
+      setValidity((prev) => ({
         ...prev,
-        [name]: name === 'email' ? validateEmail(value) : validateName(value)
+        [name]: name === "email" ? validateEmail(value) : validateName(value),
       }));
     },
-    []
+    [],
   );
 
   const isFormValid = validity.email && validity.name;
@@ -107,7 +111,7 @@ export const JoinInput: React.FC<FormInputProps> = ({
       const response = await inviteToProject(
         projectId,
         formData.email,
-        formData.name
+        formData.name,
       );
 
       if (response.errorCode === 0) {
@@ -187,8 +191,8 @@ const StyledInput = styled.input`
   border-radius: 13.86px;
   &:focus {
     outline: none;
-    border-color: #7B7FF6;
-    box-shadow: 0 0 0 1px #7B7FF6;
+    border-color: #7b7ff6;
+    box-shadow: 0 0 0 1px #7b7ff6;
   }
   &::placeholder {
     color: #a0aec0;

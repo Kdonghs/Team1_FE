@@ -50,7 +50,9 @@ import {
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
-export class Project<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class Project<
+  SecurityDataType = unknown,
+> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
@@ -78,7 +80,11 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * @secure
    * @response `200` `UpdateProjectData` OK
    */
-  updateProject = (projectId: number, data: ProjectUpdate, params: RequestParams = {}) =>
+  updateProject = (
+    projectId: number,
+    data: ProjectUpdate,
+    params: RequestParams = {},
+  ) =>
     this.request<UpdateProjectData, any>({
       path: `/api/project/${projectId}`,
       method: "PUT",
@@ -114,7 +120,11 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * @secure
    * @response `200` `GetMemberData` OK
    */
-  getMember = (projectId: number, memberId: number, params: RequestParams = {}) =>
+  getMember = (
+    projectId: number,
+    memberId: number,
+    params: RequestParams = {},
+  ) =>
     this.request<GetMemberData, any>({
       path: `/api/project/${projectId}/member/${memberId}`,
       method: "GET",
@@ -131,7 +141,12 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * @secure
    * @response `200` `UpdateMemberData` OK
    */
-  updateMember = (projectId: number, memberId: number, data: UpdateMember, params: RequestParams = {}) =>
+  updateMember = (
+    projectId: number,
+    memberId: number,
+    data: UpdateMember,
+    params: RequestParams = {},
+  ) =>
     this.request<UpdateMemberData, any>({
       path: `/api/project/${projectId}/member/${memberId}`,
       method: "PUT",
@@ -150,7 +165,11 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * @secure
    * @response `200` `DeleteMemberData` OK
    */
-  deleteMember = (projectId: number, memberId: number, params: RequestParams = {}) =>
+  deleteMember = (
+    projectId: number,
+    memberId: number,
+    params: RequestParams = {},
+  ) =>
     this.request<DeleteMemberData, any>({
       path: `/api/project/${projectId}/member/${memberId}`,
       method: "DELETE",
@@ -237,7 +256,11 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * @secure
    * @response `200` `UpdateOptionData` OK
    */
-  updateOption = (optionId: number, data: OptionUpdate, params: RequestParams = {}) =>
+  updateOption = (
+    optionId: number,
+    data: OptionUpdate,
+    params: RequestParams = {},
+  ) =>
     this.request<UpdateOptionData, any>({
       path: `/api/project/option/${optionId}`,
       method: "PUT",
@@ -342,7 +365,11 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * @secure
    * @response `200` `CreateTaskData` OK
    */
-  createTask = (projectId: number, data: TaskCreate, params: RequestParams = {}) =>
+  createTask = (
+    projectId: number,
+    data: TaskCreate,
+    params: RequestParams = {},
+  ) =>
     this.request<CreateTaskData, any>({
       path: `/api/project/${projectId}/task`,
       method: "POST",
@@ -385,7 +412,11 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * @secure
    * @response `200` `CreateMemberData` OK
    */
-  createMember = (projectId: string, data: CreateMember, params: RequestParams = {}) =>
+  createMember = (
+    projectId: string,
+    data: CreateMember,
+    params: RequestParams = {},
+  ) =>
     this.request<CreateMemberData, any>({
       path: `/api/project/${projectId}/member`,
       method: "POST",
@@ -463,7 +494,10 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
    * @secure
    * @response `200` `InviteMemberToProjectData` OK
    */
-  inviteMemberToProject = (data: InviteRequestDTO, params: RequestParams = {}) =>
+  inviteMemberToProject = (
+    data: InviteRequestDTO,
+    params: RequestParams = {},
+  ) =>
     this.request<InviteMemberToProjectData, any>({
       path: `/api/project/invite`,
       method: "POST",

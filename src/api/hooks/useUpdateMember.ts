@@ -18,7 +18,7 @@ type UpdateMemberParams = {
 const updateMember = async (
   projectId: number,
   memberId: number,
-  data: UpdateMember
+  data: UpdateMember,
 ) => {
   const testToken = getTestToken();
 

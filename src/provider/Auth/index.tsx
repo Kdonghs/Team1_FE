@@ -14,7 +14,11 @@ type AuthContextType = {
   user: User | null;
   login: () => void;
   logout: () => void;
-  handleGoogleCallback: (responseData: { errorCode: number; errorMessage: string; resultData: { token: string } }) => void;
+  handleGoogleCallback: (responseData: {
+    errorCode: number;
+    errorMessage: string;
+    resultData: { token: string };
+  }) => void;
 };
 
 const AuthContext = createContext<AuthContextType>({
@@ -73,7 +77,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     window.location.href = googleAuthUrl;
   };
 
-  const handleGoogleCallback = (responseData: { errorCode: number; errorMessage: string; resultData: { token: string } }) => {
+  const handleGoogleCallback = (responseData: {
+    errorCode: number;
+    errorMessage: string;
+    resultData: { token: string };
+  }) => {
     if (responseData.errorCode === 200 && responseData.resultData?.token) {
       // 토큰 저장
       localStorage.setItem("token", responseData.resultData.token);

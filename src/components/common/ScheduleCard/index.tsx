@@ -1,24 +1,20 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
-import React from "react";
-
-type TaskOwner = {
-  id: number;
-  name: string;
-  role: string;
-  imageURL: string;
-};
+import React, { useEffect, useState } from "react";
 
 type Task = {
   id: number;
   name: string;
   description: string;
-  owner: TaskOwner;
-  startTime: string; // 시작 시간 추가
-  endTime: string; // 종료 시간 추가
+  startTime: string;
+  endTime: string;
   startDate: string;
   endDate: string;
-  priority: "HIGH" | "MEDIUM" | "LOW";
-  status: number;
+  options: Record<string, unknown>;
+  totalMembers: number;
+  projectManager: {
+    name: string;
+    imageURL: string;
+  };
 };
 
 type ApiResponse = {
@@ -32,10 +28,103 @@ type ApiResponse = {
   total: number;
 };
 
-// 현재 로그인한 사용자 정보
-const CURRENT_USER = {
-  id: 1,
-  name: "채연",
+type User = {
+  username: string;
+  email: string;
+  picture: string;
+  role: string;
+  createDate: string;
+};
+
+type UserApiResponse = {
+  errorCode: number;
+  errorMessage: string;
+  resultData: User;
+};
+
+// Mock Data
+const mockApiResponse: ApiResponse = {
+  errorCode: 0,
+  errorMessage: "Success",
+  resultData: [
+    {
+      id: 1,
+      name: "신규 서비스 기획 미팅",
+      description: "2024년 1분기 신규 서비스 론칭 기획",
+      startTime: "09:00",
+      endTime: "11:00",
+      startDate: new Date().toISOString(),
+      endDate: new Date().toISOString(),
+      options: {},
+      totalMembers: 5,
+      projectManager: {
+        name: "김철수",
+        imageURL: ""
+      }
+    },
+    {
+      id: 2,
+      name: "디자인 시스템 리뷰",
+      description: "컴포넌트 디자인 검토",
+      startTime: "14:00",
+      endTime: "16:00",
+      startDate: new Date().toISOString(),
+      endDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(),
+      options: {},
+      totalMembers: 3,
+      projectManager: {
+        name: "김철수",
+        imageURL: ""
+      }
+    },
+    {
+      id: 3,
+      name: "백엔드 API 설계",
+      description: "REST API 구조 설계",
+      startTime: "10:00",
+      endTime: "12:00",
+      startDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(),
+      endDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(),
+      options: {},
+      totalMembers: 4,
+      projectManager: {
+        name: "김철수",
+        imageURL: ""
+      }
+    },
+    {
+      id: 4,
+      name: "스프린트 회고",
+      description: "1분기 스프린트 리뷰",
+      startTime: "15:00",
+      endTime: "17:00",
+      startDate: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
+      endDate: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
+      options: {},
+      totalMembers: 8,
+      projectManager: {
+        name: "김철수",
+        imageURL: ""
+      }
+    }
+  ],
+  size: 10,
+  page: 0,
+  pages: 1,
+  hasNext: false,
+  total: 4
+};
+
+const mockUserResponse: UserApiResponse = {
+  errorCode: 0,
+  errorMessage: "Success",
+  resultData: {
+    username: "김철수",
+    email: "cheolsu.kim@example.com",
+    picture: "",
+    role: "PM",
+    createDate: "2024-01-01T00:00:00.000Z"
+  }
 };
 
 const ScheduleCard: React.FC<{ date: string; tasks: Task[] }> = ({
@@ -80,9 +169,12 @@ const ScheduleCard: React.FC<{ date: string; tasks: Task[] }> = ({
               <Box w="4px" h="40px" bg="#95A4FC" mr={2} borderRadius="2px" />
               <VStack align="start" spacing={0}>
                 <Text color="#95A4FC" fontSize="12px">
-                  {`오전 ${task.startTime} - ${task.endTime}`}
+                  {`${task.startTime} - ${task.endTime}`}
                 </Text>
                 <Text fontSize="14px">{task.name}</Text>
+                <Text fontSize="12px" color="gray.500">
+                  {task.description}
+                </Text>
               </VStack>
             </Flex>
           ))
@@ -93,86 +185,93 @@ const ScheduleCard: React.FC<{ date: string; tasks: Task[] }> = ({
 };
 
 export const ScheduleList: React.FC = () => {
-  // Mock API response
-  const mockApiResponse: ApiResponse = {
-    errorCode: 200,
-    errorMessage: "Success",
-    resultData: [
-      {
-        id: 1,
-        name: "팀 회의",
-        description: "주간 업무 계획 회의",
-        owner: { id: 1, name: "채연", role: "팀원", imageURL: "" },
-        startTime: "10:00",
-        endTime: "11:00",
-        startDate: new Date().toISOString(),
-        endDate: new Date(
-          new Date().setDate(new Date().getDate() + 1),
-        ).toISOString(),
-        priority: "HIGH",
-        status: 0,
-      },
-      {
-        id: 2,
-        name: "팀 회의2",
-        description: "스프린트 회고",
-        owner: { id: 1, name: "채연", role: "팀원", imageURL: "" },
-        startTime: "11:00",
-        endTime: "12:00",
-        startDate: new Date().toISOString(),
-        endDate: new Date(
-          new Date().setDate(new Date().getDate()),
-        ).toISOString(),
-        priority: "MEDIUM",
-        status: 0,
-      },
-      {
-        id: 3,
-        name: "팀 회의",
-        description: "일일 스크럼",
-        owner: { id: 1, name: "채연", role: "팀원", imageURL: "" },
-        startTime: "10:00",
-        endTime: "11:00",
-        startDate: new Date(
-          new Date().setDate(new Date().getDate() + 1),
-        ).toISOString(),
-        endDate: new Date(
-          new Date().setDate(new Date().getDate() + 2),
-        ).toISOString(),
-        priority: "HIGH",
-        status: 0,
-      },
-      {
-        id: 4,
-        name: "팀 회의",
-        description: "기술 리뷰",
-        owner: { id: 1, name: "채연", role: "팀원", imageURL: "" },
-        startTime: "10:00",
-        endTime: "13:00",
-        startDate: new Date(
-          new Date().setDate(new Date().getDate() + 2),
-        ).toISOString(),
-        endDate: new Date(
-          new Date().setDate(new Date().getDate() + 2),
-        ).toISOString(),
-        priority: "LOW",
-        status: 0,
-      },
-    ],
-    size: 10,
-    page: 0,
-    pages: 1,
-    hasNext: false,
-    total: 4,
-  };
+  const [scheduleData, setScheduleData] = useState<ApiResponse | null>(null);
+  const [currentUser, setCurrentUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // 현재 사용자의 태스크만 필터링
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      try {
+        // api 연동
+        /*
+        const response = await fetch('/api/user', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('사용자 정보를 가져오는데 실패했습니다.');
+        }
+
+        const data: UserApiResponse = await response.json();
+        if (data.errorCode === 0) {
+          setCurrentUser(data.resultData);
+        } else {
+          throw new Error(data.errorMessage);
+        }
+        */
+
+        setCurrentUser(mockUserResponse.resultData);
+      } catch (err) {
+        console.error('사용자 정보 조회 실패:', err);
+        setError('사용자 정보를 불러오는데 실패했습니다.');
+      }
+    };
+
+    getCurrentUser();
+  }, []);
+
+  useEffect(() => {
+    const getSchedules = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+
+        // api 연동
+        /*
+        const response = await fetch('/api/project', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('스케줄 데이터를 가져오는데 실패했습니다.');
+        }
+
+        const data: ApiResponse = await response.json();
+        if (data.errorCode === 0) {
+          setScheduleData(data);
+        } else {
+          throw new Error(data.errorMessage);
+        }
+        */
+
+        setScheduleData(mockApiResponse);
+      } catch (err) {
+        console.error('스케줄 데이터 조회 실패:', err);
+        setError('일정을 불러오는데 실패했습니다.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getSchedules();
+  }, []);
+
   const filterUserTasks = (tasks: Task[]): Task[] => {
-    return tasks.filter((task) => task.owner.id === CURRENT_USER.id);
+    if (!currentUser) return [];
+    return tasks.filter((task) => task.projectManager.name === currentUser.username);
   };
 
   const getTasksByDate = (date: string): Task[] => {
-    const filteredTasks = filterUserTasks(mockApiResponse.resultData);
+    if (!scheduleData) return [];
+
+    const filteredTasks = filterUserTasks(scheduleData.resultData);
     return filteredTasks.filter((task) => {
       const taskStart = new Date(task.startDate);
       const taskEnd = new Date(task.endDate);
@@ -200,6 +299,39 @@ export const ScheduleList: React.FC = () => {
   };
 
   const dates = getDates();
+
+  if (isLoading) {
+    return (
+      <Box p={6}>
+        <Text fontSize="18px" fontWeight="bold" mb={6}>
+          예정 일정
+        </Text>
+        <Text>로딩 중...</Text>
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box p={6}>
+        <Text fontSize="18px" fontWeight="bold" mb={6}>
+          예정 일정
+        </Text>
+        <Text color="red.500">{error}</Text>
+      </Box>
+    );
+  }
+
+  if (!currentUser) {
+    return (
+      <Box p={6}>
+        <Text fontSize="18px" fontWeight="bold" mb={6}>
+          예정 일정
+        </Text>
+        <Text color="red.500">사용자 정보를 불러올 수 없습니다.</Text>
+      </Box>
+    );
+  }
 
   return (
     <Box>
@@ -230,14 +362,8 @@ export const ScheduleList: React.FC = () => {
 
             <Box flex="1" p={6}>
               <VStack spacing={6} align="stretch">
-                <ScheduleCard
-                  date={dates[1]}
-                  tasks={getTasksByDate(dates[1])}
-                />
-                <ScheduleCard
-                  date={dates[2]}
-                  tasks={getTasksByDate(dates[2])}
-                />
+                <ScheduleCard date={dates[1]} tasks={getTasksByDate(dates[1])} />
+                <ScheduleCard date={dates[2]} tasks={getTasksByDate(dates[2])} />
               </VStack>
             </Box>
           </Flex>
