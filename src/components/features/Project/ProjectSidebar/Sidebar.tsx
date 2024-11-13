@@ -43,7 +43,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </Button>
       </Flex>
 
-      <Flex padding={2}>
+      <Flex>
         <UserProfile />
       </Flex>
 
