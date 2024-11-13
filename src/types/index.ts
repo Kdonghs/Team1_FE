@@ -57,3 +57,11 @@ export interface ProjectData {
   endDateAfterStartDate: boolean;
   atLeastOneDayDifference: boolean;
 }
+
+export interface Profile {
+  username: string;
+  email: string;
+  picture: string;
+  role: string;
+  createDate: string;
+}

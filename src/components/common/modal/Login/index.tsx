@@ -41,7 +41,7 @@ export const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   };
 
   const appleKakaoLogin = () => {
-    alert("개발 예정입니다.");
+    // alert("개발 예정입니다.");
   };
 
   return (

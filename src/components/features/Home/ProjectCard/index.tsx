@@ -70,7 +70,8 @@ export const ProjectCard: React.FC<Props> = ({
       <TextArea>
         <Title>{title}</Title>
         <DateInfo>
-          {new Date(startDate).toLocaleDateString()} - {new Date(endDate).toLocaleDateString()}
+          {new Date(startDate).toLocaleDateString()} -{" "}
+          {new Date(endDate).toLocaleDateString()}
         </DateInfo>
       </TextArea>
     </Wrapper>
@@ -97,7 +98,7 @@ const Wrapper = styled.div<{
   }
 
   &:focus {
-    outline: 2px solid #95A4FC;
+    outline: 2px solid #95a4fc;
     outline-offset: 2px;
   }
 `;
