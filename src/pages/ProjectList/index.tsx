@@ -142,15 +142,17 @@ export const ProjectListPage: React.FC = () => {
           )}
 
           <Flex gap={6}>
-            {visibleProjects.map((project) => (
+          {visibleProjects.map((project) => (
               <ProjectCard
                 key={project.id}
+                id={project.id}  // id prop 추가
                 title={project.name}
                 startDate={project.startDate}
                 endDate={project.endDate}
                 option={{
                   type: project.optionIds.length === 2 ? "basic" : "custom",
                 }}
+                imageSrc={project.imageUrl}  // 이미지 URL 추가
               />
             ))}
           </Flex>
