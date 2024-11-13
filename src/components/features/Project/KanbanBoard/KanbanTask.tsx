@@ -159,9 +159,11 @@ export const KanbanTask = ({ task, onDeleteTask }: TaskProps) => {
         </Flex>
       </CardHeader>
       <CardBody pt={1}>
-        <Text fontSize="sm" color="#6D7280">
-          {task.description}
-        </Text>
+        {task.description && (
+          <Text fontSize="sm" color="#6D7280">
+            {task.description}
+          </Text>
+        )}
         <Spacer h={1} />
         <Text fontSize="xs" color="#666666">
           {dayjs(task.endDate).locale("ko").format("YYYY.M.D H시 m분")}

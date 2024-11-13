@@ -1,9 +1,14 @@
-import { Flex, SimpleGrid } from "@chakra-ui/react";
+import { Flex, Select, SimpleGrid, VStack } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import type { TaskStatus } from "@/types";
 
-import type { TaskWithOwnerDetail } from "../../../../api/generated/data-contracts";
+import type {
+  MemberResponseDTO,
+  TaskWithOwnerDetail,
+} from "../../../../api/generated/data-contracts";
+import { useGetProjectMembers } from "../../../../api/hooks/useGetProjectMembers";
 import { useGetProjectTaskList } from "../../../../api/hooks/useGetProjectTaskList";
 import { KanbanColumn } from "./KanbanColumn";
 
@@ -26,23 +31,34 @@ export const KanbanBoard = ({
   priority?: string;
   owner?: string;
 }) => {
+  const [selectedOwner, setSelectedOwner] = useState<string | undefined>(
+    undefined
+  );
+  const navigate = useNavigate();
+
   const { data: pendingData } = useGetProjectTaskList(
     projectId,
     size,
     sort,
-    "PENDING"
+    "PENDING",
+    undefined,
+    selectedOwner
   );
   const { data: inProgressData } = useGetProjectTaskList(
     projectId,
     size,
     sort,
-    "IN_PROGRESS"
+    "IN_PROGRESS",
+    undefined,
+    selectedOwner
   );
   const { data: completedData } = useGetProjectTaskList(
     projectId,
     size,
     sort,
-    "COMPLETED"
+    "COMPLETED",
+    undefined,
+    selectedOwner
   );
 
   const [pendingTasks, setPendingTasks] = useState<TaskWithOwnerDetail[]>([]);
@@ -81,6 +97,27 @@ export const KanbanBoard = ({
     }
   };
 
+  const {
+    data: membersData,
+    error: membersError,
+    isLoading: membersLoading,
+  } = useGetProjectMembers(projectId, 0, "name");
+
+  if (membersLoading) {
+    return <div>로딩 중</div>;
+  }
+
+  if (membersError) {
+    return <div>팀원 목록을 불러올 수 없습니다.</div>;
+  }
+
+  const members = membersData?.pages[0].resultData as MemberResponseDTO[];
+
+  const handleSelectChange = (value: string) => {
+    setSelectedOwner(value === "" ? undefined : value);
+    navigate(`?owner=${value}`);
+  };
+
   const getColumns: Column[] = [
     {
       id: "pending",
@@ -102,17 +139,35 @@ export const KanbanBoard = ({
   //TODO: 정렬 기능 추가, 멤버별 필터링 기능 추가(주소에 쿼리스트링 넣어서?)
   return (
     <Flex
-      alignItems="center"
       justifyContent="space-between"
       borderRadius="10px"
       border="1px solid #D8DADC"
       borderColor="#D8DADC"
     >
-      <SimpleGrid columns={3} spacing={4} width="100%" p={4}>
-        {getColumns.map((column) => (
-          <KanbanColumn column={column} onDeleteTask={removeTaskFromColumn} />
-        ))}
-      </SimpleGrid>
+      <VStack width="100%" alignItems="flex-start">
+        <Select
+          width="200px"
+          height="50px"
+          color="#727272"
+          border="#E3E3E3 solid 1.3px"
+          value={selectedOwner}
+          onChange={(e) => handleSelectChange(e.target.value)}
+          mt={3}
+          ml={4}
+        >
+          <option value="">전체</option>
+          {members.map((member) => (
+            <option key={member.id} value={member.name}>
+              {member.name}
+            </option>
+          ))}
+        </Select>
+        <SimpleGrid columns={3} spacing={4} width="100%" p={4}>
+          {getColumns.map((column) => (
+            <KanbanColumn column={column} onDeleteTask={removeTaskFromColumn} />
+          ))}
+        </SimpleGrid>
+      </VStack>
     </Flex>
   );
 };
