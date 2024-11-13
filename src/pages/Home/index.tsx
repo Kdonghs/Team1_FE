@@ -5,9 +5,6 @@ import { Image } from "../../components/common/Image";
 import { SearchInput } from "../../components/common/SearchInput/ProjectCode";
 
 export const HomePage: React.FC = () => {
-  const handleJoinSuccess = (projectId: number, guestId: number) => {
-    console.log(`Successfully joined project ${projectId} as guest ${guestId}`);
-  };
 
   return (
     <Container maxW="container.xl" py={20}>
@@ -25,7 +22,6 @@ export const HomePage: React.FC = () => {
             </Text>
             <SearchInput
               placeholder="# 참여코드로 시작"
-              onJoinSuccess={handleJoinSuccess}
               height={50}
             />
           </Box>

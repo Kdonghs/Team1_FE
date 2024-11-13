@@ -49,10 +49,6 @@ const initialMockProjects: Project[] = [
   },
 ];
 
-const handleJoinSuccess = (projectId: number, guestId: number) => {
-  console.log(`Successfully joined project ${projectId} as guest ${guestId}`);
-};
-
 export const ProjectListPage: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
   const [startIndex, setStartIndex] = useState(0);
@@ -110,7 +106,6 @@ export const ProjectListPage: React.FC = () => {
       <Box maxW="lg" mx="auto">
         <SearchInput
           placeholder="# 참여코드로 시작"
-          onJoinSuccess={handleJoinSuccess}
           height={50}
           width={50}
         />
