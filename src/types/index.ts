@@ -36,3 +36,13 @@ export type TeamProgress = {
   progress: number;
   activeTasks: ActiveTask[];
 };
+
+export interface Project {
+  id: number;
+  name: string;
+  description?: string;
+  imageUrl?: string;
+  startDate: string;
+  endDate: string;
+  optionIds: number[];
+}

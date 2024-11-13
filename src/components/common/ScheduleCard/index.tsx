@@ -59,8 +59,8 @@ const mockApiResponse: ApiResponse = {
       totalMembers: 5,
       projectManager: {
         name: "김철수",
-        imageURL: ""
-      }
+        imageURL: "",
+      },
     },
     {
       id: 2,
@@ -69,13 +69,15 @@ const mockApiResponse: ApiResponse = {
       startTime: "14:00",
       endTime: "16:00",
       startDate: new Date().toISOString(),
-      endDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(),
+      endDate: new Date(
+        new Date().setDate(new Date().getDate() + 1),
+      ).toISOString(),
       options: {},
       totalMembers: 3,
       projectManager: {
         name: "김철수",
-        imageURL: ""
-      }
+        imageURL: "",
+      },
     },
     {
       id: 3,
@@ -83,14 +85,18 @@ const mockApiResponse: ApiResponse = {
       description: "REST API 구조 설계",
       startTime: "10:00",
       endTime: "12:00",
-      startDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(),
-      endDate: new Date(new Date().setDate(new Date().getDate() + 1)).toISOString(),
+      startDate: new Date(
+        new Date().setDate(new Date().getDate() + 1),
+      ).toISOString(),
+      endDate: new Date(
+        new Date().setDate(new Date().getDate() + 1),
+      ).toISOString(),
       options: {},
       totalMembers: 4,
       projectManager: {
         name: "김철수",
-        imageURL: ""
-      }
+        imageURL: "",
+      },
     },
     {
       id: 4,
@@ -98,21 +104,25 @@ const mockApiResponse: ApiResponse = {
       description: "1분기 스프린트 리뷰",
       startTime: "15:00",
       endTime: "17:00",
-      startDate: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
-      endDate: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
+      startDate: new Date(
+        new Date().setDate(new Date().getDate() + 2),
+      ).toISOString(),
+      endDate: new Date(
+        new Date().setDate(new Date().getDate() + 2),
+      ).toISOString(),
       options: {},
       totalMembers: 8,
       projectManager: {
         name: "김철수",
-        imageURL: ""
-      }
-    }
+        imageURL: "",
+      },
+    },
   ],
   size: 10,
   page: 0,
   pages: 1,
   hasNext: false,
-  total: 4
+  total: 4,
 };
 
 const mockUserResponse: UserApiResponse = {
@@ -123,8 +133,8 @@ const mockUserResponse: UserApiResponse = {
     email: "cheolsu.kim@example.com",
     picture: "",
     role: "PM",
-    createDate: "2024-01-01T00:00:00.000Z"
-  }
+    createDate: "2024-01-01T00:00:00.000Z",
+  },
 };
 
 const ScheduleCard: React.FC<{ date: string; tasks: Task[] }> = ({
@@ -216,8 +226,8 @@ export const ScheduleList: React.FC = () => {
 
         setCurrentUser(mockUserResponse.resultData);
       } catch (err) {
-        console.error('사용자 정보 조회 실패:', err);
-        setError('사용자 정보를 불러오는데 실패했습니다.');
+        console.error("사용자 정보 조회 실패:", err);
+        setError("사용자 정보를 불러오는데 실패했습니다.");
       }
     };
 
@@ -253,8 +263,8 @@ export const ScheduleList: React.FC = () => {
 
         setScheduleData(mockApiResponse);
       } catch (err) {
-        console.error('스케줄 데이터 조회 실패:', err);
-        setError('일정을 불러오는데 실패했습니다.');
+        console.error("스케줄 데이터 조회 실패:", err);
+        setError("일정을 불러오는데 실패했습니다.");
       } finally {
         setIsLoading(false);
       }
@@ -265,7 +275,9 @@ export const ScheduleList: React.FC = () => {
 
   const filterUserTasks = (tasks: Task[]): Task[] => {
     if (!currentUser) return [];
-    return tasks.filter((task) => task.projectManager.name === currentUser.username);
+    return tasks.filter(
+      (task) => task.projectManager.name === currentUser.username,
+    );
   };
 
   const getTasksByDate = (date: string): Task[] => {
@@ -362,8 +374,14 @@ export const ScheduleList: React.FC = () => {
 
             <Box flex="1" p={6}>
               <VStack spacing={6} align="stretch">
-                <ScheduleCard date={dates[1]} tasks={getTasksByDate(dates[1])} />
-                <ScheduleCard date={dates[2]} tasks={getTasksByDate(dates[2])} />
+                <ScheduleCard
+                  date={dates[1]}
+                  tasks={getTasksByDate(dates[1])}
+                />
+                <ScheduleCard
+                  date={dates[2]}
+                  tasks={getTasksByDate(dates[2])}
+                />
               </VStack>
             </Box>
           </Flex>

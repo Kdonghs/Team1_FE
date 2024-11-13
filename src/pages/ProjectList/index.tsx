@@ -4,82 +4,48 @@ import {
   Button,
   Flex,
   IconButton,
-  Input,
   Modal,
-  ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
-  Stack,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
+// import { useGetProjects } from "../../api/hooks/useGetProjects";
+import { ProjectCreatingModal } from "../../components/common/modal/ProjectCreate";
 import { ScheduleList } from "../../components/common/ScheduleCard";
 import { SearchInput } from "../../components/common/SearchInput/ProjectCode";
 import { ProjectCard } from "../../components/features/Home/ProjectCard";
+import type { Project } from "../../types";
 
-type Project = {
-  id: number;
-  name: string;
-  startDate: string;
-  endDate: string;
-  option: {
-    type: "basic" | "custom";
-    customOption?: {
-      celebrationEffect: boolean;
-      colorChange: boolean;
-      emailNotification: boolean;
-    };
-  };
-};
-
-const initialProjects: Project[] = [
+const initialMockProjects: Project[] = [
   {
     id: 1,
-    name: "디자인 시스템 개발",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
-      .toISOString()
-      .split("T")[0],
-    option: {
-      type: "custom",
-      customOption: {
-        celebrationEffect: true,
-        colorChange: true,
-        emailNotification: true,
-      },
-    },
+    name: "AI 챗봇 개발 프로젝트",
+    description: "고객 서비스 향상을 위한 AI 기반 챗봇 시스템 개발",
+    imageUrl: "https://example.com/chatbot.jpg",
+    startDate: "2024-01-15T07:13:35.717Z",
+    endDate: "2024-06-15T07:13:35.717Z",
+    optionIds: [1, 2],
   },
   {
     id: 2,
-    name: "프론트엔드 리팩토링",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 2))
-      .toISOString()
-      .split("T")[0],
-    option: {
-      type: "basic",
-    },
+    name: "모바일 앱 리뉴얼",
+    description: "기존 모바일 앱의 UI/UX 개선 및 신규 기능 추가",
+    imageUrl: "https://example.com/mobile-app.jpg",
+    startDate: "2024-02-01T07:13:35.717Z",
+    endDate: "2024-07-31T07:13:35.717Z",
+    optionIds: [1, 2, 3],
   },
   {
     id: 3,
-    name: "백엔드 API 개발",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
-      .toISOString()
-      .split("T")[0],
-    option: {
-      type: "custom",
-      customOption: {
-        celebrationEffect: false,
-        colorChange: true,
-        emailNotification: false,
-      },
-    },
+    name: "데이터 분석 플랫폼",
+    description: "실시간 데이터 분석 및 시각화 플랫폼 구축",
+    imageUrl: "https://example.com/data-analytics.jpg",
+    startDate: "2024-03-01T07:13:35.717Z",
+    endDate: "2024-09-30T07:13:35.717Z",
+    optionIds: [1, 2],
   },
 ];
 
@@ -89,41 +55,20 @@ const handleJoinSuccess = (projectId: number, guestId: number) => {
 
 export const ProjectListPage: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
-  const [newProjectTitle, setNewProjectTitle] = useState("");
   const [startIndex, setStartIndex] = useState(0);
 
+  // const { data: projects = [] } = useGetProjects();
+
+  // 임시 코드
+  const [projects, setProjects] = useState<Project[]>(initialMockProjects);
+
   const projectsPerView = 4;
-
-  const handleCreateProject = () => {
-    if (newProjectTitle.trim()) {
-      const today = new Date();
-      const endDate = new Date(today);
-      endDate.setMonth(today.getMonth() + 1);
-
-      const newProject: Project = {
-        id: projects.length + 1,
-        name: newProjectTitle,
-        startDate: today.toISOString().split("T")[0],
-        endDate: endDate.toISOString().split("T")[0],
-        option: {
-          type: "basic",
-        },
-      };
-
-      setProjects([...projects, newProject]);
-      setNewProjectTitle("");
-      onClose();
-    }
-  };
-
   const visibleProjects = projects.slice(
     startIndex,
     startIndex + projectsPerView,
   );
 
   const shouldShowNavigation = projects.length > projectsPerView;
-
   const canGoPrevious = startIndex > 0;
   const canGoNext = startIndex + projectsPerView < projects.length;
 
@@ -139,6 +84,25 @@ export const ProjectListPage: React.FC = () => {
         Math.min(projects.length - projectsPerView, prev + 1),
       );
     }
+  };
+
+  const handleAddProject = (newProjectData: any) => {
+    const newProject: Project = {
+      id: projects.length + 1,
+      name: newProjectData.name,
+      description: newProjectData.description,
+      imageUrl: newProjectData.imageURL,
+      startDate: newProjectData.startDate,
+      endDate: newProjectData.endDate,
+      optionIds: newProjectData.optionIds,
+    };
+
+    setProjects((prevProjects) => [...prevProjects, newProject]);
+  };
+
+  const handleModalClose = () => {
+    onClose();
+    setStartIndex(0);
   };
 
   return (
@@ -184,7 +148,9 @@ export const ProjectListPage: React.FC = () => {
                 title={project.name}
                 startDate={project.startDate}
                 endDate={project.endDate}
-                option={project.option}
+                option={{
+                  type: project.optionIds.length === 2 ? "basic" : "custom",
+                }}
               />
             ))}
           </Flex>
@@ -199,32 +165,17 @@ export const ProjectListPage: React.FC = () => {
           )}
         </Flex>
 
-        {/* 임시 모달 */}
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={handleModalClose} size="md" isCentered>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>새 프로젝트 생성</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Stack spacing={3}>
-                <Input
-                  placeholder="프로젝트 명 입력"
-                  value={newProjectTitle}
-                  onChange={(e) => setNewProjectTitle(e.target.value)}
-                />
-              </Stack>
-            </ModalBody>
-            <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={handleCreateProject}>
-                확인
-              </Button>
-              <Button variant="ghost" onClick={onClose}>
-                취소
-              </Button>
-            </ModalFooter>
+            <ProjectCreatingModal
+              onClose={handleModalClose}
+              onProjectCreated={handleAddProject}
+            />
           </ModalContent>
         </Modal>
       </Box>
+
       <Box maxW="1010" mx="auto" mb={10}>
         <ScheduleList />
       </Box>
@@ -233,3 +184,5 @@ export const ProjectListPage: React.FC = () => {
 };
 
 export default ProjectListPage;
+
+// ProjectCreatingModal.tsx
