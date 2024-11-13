@@ -10,7 +10,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
-import React, { useCallback, useEffect, useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 
 import { LoginModal } from "../../../components/common/modal/Login";
@@ -20,9 +20,8 @@ import { RouterPath } from "../../../routes/path";
 import type { Profile } from "../../../types";
 
 export const Header: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, login, logout } = useAuth();
   const {
-    onOpen: onLoginOpen,
     isOpen: isLoginOpen,
     onClose: onLoginClose,
   } = useDisclosure();
@@ -31,36 +30,11 @@ export const Header: React.FC = () => {
     isOpen: isProfileOpen,
     onClose: onProfileClose,
   } = useDisclosure();
-  const [profileData, setProfileData] = useState<Profile | null>(null);
   const toast = useToast();
-
-  const fetchProfile = useCallback(async () => {
-    if (!user) return;
-
-    try {
-      const response = await fetch("/api/user");
-      if (!response.ok) throw new Error("프로필 조회에 실패했습니다.");
-
-      const data = await response.json();
-      if (data.resultData) {
-        setProfileData(data.resultData);
-      }
-    } catch (error) {
-      toast({
-        title: "프로필 조회 실패",
-        description:
-          error instanceof Error
-            ? error.message
-            : "알 수 없는 오류가 발생했습니다.",
-        status: "error",
-        duration: 3000,
-      });
-    }
-  }, [user, toast]);
 
   const handleUpdateProfile = async (username: string, picture: string) => {
     try {
-      const response = await fetch("/api/user", {
+      const response = await fetch("https://seamlessup.com/api/user", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -71,19 +45,29 @@ export const Header: React.FC = () => {
         }),
       });
 
-      if (!response.ok) throw new Error("프로필 수정에 실패했습니다.");
-
-      const data = await response.json();
-      if (data.resultData) {
-        setProfileData(data.resultData);
+      if (!response.ok) {
+        throw new Error("프로필 수정에 실패했습니다.");
       }
 
-      onProfileClose();
-      toast({
-        title: "프로필이 수정되었습니다.",
-        status: "success",
-        duration: 3000,
-      });
+      const data = await response.json();
+
+      if (data.resultData) {
+        const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+        const updatedUser = {
+          ...currentUser,
+          username: data.resultData.username,
+          picture: data.resultData.picture,
+        };
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+
+        onProfileClose();
+        toast({
+          title: "프로필이 수정되었습니다.",
+          status: "success",
+          duration: 3000,
+        });
+        window.location.reload();
+      }
     } catch (error) {
       toast({
         title: "프로필 수정 실패",
@@ -97,16 +81,11 @@ export const Header: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
-
   const handleAuthAction = () => {
     if (user) {
       logout();
-      setProfileData(null);
     } else {
-      onLoginOpen();
+      login();
     }
   };
 
@@ -121,7 +100,7 @@ export const Header: React.FC = () => {
           </Link>
 
           <Flex gap={4} alignItems="center">
-            {profileData && (
+            {user && (
               <Flex
                 alignItems="center"
                 bg="white"
@@ -132,13 +111,13 @@ export const Header: React.FC = () => {
                 onClick={onProfileOpen}
                 _hover={{ borderColor: "#95a4fc" }}
               >
-                <Avatar size="sm" src={profileData.picture} />
+                <Avatar size="sm" src={user.picture} />
                 <Box ml={2}>
                   <Text fontWeight="500" color="#333">
-                    {profileData.username}
+                    {user.username}
                   </Text>
                   <Text fontSize="sm" color="#666">
-                    {profileData.email}
+                    {user.email}
                   </Text>
                 </Box>
               </Flex>
@@ -156,7 +135,7 @@ export const Header: React.FC = () => {
           <ProfileEditingModal
             isOpen={isProfileOpen}
             onClose={onProfileClose}
-            profileData={profileData}
+            profileData={user as Profile}
             onUpdateProfile={handleUpdateProfile}
           />
         </Flex>
