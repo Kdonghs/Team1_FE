@@ -17,7 +17,7 @@ import { ProjectCreatingModal } from "../../components/common/modal/ProjectCreat
 import { ScheduleList } from "../../components/common/ScheduleCard";
 import { SearchInput } from "../../components/common/SearchInput/ProjectCode";
 import { ProjectCard } from "../../components/features/Home/ProjectCard";
-import type { Project } from "../../types";
+import type { Project, ProjectData } from "../../types";
 
 const initialMockProjects: Project[] = [
   {
@@ -86,7 +86,7 @@ export const ProjectListPage: React.FC = () => {
     }
   };
 
-  const handleAddProject = (newProjectData: any) => {
+  const handleAddProject = (newProjectData: ProjectData) => {
     const newProject: Project = {
       id: projects.length + 1,
       name: newProjectData.name,

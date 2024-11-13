@@ -46,3 +46,14 @@ export interface Project {
   endDate: string;
   optionIds: number[];
 }
+
+export interface ProjectData {
+  name: string;
+  description?: string;
+  imageURL?: string;
+  startDate: string;
+  endDate: string;
+  optionIds: number[];
+  endDateAfterStartDate: boolean;
+  atLeastOneDayDifference: boolean;
+}

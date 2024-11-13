@@ -12,36 +12,29 @@ import styled from "@emotion/styled";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
+import type { Project, ProjectData } from "../../../../types";
 // import { useCreateProject } from "../../../../api/hooks/useCreateProjects";
 import { AnimatedPageTransition } from "./animatedPageTransition";
 import { ProjectDetailCreatingFields } from "./ProjectCreatingForm/projectDetailCreatingFields";
 import { ProjectOptionCreatingFields } from "./ProjectCreatingForm/ProjectOptionCreatingFields";
 import { renderFooterButtons } from "./renderFooterButtons";
 
-interface ProjectDetail {
-  name: string;
-  description?: string;
-  imageURL?: string;
-  startDate: string;
-  endDate: string;
-  optionIds: number[];
-}
-
 interface ProjectCreatingModalProps {
   onClose: () => void;
-  onProjectCreated: (project: any) => void;
+  onProjectCreated: (project: ProjectData) => void;
 }
 
 export const ProjectCreatingModal = ({
   onClose,
   onProjectCreated,
 }: ProjectCreatingModalProps) => {
-  const methods = useForm<ProjectDetail>({
+  const methods = useForm<Project>({
     mode: "onBlur",
     defaultValues: {
+      id: 0,
       name: "",
       description: "",
-      imageURL: "",
+      imageUrl: "",
       startDate: "",
       endDate: "",
       optionIds: [2, 4],
@@ -66,9 +59,10 @@ export const ProjectCreatingModal = ({
     const newEndDate = data.endDate ? new Date(data.endDate).toISOString() : "";
 
     const projectData = {
+      id: data.id,
       name: data.name?.trim() || "",
       description: data.description,
-      imageURL: data.imageURL,
+      imageURL: data.imageUrl,
       startDate: newStartDate,
       endDate: newEndDate,
       optionIds: selectedFeature === "기본" ? [2, 4] : data.optionIds || [],
