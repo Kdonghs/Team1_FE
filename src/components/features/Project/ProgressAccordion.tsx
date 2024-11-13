@@ -13,16 +13,18 @@ import {
 import { useEffect, useState } from "react";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
-import type { ProjectDetail } from "@/api/generated/data-contracts";
+import type { ProjectDetail } from "../../../api/generated/data-contracts";
+import { useGetProjectProgress } from "../../../api/hooks/useGetProjectProgress";
 
 export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
   const { projectDetail } = props;
   const [confettiVisible, setConfettiVisible] = useState(false);
   const toast = useToast();
-  const progress = 10;
+  const { data } = useGetProjectProgress(projectDetail?.id || 0);
 
+  const progressData = data?.resultData?.projectProgress || 0;
   useEffect(() => {
-    if (progress >= 50 && projectDetail?.optionIds?.includes(3)) {
+    if (progressData >= 50 && projectDetail?.optionIds?.includes(3)) {
       if (!localStorage.getItem("celebration")) {
         setConfettiVisible(true);
         localStorage.setItem("celebration", "true");
@@ -41,7 +43,7 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
         });
       }
     }
-  }, [progress, projectDetail, toast]);
+  }, [progressData, projectDetail, toast]);
 
   return (
     <Flex
@@ -61,7 +63,7 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
               </Text>
             </Box>
             <Progress
-              value={progress}
+              value={progressData}
               size="lg"
               colorScheme="gray"
               width="80%"
