@@ -53,7 +53,13 @@ export const TaskModal = ({
   const queryClient = useQueryClient();
 
   const toast = useToast();
-  const { control, handleSubmit, reset, watch } = useForm<TaskCreate>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { isDirty },
+  } = useForm<TaskCreate>({
     defaultValues: {
       name: initialData?.name || "",
       description: initialData?.description || "",
@@ -330,7 +336,13 @@ export const TaskModal = ({
           </ModalBody>
 
           <ModalFooter>
-            <Button mr={3} bg="#95A4FC" color="white" type="submit">
+            <Button
+              mr={3}
+              bg="#95A4FC"
+              color="white"
+              type="submit"
+              isDisabled={!isDirty}
+            >
               {taskId ? "수정" : "생성"}
             </Button>
           </ModalFooter>
