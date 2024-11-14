@@ -9,7 +9,7 @@ import type {
 
 export const getProjectProgress = async (
   projectId: number,
-  query: { param: GetList }
+  query: { param: GetList },
 ): Promise<GetProjectProgressData> => {
   const response = await authProjectApi.getProjectProgress(projectId, query, {
     paramsSerializer: (params) =>

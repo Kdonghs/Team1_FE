@@ -26,7 +26,7 @@ export const KanbanColumn = ({ column, onDeleteTask }: ColumnProps) => {
 
   const filteredTasks = column.tasks.filter(
     (task): task is TaskWithOwnerDetail & { id: number } =>
-      task.id !== undefined
+      task.id !== undefined,
   );
 
   return (

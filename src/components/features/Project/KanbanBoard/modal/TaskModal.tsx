@@ -76,7 +76,7 @@ export const TaskModal = ({
     },
   });
   const [previousStatus, setPreviousStatus] = useState<TaskStatus>(
-    initialData?.status || "PENDING"
+    initialData?.status || "PENDING",
   );
 
   const startDate = watch("startDate");
@@ -118,7 +118,7 @@ export const TaskModal = ({
               isClosable: true,
             });
           },
-        }
+        },
       );
     }
   };

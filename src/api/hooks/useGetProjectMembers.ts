@@ -10,7 +10,7 @@ import type {
 
 export const getProjectMembers = async (
   projectId: number,
-  query: { param: GetList; memberListRequestDTO: GetMemberList }
+  query: { param: GetList; memberListRequestDTO: GetMemberList },
 ): Promise<GetMemberListData> => {
   const response = await authProjectApi.getMemberList(
     projectId,
@@ -18,7 +18,7 @@ export const getProjectMembers = async (
     {
       paramsSerializer: (params) =>
         qs.stringify(params, { arrayFormat: "brackets" }),
-    }
+    },
   );
 
   return response.data;
@@ -28,7 +28,7 @@ export const useGetProjectMembers = (
   projectId: number,
   size: number,
   sort: string,
-  role?: string
+  role?: string,
 ) =>
   useInfiniteQuery<GetMemberListData, Error>({
     queryKey: ["projectMembers", projectId, size, sort, role],

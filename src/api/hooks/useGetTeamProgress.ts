@@ -9,7 +9,7 @@ import type {
 
 export const getTeamProgress = async (
   projectId: number,
-  query: { page: number; size: number; sort: string }
+  query: { page: number; size: number; sort: string },
 ): Promise<PageResultMemberProgress> => {
   const queryParams: GetList = {
     page: query.page,
@@ -23,7 +23,7 @@ export const getTeamProgress = async (
     {
       paramsSerializer: (params) =>
         qs.stringify(params, { arrayFormat: "brackets" }),
-    }
+    },
   );
 
   return response.data;
@@ -33,7 +33,7 @@ export const useGetTeamProgress = (
   projectId: number,
   size: number,
   sort: string,
-  role?: string
+  role?: string,
 ) =>
   useInfiniteQuery<PageResultMemberProgress, Error>({
     queryKey: ["teamProgress", projectId, size, sort, role],

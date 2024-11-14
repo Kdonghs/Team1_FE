@@ -9,7 +9,12 @@
  * ---------------------------------------------------------------
  */
 
-import { AesDecodeData, AttendUrlCreateData, MemberCodeJoinData, TempData } from "./data-contracts";
+import {
+  AesDecodeData,
+  AttendUrlCreateData,
+  MemberCodeJoinData,
+  TempData,
+} from "./data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
 export class Auth<

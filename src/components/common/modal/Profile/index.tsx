@@ -110,7 +110,6 @@ export const ProfileEditingModal: React.FC<ProfileEditingModalProps> = ({
     profileData?.picture ?? "",
   );
 
-  // 모달이 열릴 때마다 초기값 설정
   useEffect(() => {
     if (profileData) {
       setEditedUsername(profileData.username);
