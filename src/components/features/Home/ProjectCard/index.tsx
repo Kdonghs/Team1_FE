@@ -26,7 +26,7 @@ type Props = {
   height?: number | string;
   onDeleteSuccess?: () => void;
   refetch: () => Promise<void>;
-  refetchSchedule: () => Promise<void>; // 추가된 prop
+  refetchSchedule: () => Promise<void>;
 };
 
 export const ProjectCard: React.FC<Props> = ({
