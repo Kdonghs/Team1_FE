@@ -231,7 +231,7 @@ export interface TaskCreate {
   name: string;
   description?: string;
   /** @format int64 */
-  ownerId: number;
+  ownerId?: number;
   priority: "LOW" | "MEDIUM" | "HIGH";
   /**
    * @format int32
@@ -488,6 +488,18 @@ export interface ProjectDate {
   endDate?: string;
 }
 
+export interface MemberToken {
+  token?: string;
+  projectId?: string;
+}
+
+export interface SingleResultMemberToken {
+  /** @format int32 */
+  errorCode?: number;
+  errorMessage?: string;
+  resultData?: MemberToken;
+}
+
 export interface SingleResultLong {
   /** @format int32 */
   errorCode?: number;
@@ -562,9 +574,7 @@ export type GetProjectOptionsData = ListResultOptionDetail;
 
 export type GetProjectDateData = PageResultProjectDate;
 
-export type TempData = SingleResultToken;
-
-export type MemberCodeJoinData = SingleResultToken;
+export type MemberCodeJoinData = SingleResultMemberToken;
 
 export type AesDecodeData = SingleResultString;
 

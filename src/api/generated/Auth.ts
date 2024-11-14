@@ -9,39 +9,10 @@
  * ---------------------------------------------------------------
  */
 
-import {
-  AesDecodeData,
-  AttendUrlCreateData,
-  MemberCodeJoinData,
-  TempData,
-} from "./data-contracts";
+import { AesDecodeData, AttendUrlCreateData, MemberCodeJoinData } from "./data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
-export class Auth<
-  SecurityDataType = unknown,
-> extends HttpClient<SecurityDataType> {
-  /**
-   * No description
-   *
-   * @tags 인증기능 구현
-   * @name Temp
-   * @request GET:/api/auth/success
-   * @secure
-   * @response `200` `TempData` OK
-   */
-  temp = (
-    query: {
-      accessToken: string;
-    },
-    params: RequestParams = {},
-  ) =>
-    this.request<TempData, any>({
-      path: `/api/auth/success`,
-      method: "GET",
-      query: query,
-      secure: true,
-      ...params,
-    });
+export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *

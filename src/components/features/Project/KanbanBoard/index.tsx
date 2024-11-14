@@ -32,7 +32,7 @@ export const KanbanBoard = ({
   owner?: string;
 }) => {
   const [selectedOwner, setSelectedOwner] = useState<string | undefined>(
-    undefined,
+    undefined
   );
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,7 +43,7 @@ export const KanbanBoard = ({
     sort,
     "PENDING",
     undefined,
-    selectedOwner,
+    selectedOwner
   );
   const { data: inProgressData } = useGetProjectTaskList(
     projectId,
@@ -51,7 +51,7 @@ export const KanbanBoard = ({
     sort,
     "IN_PROGRESS",
     undefined,
-    selectedOwner,
+    selectedOwner
   );
   const { data: completedData } = useGetProjectTaskList(
     projectId,
@@ -59,15 +59,15 @@ export const KanbanBoard = ({
     sort,
     "COMPLETED",
     undefined,
-    selectedOwner,
+    selectedOwner
   );
 
   const [pendingTasks, setPendingTasks] = useState<TaskWithOwnerDetail[]>([]);
   const [inProgressTasks, setInProgressTasks] = useState<TaskWithOwnerDetail[]>(
-    [],
+    []
   );
   const [completedTasks, setCompletedTasks] = useState<TaskWithOwnerDetail[]>(
-    [],
+    []
   );
 
   useEffect(() => {
@@ -124,7 +124,7 @@ export const KanbanBoard = ({
 
   const handleSelectChange = (value: string) => {
     setSelectedOwner(value === "" ? undefined : value);
-    navigate(`?owner=${value}`);
+    navigate(`#kanban?owner=${value}`, { replace: true });
   };
 
   const getColumns: Column[] = [
