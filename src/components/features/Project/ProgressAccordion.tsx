@@ -15,6 +15,7 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 import type { ProjectDetail } from "../../../api/generated/data-contracts";
 import { useGetProjectProgress } from "../../../api/hooks/useGetProjectProgress";
+import { ProgressTree } from "./ProgressTree";
 
 export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
   const { projectDetail } = props;
@@ -73,7 +74,11 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
             />
           </AccordionButton>
 
-          <AccordionPanel pb={4}>{projectDetail.name} 관련 내용</AccordionPanel>
+          <AccordionPanel pb={4}>
+            {data?.resultData?.projectId && (
+              <ProgressTree projectId={data.resultData.projectId} />
+            )}
+          </AccordionPanel>
         </AccordionItem>
       </Accordion>
       {confettiVisible && (
