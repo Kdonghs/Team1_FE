@@ -1,13 +1,14 @@
 import { Avatar, Flex, Link, Text, Tooltip } from "@chakra-ui/react";
+import { useParams } from "react-router-dom";
 
 export const TeamMemberProfile = ({
   teamMember,
 }: {
   teamMember?: { id?: number; name?: string; role?: string; imageURL?: string };
 }) => {
-  // TODO: 칸반 보드 구현 후 projectId, memberID 수정
-  const projectId = 1;
-  const memberId = ""; // 원래는 teamMember?.id; 이나 임시로 설정
+  const { id } = useParams<{ id: string }>();
+  const projectId = id ? parseInt(id, 10) : 0;
+
   return (
     <Tooltip
       label={`${teamMember?.name}의 칸반보드 이동`}
@@ -18,7 +19,7 @@ export const TeamMemberProfile = ({
       bgColor="gray.600"
     >
       <Link
-        href={`/projects/${projectId}/kanban/${memberId}`}
+        href={`/projects/${projectId}/kanban/?owner=${teamMember?.name}`}
         _hover={{ textDecoration: "none" }}
       >
         <Flex

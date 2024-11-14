@@ -2,12 +2,11 @@ import type { UseMutationResult } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-import { getTestToken } from "../../components/features/Project/TokenTest";
+import { authProjectApi } from "../Api";
 import type {
   UpdateMember,
   UpdateMemberData,
 } from "../generated/data-contracts";
-import { projectApi } from "../projectApi";
 
 type UpdateMemberParams = {
   projectId: number;
@@ -20,13 +19,7 @@ const updateMember = async (
   memberId: number,
   data: UpdateMember
 ) => {
-  const testToken = getTestToken();
-
-  const response = await projectApi.updateMember(projectId, memberId, data, {
-    headers: {
-      Authorization: `Bearer ${testToken}`,
-    },
-  });
+  const response = await authProjectApi.updateMember(projectId, memberId, data);
   return response.data;
 };
 
