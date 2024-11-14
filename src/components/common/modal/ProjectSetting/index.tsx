@@ -101,7 +101,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
         });
         onClose();
       },
-      onError: (err) => {
+      onError: () => {
         toast({
           title: "프로젝트 업데이트 오류",
           description: "업데이트 중 오류가 발생했습니다.",
@@ -109,13 +109,12 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
           duration: 3000,
           isClosable: true,
         });
-        console.log(err);
       },
     });
   });
 
   const preventEnterKeySubmission = (
-    e: React.KeyboardEvent<HTMLFormElement>,
+    e: React.KeyboardEvent<HTMLFormElement>
   ) => {
     const target = e.target as HTMLFormElement;
     if (e.key === "Enter" && !["TEXTAREA"].includes(target.tagName)) {
@@ -183,7 +182,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
                 handleNextPage,
                 handlePreviousPage,
                 onSubmit,
-                isValid,
+                isValid
               )}
             </ModalFooter>
           </form>

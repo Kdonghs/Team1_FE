@@ -4,11 +4,20 @@ import { useParams } from "react-router-dom";
 import { Image } from "../../components/common/Image";
 import { JoinInput } from "../../components/common/SearchInput/ProjectJoin";
 
+// interface MemberData {
+//   message: string;
+//   name: string;
+//   role: string;
+//   email: string;
+//   getattendURL: string;
+//   id: number;
+// }
+
 export const JoinProjectPage = () => {
   const { projectId } = useParams();
   const toast = useToast();
 
-  const handleJoinSuccess = (_joinedProjectId: number, _guestId: number) => {
+  const handleJoinSuccess = () => {
     toast({
       title: "프로젝트 참여 성공",
       description: "초대 메일이 발송되었습니다.",
@@ -51,3 +60,5 @@ export const JoinProjectPage = () => {
     </VStack>
   );
 };
+
+export default JoinProjectPage;

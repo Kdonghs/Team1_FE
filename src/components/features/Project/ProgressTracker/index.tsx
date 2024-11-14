@@ -51,7 +51,7 @@ export const ProgressTracker = ({
   }, [fetchNextPage, hasNextPage]);
 
   if (isLoading) return <Text>로딩 중...</Text>;
-  if (isError) return <Text>에러 발생</Text>;
+  if (isError) return <Text>프로젝트를 불러올 수 없습니다.</Text>;
 
   const teamProgressData: MemberProgress[] =
     data?.pages
