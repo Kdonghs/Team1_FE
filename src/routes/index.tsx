@@ -5,7 +5,6 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
-import { GoogleCallback } from "../components/common/modal/Login/GoogleCallback";
 import { Layout } from "../components/features/Layout";
 import { ProjectSidebar } from "../components/features/Project/ProjectSidebar";
 import { HomePage } from "../pages/Home";
@@ -90,10 +89,6 @@ const router = createBrowserRouter([
         <SignupPage />
       </AuthProvider>
     ),
-  },
-  {
-    path: RouterPath.callback,
-    element: <GoogleCallback />,
   },
   {
     path: RouterPath.notFound,

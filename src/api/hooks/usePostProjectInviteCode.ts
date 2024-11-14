@@ -2,20 +2,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import type { GenerateInviteLinkData } from "@/api/generated/data-contracts";
 
-import { getTestToken } from "../../components/features/Project/TokenTest";
-import { projectApi } from "../projectApi";
+import { authProjectApi } from "../Api";
 
 const postProjectInviteCode = async (
-  projectId: number,
+  projectId: number
 ): Promise<GenerateInviteLinkData | null> => {
   try {
-    const testToken = getTestToken();
-
-    const response = await projectApi.generateInviteLink(projectId, {
-      headers: {
-        Authorization: `Bearer ${testToken}`,
-      },
-    });
+    const response = await authProjectApi.generateInviteLink(projectId);
 
     if (!response.data || !response.data.resultData) {
       throw new Error("Project data not found");
@@ -26,7 +19,7 @@ const postProjectInviteCode = async (
     throw new Error(
       error instanceof Error
         ? error.message
-        : "Failed to fetch project invite code",
+        : "Failed to fetch project invite code"
     );
   }
 };

@@ -4,6 +4,7 @@ import {
   Flex,
   Modal,
   Text,
+  useBreakpointValue,
   useDisclosure,
 } from "@chakra-ui/react";
 
@@ -22,6 +23,14 @@ export const Project = () => {
     onOpen: onProjectSettingModalOpen,
     onClose: onProjectSettingModalClose,
   } = useDisclosure();
+
+  const buttonWidth = useBreakpointValue({
+    base: "100%",
+    sm: "48%",
+    md: "48%",
+    lg: "auto",
+  });
+
   return (
     <Container maxW="container.xl" p={5}>
       <Flex justifyContent="space-between" alignItems="center" py={6}>
@@ -29,8 +38,20 @@ export const Project = () => {
           Project
         </Text>
         {/* TODO: 관리자만 보이도록 권한 설정 필요 */}
-        <Flex m={2}>
-          <Button {...buttonStyle} onClick={onMemberManagementModalOpen} mr={4}>
+        <Flex
+          direction={{ base: "column", sm: "row" }}
+          alignItems="stretch"
+          justifyContent="flex-end"
+          gap={4}
+          wrap="wrap"
+          m={2}
+        >
+          <Button
+            {...buttonStyle}
+            onClick={onMemberManagementModalOpen}
+            w={buttonWidth}
+            fontSize={"md"}
+          >
             팀원 관리
           </Button>
           <Modal
@@ -41,7 +62,12 @@ export const Project = () => {
           >
             <MemberManagementModal />
           </Modal>
-          <Button {...buttonStyle} onClick={onProjectSettingModalOpen}>
+          <Button
+            {...buttonStyle}
+            onClick={onProjectSettingModalOpen}
+            w={buttonWidth}
+            fontSize={"md"}
+          >
             프로젝트 설정
           </Button>
           <Modal
@@ -50,7 +76,6 @@ export const Project = () => {
             size={"md"}
             isCentered
           >
-            {/* TODO: 프로젝트 생성 모달 - 프로젝트 세팅 모달 간 컴포넌트 공유할지 고민하기 */}
             <ProjectSettingModal onClose={onProjectSettingModalClose} />
           </Modal>
         </Flex>

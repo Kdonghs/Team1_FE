@@ -2,7 +2,6 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 
-import { TokenTest } from "../TokenTest";
 import { UserProfile } from "./UserProfile";
 
 interface SidebarProps {
@@ -43,7 +42,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </Button>
       </Flex>
 
-      <Flex padding={2}>
+      <Flex>
         <UserProfile />
       </Flex>
 
@@ -73,7 +72,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </Text>
         </Stack>
       </Stack>
-      <TokenTest />
     </Box>
   );
 };
