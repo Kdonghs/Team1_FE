@@ -8,6 +8,7 @@ import {
   Flex,
   Progress,
   Text,
+  Tooltip,
   useToast,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -111,15 +112,22 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
                 {projectDetail.name}
               </Text>
             </Box>
-            <Progress
-              value={progressData}
-              size="lg"
-              colorScheme={isProjectColorChangeEnabled ? "red" : "gray"}
-              width="80%"
-              height={5}
-              borderRadius="full"
-              margin={3}
-            />
+            <Tooltip
+              placement="top"
+              label={`${progressData}%`}
+              borderRadius={10}
+              aria-label="progress"
+            >
+              <Progress
+                value={progressData}
+                size="lg"
+                colorScheme={isProjectColorChangeEnabled ? "red" : "gray"}
+                width="80%"
+                height={5}
+                borderRadius="full"
+                margin={3}
+              />
+            </Tooltip>
           </AccordionButton>
 
           <AccordionPanel pb={4}>
