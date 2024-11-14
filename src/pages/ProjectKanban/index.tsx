@@ -4,12 +4,14 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { useGetProjectDetail } from "../../api/hooks/useGetProjectDetail";
 import { Project } from "../../components/features/Project";
+import { KanbanBoard } from "../../components/features/Project/KanbanBoard";
 import { ProgressAccordion } from "../../components/features/Project/ProgressAccordion";
-import { ProgressTracker } from "../../components/features/Project/ProgressTracker";
-export const ProjectPage = () => {
+
+export const ProjectKanbanPage = () => {
   const { id } = useParams<{ id: string }>();
-  const projectId = id ? parseInt(id, 10) : null;
+  const projectId = id ? parseInt(id, 10) : 0;
   const navigate = useNavigate();
+
   const { data, error, isLoading } = useGetProjectDetail(projectId);
 
   useEffect(() => {
@@ -31,7 +33,7 @@ export const ProjectPage = () => {
         {data?.id !== undefined && (
           <Stack spacing={6}>
             <ProgressAccordion projectDetail={data} />
-            <ProgressTracker projectId={data.id} />
+            <KanbanBoard projectId={projectId} />
           </Stack>
         )}
       </Container>

@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import type { SingleResultString } from "@/api/generated/data-contracts";
 
 export const InviteMember = (inviteCode: SingleResultString) => {
-  const inviteLink = `https://seamlessup.com/invite/${inviteCode.resultData || ""}`;
+  const inviteLink = `https://seamless.com/invite/${inviteCode.resultData || ""}`;
 
   const { onCopy, value, setValue, hasCopied } = useClipboard("");
   useEffect(() => {

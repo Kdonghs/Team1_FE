@@ -58,7 +58,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 프로젝트 홈
               </Text>
             </Link>
-            <Link to={`/projects/${projectId}/#kanban`}>
+            <Link to={`/projects/${projectId}/kanban`}>
               <Text mt={2} mb={2}>
                 칸반 보드
               </Text>
