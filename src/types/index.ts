@@ -50,7 +50,7 @@ export interface Project {
   id: number;
   name: string;
   description?: string;
-  imageUrl?: string;
+  imageURL?: string;
   startDate: string;
   endDate: string;
   optionIds: number[];

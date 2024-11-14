@@ -39,6 +39,7 @@ export const renderFooterButtons = (
   handlePreviousPage: () => void,
   onSubmit: () => void,
   isValid: boolean,
+  isPending?: boolean,
 ) => {
   const currentConfig = footerConfig[currentPage]?.[selectedFeature] || [];
 
@@ -59,6 +60,7 @@ export const renderFooterButtons = (
           action={buttonConfig.action}
           type={buttonConfig.action === "submit" ? "submit" : "button"}
           disabled={!isValid}
+          isLoading={buttonConfig.action === "submit" && isPending}
           onClick={buttonAction[buttonConfig.action]}
         >
           {buttonConfig.label}

@@ -46,6 +46,19 @@ export const ProjectDetailCreatingFields = ({
         )}
       />
       <Controller
+        name="imageURL"
+        control={control}
+        render={({ field, fieldState: { error, invalid } }) => (
+          <TextField
+            label="이미지 URL"
+            placeholder="이미지 URL을 입력하세요"
+            {...field}
+            isInvalid={invalid}
+            errorMessage={error?.message}
+          />
+        )}
+      />
+      <Controller
         name="startDate"
         control={control}
         rules={{

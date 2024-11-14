@@ -21,10 +21,7 @@ import type { Profile } from "../../../types";
 
 export const Header: React.FC = () => {
   const { user, login, logout } = useAuth();
-  const {
-    isOpen: isLoginOpen,
-    onClose: onLoginClose,
-  } = useDisclosure();
+  const { isOpen: isLoginOpen, onClose: onLoginClose } = useDisclosure();
   const {
     onOpen: onProfileOpen,
     isOpen: isProfileOpen,

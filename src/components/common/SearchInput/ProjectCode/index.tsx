@@ -21,7 +21,8 @@ interface AuthResponse {
   };
 }
 
-interface SearchInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onError'> {
+interface SearchInputProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onError"> {
   onError?: (error: Error) => void;
 }
 
@@ -30,13 +31,18 @@ const validateCode = (code: string): boolean => {
   return trimmedCode.length > 0;
 };
 
-const authenticateWithCode = async (memberCode: string): Promise<AuthResponse> => {
-  const response = await fetch(`/api/auth/memberCode?memberCode=${encodeURIComponent(memberCode)}`, {
-    method: "GET",
-    headers: {
-      Accept: "application/json",
+const authenticateWithCode = async (
+  memberCode: string,
+): Promise<AuthResponse> => {
+  const response = await fetch(
+    `/api/auth/memberCode?memberCode=${encodeURIComponent(memberCode)}`,
+    {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
     },
-  });
+  );
 
   const data = await response.json();
 
@@ -56,11 +62,14 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setMemberCode(value);
-    setIsValid(validateCode(value));
-  }, []);
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setMemberCode(value);
+      setIsValid(validateCode(value));
+    },
+    [],
+  );
 
   const handleAuth = useCallback(async () => {
     if (!isValid || isLoading) return;
@@ -77,17 +86,24 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       }
     } catch (error) {
       console.error("Authentication error:", error);
-      onError?.(error instanceof Error ? error : new Error("인증 중 오류가 발생했습니다."));
+      onError?.(
+        error instanceof Error
+          ? error
+          : new Error("인증 중 오류가 발생했습니다."),
+      );
     } finally {
       setIsLoading(false);
     }
   }, [memberCode, isValid, isLoading, navigate, onError]);
 
-  const handleKeyPress = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && isValid && !isLoading) {
-      handleAuth();
-    }
-  }, [handleAuth, isValid, isLoading]);
+  const handleKeyPress = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter" && isValid && !isLoading) {
+        handleAuth();
+      }
+    },
+    [handleAuth, isValid, isLoading],
+  );
 
   return (
     <Container>
@@ -147,19 +163,19 @@ const AuthButton = styled(Button)`
   height: 40px;
   margin-top: 16px;
   border-radius: 8px;
-  background-color: ${props => props.isDisabled ? "#E2E8F0" : "#7B7FF6"};
+  background-color: ${(props) => (props.isDisabled ? "#E2E8F0" : "#7B7FF6")};
   color: white;
 
   &:hover:not(:disabled) {
-    background-color: #6972F0;
+    background-color: #6972f0;
   }
 
   &:active:not(:disabled) {
-    background-color: #5A63E6;
+    background-color: #5a63e6;
   }
 
   &:disabled {
-    background-color: #E2E8F0;
+    background-color: #e2e8f0;
     cursor: not-allowed;
     opacity: 1;
   }

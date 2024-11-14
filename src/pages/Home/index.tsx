@@ -5,7 +5,6 @@ import { Image } from "../../components/common/Image";
 import { SearchInput } from "../../components/common/SearchInput/ProjectCode";
 
 export const HomePage: React.FC = () => {
-
   return (
     <Container maxW="container.xl" py={20}>
       <VStack spacing={150} align="stretch">
@@ -20,10 +19,7 @@ export const HomePage: React.FC = () => {
             <Text fontSize="2xl" mb={5}>
               팀의 멤버이신가요?
             </Text>
-            <SearchInput
-              placeholder="# 참여코드로 시작"
-              height={50}
-            />
+            <SearchInput placeholder="# 참여코드로 시작" height={50} />
           </Box>
         </Box>
         <Box>
