@@ -74,7 +74,7 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
   useEffect(() => {
     const projectId = projectDetail?.id;
 
-    if (progressData >= 50 && projectDetail?.optionIds?.includes(3)) {
+    if (progressData >= 50 && projectDetail?.optionIds?.includes(2)) {
       if (!localStorage.getItem(`celebration-${projectId}`)) {
         setConfettiVisible(true);
         localStorage.setItem(`celebration-${projectId}`, "true");
