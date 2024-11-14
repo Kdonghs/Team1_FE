@@ -3,7 +3,7 @@ import {
   IconButton,
   InputGroup,
   InputRightElement,
-  useToast
+  useToast,
 } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import React, { useCallback, useState } from "react";
@@ -92,7 +92,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           description: "프로젝트로 이동합니다.",
           status: "success",
           duration: 3000,
-          isClosable: true
+          isClosable: true,
         });
         navigate(`${RouterPath.project}/${response.resultData.projectId}`);
       } else {
@@ -100,26 +100,22 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       }
     } catch (error) {
       console.error("Authentication error:", error);
-      const errorMessage = error instanceof Error ? error.message : "인증 중 오류가 발생했습니다.";
+      const errorMessage =
+        error instanceof Error ? error.message : "인증 중 오류가 발생했습니다.";
 
       toast({
         title: "인증 실패",
         description: errorMessage,
         status: "error",
         duration: 3000,
-        isClosable: true
+        isClosable: true,
       });
 
-      onError?.(
-        error instanceof Error
-          ? error
-          : new Error(errorMessage),
-      );
+      onError?.(error instanceof Error ? error : new Error(errorMessage));
     } finally {
       setIsLoading(false);
     }
   }, [memberCode, isValid, isLoading, navigate, onError, toast]);
-
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -160,7 +156,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
             }}
           />
         </StyledInputRightElement>
-
       </StyledInputGroup>
     </Container>
   );

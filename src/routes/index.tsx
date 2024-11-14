@@ -14,9 +14,9 @@ import { MemberDetailsPage } from "../pages/MemberDetails";
 import { ProjectPage } from "../pages/Project";
 import { ProjectKanbanPage } from "../pages/ProjectKanban";
 import { ProjectListPage } from "../pages/ProjectList";
-import { SignupPage } from "../pages/Signup";
 import { AuthProvider } from "../provider/Auth";
 import { PrivateRoute } from "./components/PrivateRoute";
+import { ProjectRoute } from "./components/ProjectRoute";
 import { RouterPath } from "./path";
 
 const router = createBrowserRouter([
@@ -60,17 +60,22 @@ const router = createBrowserRouter([
     path: RouterPath.project,
     element: (
       <AuthProvider>
-        <ProjectSidebar />
+        <ProjectRoute />
       </AuthProvider>
     ),
     children: [
       {
-        index: true,
-        element: <ProjectPage />,
-      },
-      {
-        path: RouterPath.projectKanban,
-        element: <ProjectKanbanPage />,
+        element: <ProjectSidebar />,
+        children: [
+          {
+            index: true,
+            element: <ProjectPage />,
+          },
+          {
+            path: RouterPath.projectKanban,
+            element: <ProjectKanbanPage />,
+          },
+        ],
       },
     ],
   },
@@ -79,14 +84,6 @@ const router = createBrowserRouter([
     element: (
       <AuthProvider>
         <LoginPage />
-      </AuthProvider>
-    ),
-  },
-  {
-    path: RouterPath.signup,
-    element: (
-      <AuthProvider>
-        <SignupPage />
       </AuthProvider>
     ),
   },

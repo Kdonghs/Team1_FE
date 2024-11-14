@@ -1,12 +1,11 @@
 export const RouterPath = {
   root: "/",
   login: "/login",
-  signup: "/signup",
   projectList: "/projects",
   project: "/projects/:id",
   projectKanban: "/projects/:id/kanban",
   memberDetails: "/members/:id",
-  joinProject: "/join-project",
+  joinProject: "/invite/:intiveCode",
   callback: "/api/auth/success",
   test: "/test",
   notFound: "*",
