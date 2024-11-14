@@ -5,7 +5,7 @@ import type { GenerateInviteLinkData } from "@/api/generated/data-contracts";
 import { authProjectApi } from "../Api";
 
 const postProjectInviteCode = async (
-  projectId: number
+  projectId: number,
 ): Promise<GenerateInviteLinkData | null> => {
   try {
     const response = await authProjectApi.generateInviteLink(projectId);
@@ -19,7 +19,7 @@ const postProjectInviteCode = async (
     throw new Error(
       error instanceof Error
         ? error.message
-        : "Failed to fetch project invite code"
+        : "Failed to fetch project invite code",
     );
   }
 };

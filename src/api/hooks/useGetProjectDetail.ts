@@ -4,7 +4,7 @@ import { authProjectApi } from "../Api";
 import type { ProjectDetail } from "../generated/data-contracts";
 
 const getProjectDetail = async (
-  projectId: number
+  projectId: number,
 ): Promise<ProjectDetail | null> => {
   try {
     const response = await authProjectApi.getProject(projectId);
@@ -16,7 +16,9 @@ const getProjectDetail = async (
     return response.data.resultData;
   } catch (error) {
     throw new Error(
-      error instanceof Error ? error.message : "Failed to fetch project details"
+      error instanceof Error
+        ? error.message
+        : "Failed to fetch project details",
     );
   }
 };

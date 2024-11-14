@@ -14,7 +14,7 @@ const getUserData = async (): Promise<GetUserData | null> => {
     return response.data;
   } catch (error) {
     throw new Error(
-      error instanceof Error ? error.message : "Failed to fetch user data"
+      error instanceof Error ? error.message : "Failed to fetch user data",
     );
   }
 };

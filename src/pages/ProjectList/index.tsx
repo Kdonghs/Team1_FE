@@ -2,154 +2,133 @@ import { AddIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
+  Center,
   Flex,
   IconButton,
-  Input,
   Modal,
-  ModalBody,
-  ModalCloseButton,
   ModalContent,
-  ModalFooter,
-  ModalHeader,
   ModalOverlay,
-  Stack,
   Text,
   useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
+import { useGetProjects } from "../../api/hooks/useGetProjects";
+import { ProjectCreatingModal } from "../../components/common/modal/ProjectCreate";
 import { ScheduleList } from "../../components/common/ScheduleCard";
 import { SearchInput } from "../../components/common/SearchInput/ProjectCode";
 import { ProjectCard } from "../../components/features/Home/ProjectCard";
 
-type Project = {
-  id: number;
-  name: string;
-  startDate: string;
-  endDate: string;
-  option: {
-    type: "basic" | "custom";
-    customOption?: {
-      celebrationEffect: boolean;
-      colorChange: boolean;
-      emailNotification: boolean;
-    };
-  };
-};
-
-const initialProjects: Project[] = [
-  {
-    id: 1,
-    name: "디자인 시스템 개발",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
-      .toISOString()
-      .split("T")[0],
-    option: {
-      type: "custom",
-      customOption: {
-        celebrationEffect: true,
-        colorChange: true,
-        emailNotification: true,
-      },
-    },
-  },
-  {
-    id: 2,
-    name: "프론트엔드 리팩토링",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 2))
-      .toISOString()
-      .split("T")[0],
-    option: {
-      type: "basic",
-    },
-  },
-  {
-    id: 3,
-    name: "백엔드 API 개발",
-    startDate: new Date().toISOString().split("T")[0],
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
-      .toISOString()
-      .split("T")[0],
-    option: {
-      type: "custom",
-      customOption: {
-        celebrationEffect: false,
-        colorChange: true,
-        emailNotification: false,
-      },
-    },
-  },
-];
-
-const handleJoinSuccess = (projectId: number, guestId: number) => {
-  console.log(`Successfully joined project ${projectId} as guest ${guestId}`);
-};
-
 export const ProjectListPage: React.FC = () => {
   const { isOpen, onClose, onOpen } = useDisclosure();
-  const [projects, setProjects] = useState<Project[]>(initialProjects);
-  const [newProjectTitle, setNewProjectTitle] = useState("");
-  const [startIndex, setStartIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
+  const projectsPerPage = 4;
 
-  const projectsPerView = 4;
-
-  const handleCreateProject = () => {
-    if (newProjectTitle.trim()) {
-      const today = new Date();
-      const endDate = new Date(today);
-      endDate.setMonth(today.getMonth() + 1);
-
-      const newProject: Project = {
-        id: projects.length + 1,
-        name: newProjectTitle,
-        startDate: today.toISOString().split("T")[0],
-        endDate: endDate.toISOString().split("T")[0],
-        option: {
-          type: "basic",
-        },
-      };
-
-      setProjects([...projects, newProject]);
-      setNewProjectTitle("");
-      onClose();
-    }
-  };
-
-  const visibleProjects = projects.slice(
-    startIndex,
-    startIndex + projectsPerView,
-  );
-
-  const shouldShowNavigation = projects.length > projectsPerView;
-
-  const canGoPrevious = startIndex > 0;
-  const canGoNext = startIndex + projectsPerView < projects.length;
+  const {
+    data: projectResponse,
+    error,
+    isLoading,
+    refetch,
+  } = useGetProjects({
+    page: currentPage,
+    size: projectsPerPage,
+    sort: "createdAt,desc",
+  });
 
   const handlePrevious = () => {
-    if (canGoPrevious) {
-      setStartIndex((prev) => Math.max(0, prev - 1));
+    if (currentPage > 0) {
+      setCurrentPage((prev) => prev - 1);
     }
   };
 
   const handleNext = () => {
-    if (canGoNext) {
-      setStartIndex((prev) =>
-        Math.min(projects.length - projectsPerView, prev + 1),
+    if (projectResponse?.hasNext) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handleAddProject = async () => {
+    await refetch(); // 프로젝트 목록 강제 리프레시
+    onClose();
+  };
+
+  const renderProjectSection = () => {
+    if (isLoading) {
+      return (
+        <Center py={10}>
+          <Text>프로젝트 목록을 불러오는 중...</Text>
+        </Center>
       );
     }
+
+    if (error) {
+      return (
+        <Center py={10}>
+          <Text color="red.500">프로젝트 목록을 불러오는데 실패했습니다.</Text>
+        </Center>
+      );
+    }
+
+    if (!projectResponse?.resultData.length) {
+      return (
+        <Center py={10}>
+          <VStack spacing={4}>
+            <Text color="gray.500" fontSize="lg">
+              참여중인 프로젝트가 없습니다.
+            </Text>
+            {/* <Button
+              backgroundColor="#95A4FC"
+              color="#FFFFFF"
+              onClick={onOpen}
+              leftIcon={<AddIcon />}
+            >
+              프로젝트 생성하기
+            </Button> */}
+          </VStack>
+        </Center>
+      );
+    }
+
+    return (
+      <Flex justifyContent="center" alignItems="center" gap={6} p={5}>
+        <IconButton
+          aria-label="Previous projects"
+          icon={<ChevronLeftIcon />}
+          onClick={handlePrevious}
+          isDisabled={currentPage === 0}
+        />
+
+        <Flex gap={6}>
+          {projectResponse.resultData.map((project) => (
+            <ProjectCard
+              key={project.id}
+              id={project.id}
+              title={project.name}
+              startDate={project.startDate}
+              endDate={project.endDate}
+              option={{
+                type: project.optionIds.length === 2 ? "basic" : "custom",
+              }}
+              imageSrc={project.imageURL}
+            />
+          ))}
+        </Flex>
+
+        <IconButton
+          aria-label="Next projects"
+          icon={<ChevronRightIcon />}
+          onClick={handleNext}
+          isDisabled={!projectResponse?.hasNext}
+        />
+      </Flex>
+    );
   };
 
   return (
     <Box>
       <Box maxW="lg" mx="auto">
-        <SearchInput
-          placeholder="# 참여코드로 시작"
-          onJoinSuccess={handleJoinSuccess}
-          height={50}
-          width={50}
-        />
+        <SearchInput placeholder="# 참여코드로 시작" height={50} width={50} />
       </Box>
 
       <Box mt={10}>
@@ -157,6 +136,7 @@ export const ProjectListPage: React.FC = () => {
           <Text fontSize="20px" fontWeight="bold" mb={6}>
             프로젝트
           </Text>
+
           <Button
             backgroundColor="#95A4FC"
             color="#FFFFFF"
@@ -167,64 +147,19 @@ export const ProjectListPage: React.FC = () => {
           </Button>
         </Flex>
 
-        <Flex justifyContent="center" alignItems="center" gap={6} p={5}>
-          {shouldShowNavigation && (
-            <IconButton
-              aria-label="Previous projects"
-              icon={<ChevronLeftIcon />}
-              onClick={handlePrevious}
-              isDisabled={!canGoPrevious}
-            />
-          )}
+        {renderProjectSection()}
 
-          <Flex gap={6}>
-            {visibleProjects.map((project) => (
-              <ProjectCard
-                key={project.id}
-                title={project.name}
-                startDate={project.startDate}
-                endDate={project.endDate}
-                option={project.option}
-              />
-            ))}
-          </Flex>
-
-          {shouldShowNavigation && (
-            <IconButton
-              aria-label="Next projects"
-              icon={<ChevronRightIcon />}
-              onClick={handleNext}
-              isDisabled={!canGoNext}
-            />
-          )}
-        </Flex>
-
-        {/* 임시 모달 */}
-        <Modal isOpen={isOpen} onClose={onClose}>
+        <Modal isOpen={isOpen} onClose={onClose} size="md" isCentered>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>새 프로젝트 생성</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Stack spacing={3}>
-                <Input
-                  placeholder="프로젝트 명 입력"
-                  value={newProjectTitle}
-                  onChange={(e) => setNewProjectTitle(e.target.value)}
-                />
-              </Stack>
-            </ModalBody>
-            <ModalFooter>
-              <Button colorScheme="blue" mr={3} onClick={handleCreateProject}>
-                확인
-              </Button>
-              <Button variant="ghost" onClick={onClose}>
-                취소
-              </Button>
-            </ModalFooter>
+            <ProjectCreatingModal
+              onClose={onClose}
+              onProjectCreated={handleAddProject}
+            />
           </ModalContent>
         </Modal>
       </Box>
+
       <Box maxW="1010" mx="auto" mb={10}>
         <ScheduleList />
       </Box>
