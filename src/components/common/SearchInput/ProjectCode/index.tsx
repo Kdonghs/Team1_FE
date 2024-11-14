@@ -84,8 +84,8 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     setIsLoading(true);
     try {
       const response = await authenticateWithCode(memberCode);
-
-      if (response.errorCode === 0 && response.resultData?.token) {
+      console.log("Authentication response:", response);
+      if (response.errorCode === 200 && response.resultData?.token) {
         authSessionStorage.set(response.resultData.token);
         toast({
           title: "인증 성공",
