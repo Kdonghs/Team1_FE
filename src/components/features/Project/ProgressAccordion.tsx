@@ -15,6 +15,7 @@ import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 import type { ProjectDetail } from "../../../api/generated/data-contracts";
 import { useGetProjectProgress } from "../../../api/hooks/useGetProjectProgress";
+import { useOptionContext } from "../../../provider/Option";
 import { ProgressTree } from "./ProgressTree";
 
 export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
@@ -27,6 +28,28 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
     return savedState === "open";
   });
   const progressData = data?.resultData?.projectProgress || 0;
+  const { isProjectColorChangeEnabled, setIsProjectColorChangeEnabled } =
+    useOptionContext();
+
+  useEffect(() => {
+    if (projectDetail?.endDate) {
+      const today = new Date();
+      const endDate = new Date(projectDetail.endDate);
+
+      const timeDiff = endDate.getTime() - today.getTime();
+      const oneDayInMillis = 86400000;
+
+      if (
+        projectDetail?.optionIds?.includes(3) &&
+        timeDiff >= 0 &&
+        timeDiff <= oneDayInMillis
+      ) {
+        setIsProjectColorChangeEnabled(true);
+      } else {
+        setIsProjectColorChangeEnabled(false);
+      }
+    }
+  }, [projectDetail, setIsProjectColorChangeEnabled]);
 
   const handleToggle = () => {
     const newState = !isOpen;
@@ -76,7 +99,7 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
             <Progress
               value={progressData}
               size="lg"
-              colorScheme="gray"
+              colorScheme={isProjectColorChangeEnabled ? "red" : "gray"}
               width="80%"
               height={5}
               borderRadius="full"

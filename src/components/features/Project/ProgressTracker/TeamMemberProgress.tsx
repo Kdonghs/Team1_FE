@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 
 import type { MemberProgress } from "@/api/generated/data-contracts";
 
+import { useOptionContext } from "../../../../provider/Option";
 import { ProgressLabel } from "./ProgressLabel";
 import { TeamMemberProfile } from "./TeamMemberProfile";
 
@@ -14,6 +15,7 @@ const createFillAnimation = (progress: number) => keyframes`
 `;
 
 export const TeamMemberProgress = ({ member }: { member: MemberProgress }) => {
+  const { isProjectColorChangeEnabled } = useOptionContext();
   const { teamMember, progress } = member;
   const activeTasks = member.activeTasks || [];
 
@@ -29,6 +31,10 @@ export const TeamMemberProgress = ({ member }: { member: MemberProgress }) => {
       setTooltipX(offsetX);
     }
   };
+
+  const progressColor = isProjectColorChangeEnabled
+    ? `rgba(255, 0, 0, ${0.5 + (progress || 0) / 200})`
+    : `rgba(49, 130, 206, ${0.5 + (progress || 0) / 200})`;
 
   return (
     <Flex
@@ -66,7 +72,7 @@ export const TeamMemberProgress = ({ member }: { member: MemberProgress }) => {
               "& > div": {
                 animation: `${fillAnimation} 2s ease-in-out forwards`,
                 width: `${progress || 0}%`,
-                backgroundColor: `rgba(49, 130, 206, ${0.5 + (progress || 0) / 200})`,
+                backgroundColor: progressColor,
               },
             }}
           />

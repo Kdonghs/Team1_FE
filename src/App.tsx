@@ -1,10 +1,13 @@
 import { AuthProvider } from "./provider/Auth";
+import { OptionProvider } from "./provider/Option";
 import { Routes } from "./routes";
 
 function App() {
   return (
     <AuthProvider>
-      <Routes />
+      <OptionProvider>
+        <Routes />
+      </OptionProvider>
     </AuthProvider>
   );
 }

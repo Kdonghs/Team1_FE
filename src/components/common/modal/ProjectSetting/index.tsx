@@ -89,7 +89,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
       endDate: newEndDate,
       optionIds: newOptionIds,
     };
-    console.log(updatedProjectData.optionIds);
+    console.log(updatedProjectData);
     mutate(updatedProjectData, {
       onSuccess: () => {
         toast({

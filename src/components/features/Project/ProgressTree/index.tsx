@@ -15,6 +15,7 @@ import plantAnimation2 from "../../../../assets/animations/Plant_2.json";
 import plantAnimation3 from "../../../../assets/animations/Plant_3.json";
 import plantAnimation4 from "../../../../assets/animations/Plant_4.json";
 import plantAnimation5 from "../../../../assets/animations/Plant_5.json";
+import { useOptionContext } from "../../../../provider/Option";
 
 interface ProgressTreeProps {
   projectId: number;
@@ -24,6 +25,7 @@ export const ProgressTree = ({ projectId }: ProgressTreeProps) => {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
   const [isHovered, setIsHovered] = useState(false);
 
+  const { isProjectColorChangeEnabled } = useOptionContext();
   const { data, error, isLoading } = useGetProjectProgress(projectId);
   const growData = data?.resultData;
 
@@ -197,6 +199,7 @@ export const ProgressTree = ({ projectId }: ProgressTreeProps) => {
               value={25 - getRemainingPercentage()}
               size="md"
               width="80%"
+              colorScheme={isProjectColorChangeEnabled ? "red" : "blue"}
               bgColor={"white"}
               mt={2}
               borderRadius={"full"}

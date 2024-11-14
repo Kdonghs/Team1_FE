@@ -2,16 +2,14 @@ import { Container, Stack } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { ProgressTracker } from "../..//components/features/Project/ProgressTracker";
 import { useGetProjectDetail } from "../../api/hooks/useGetProjectDetail";
 import { Project } from "../../components/features/Project";
 import { ProgressAccordion } from "../../components/features/Project/ProgressAccordion";
-
+import { ProgressTracker } from "../../components/features/Project/ProgressTracker";
 export const ProjectPage = () => {
   const { id } = useParams<{ id: string }>();
   const projectId = id ? parseInt(id, 10) : null;
   const navigate = useNavigate();
-
   const { data, error, isLoading } = useGetProjectDetail(projectId);
 
   useEffect(() => {
