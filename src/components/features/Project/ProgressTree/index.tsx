@@ -215,6 +215,7 @@ const animationMap: Record<number, object> = {
   100: plantAnimation5,
 };
 
+//TODO: 단계별 수정 필요
 const growthLevels: Record<
   number,
   { growthLevel: string; description: string }
