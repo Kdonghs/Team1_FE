@@ -55,7 +55,7 @@ interface FormValidity {
 const createMember = async (
   email: string,
   name: string,
-  attendURL: string
+  attendURL: string,
 ): Promise<MemberResponse> => {
   try {
     const response = await fetch(`/api/project/1/member`, {
@@ -86,7 +86,7 @@ const createMember = async (
 const sendInvite = async (
   projectId: number,
   email: string,
-  name: string
+  name: string,
 ): Promise<InviteResponse> => {
   try {
     const response = await fetch(`/api/project/invite`, {
@@ -148,11 +148,11 @@ export const JoinInput: React.FC<FormInputProps> = ({
           name === "email"
             ? validateEmail(value)
             : name === "name"
-            ? validateName(value)
-            : validateUrl(value),
+              ? validateName(value)
+              : validateUrl(value),
       }));
     },
-    []
+    [],
   );
 
   const isFormValid = validity.email && validity.name && validity.attendURL;
@@ -165,21 +165,26 @@ export const JoinInput: React.FC<FormInputProps> = ({
       const memberResponse = await createMember(
         formData.email,
         formData.name,
-        formData.attendURL
+        formData.attendURL,
       );
 
       if (memberResponse.errorCode === 200 && memberResponse.resultData) {
         try {
           await sendInvite(projectId, formData.email, formData.name);
         } catch (inviteError) {
-          console.warn("Invite API error (email sent successfully):", inviteError);
+          console.warn(
+            "Invite API error (email sent successfully):",
+            inviteError,
+          );
         }
 
         onJoinSuccess?.(memberResponse.resultData);
         setFormData({ email: "", name: "", attendURL: "" });
         setValidity({ email: false, name: false, attendURL: false });
       } else {
-        throw new Error(memberResponse.errorMessage || "멤버 생성에 실패했습니다.");
+        throw new Error(
+          memberResponse.errorMessage || "멤버 생성에 실패했습니다.",
+        );
       }
     } catch (error) {
       console.error("Error in join process:", error);
