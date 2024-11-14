@@ -14,8 +14,10 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { useGetProjectMembers } from "../../../../api/hooks/useGetProjectMembers";
-import { usePostProjectInviteCode } from "../../../../api/hooks/usePostProjectInviteCode";
+import {
+  useGetProjectMembers,
+  usePostProjectInviteCode,
+} from "../../../../api/hooks/project.api";
 import { InviteMember } from "./InviteMember";
 import { MemberItem } from "./MemberItem";
 
@@ -91,7 +93,7 @@ export const MemberManagementModal = ({
               <StyledFlex>
                 {membersData?.pages?.length === 0 ||
                 membersData?.pages?.every(
-                  (page) => page.resultData?.length === 0,
+                  (page) => page.resultData?.length === 0
                 ) ? (
                   <Text>팀원이 없습니다.</Text>
                 ) : (
@@ -124,7 +126,7 @@ export const MemberManagementModal = ({
                               loadMoreMembers();
                             }
                           },
-                          { threshold: 1.0 },
+                          { threshold: 1.0 }
                         );
                         observer.observe(ref);
                       }

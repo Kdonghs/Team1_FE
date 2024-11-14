@@ -10,7 +10,7 @@ import type { LottieRefCurrentProps } from "lottie-react";
 import Lottie from "lottie-react";
 import { useRef, useState } from "react";
 
-import { useGetProjectProgress } from "../../../../api/hooks/useGetProjectProgress";
+import { useGetProjectProgress } from "../../../../api/hooks/project.api";
 import plantAnimation2 from "../../../../assets/animations/Plant_2.json";
 import plantAnimation3 from "../../../../assets/animations/Plant_3.json";
 import plantAnimation4 from "../../../../assets/animations/Plant_4.json";

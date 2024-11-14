@@ -27,8 +27,7 @@ import { EllipsisVertical, LogOutIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { useGetUserData } from "../../../../api/hooks/useGetUserdata";
-import { useUpdateUser } from "../../../../api/hooks/useUpdateUserdata";
+import { useGetUserData, useUpdateUser } from "../../../../api/hooks/user.api";
 import { useAuth } from "../../../../provider/Auth";
 
 interface UserProfileForm {
@@ -94,7 +93,7 @@ export const UserProfile = () => {
               isClosable: true,
             });
           },
-        },
+        }
       );
     } else {
       onClose();

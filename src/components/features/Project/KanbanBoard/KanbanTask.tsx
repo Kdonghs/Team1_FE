@@ -31,7 +31,7 @@ import type {
 } from "@/api/generated/data-contracts";
 import type { TaskPriority, TaskStatus } from "@/types/index";
 
-import { useDeleteProjectTask } from "../../../../api/hooks/useDeleteProjectTask";
+import { useDeleteProjectTask } from "../../../../api/hooks/project.api";
 import { useOptionContext } from "../../../../provider/Option";
 import { TaskModal } from "./modal/TaskModal";
 interface TaskProps {
@@ -92,7 +92,7 @@ export const KanbanTask = ({ task, onDeleteTask }: TaskProps) => {
               isClosable: true,
             });
           },
-        },
+        }
       );
     }
   };
