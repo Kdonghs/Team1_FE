@@ -19,6 +19,7 @@ import type {
 } from "../../../../api/generated/data-contracts";
 import { useGetProjectDetail } from "../../../../api/hooks/useGetProjectDetail";
 import { useUpdateProject } from "../../../../api/hooks/useUpdateProject";
+import { getKoreanTimeISO } from "../../../../utils/dateUtils";
 import { ProjectOptionSettingFields } from "../ProjectSetting/ProjectSettingForm/projectOptionSettingFields";
 import { AnimatedPageTransition } from "./animatedPageTransition";
 import { ProjectDetailSettingFields } from "./ProjectSettingForm/projectDetailSettingFields";
@@ -76,10 +77,10 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
 
     const newName = updatedData.name?.trim();
     const newStartDate = updatedData.startDate
-      ? new Date(updatedData.startDate).toISOString()
+      ? getKoreanTimeISO(new Date(updatedData.startDate))
       : undefined;
     const newEndDate = updatedData.endDate
-      ? new Date(updatedData.endDate).toISOString()
+      ? getKoreanTimeISO(new Date(updatedData.endDate))
       : undefined;
     const newOptionIds =
       selectedFeature === "기본" ? [2, 4] : updatedData.optionIds || [];
