@@ -1,8 +1,7 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import { getTestToken } from "../../components/features/Project/TokenTest";
+import { authProjectApi } from "../Api";
 import type { GetTaskListData } from "../generated/data-contracts";
-import { projectApi } from "../projectApi";
 
 export const getProjectTaskList = async (
   projectId: number,
@@ -21,12 +20,7 @@ export const getProjectTaskList = async (
     priority,
     owner,
   };
-  const testToken = getTestToken();
-  const response = await projectApi.getTaskList(projectId, queryParams, {
-    headers: {
-      Authorization: `Bearer ${testToken}`,
-    },
-  });
+  const response = await authProjectApi.getTaskList(projectId, queryParams, {});
   return response.data;
 };
 

@@ -1,12 +1,11 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import qs from "qs";
 
-import { getTestToken } from "../../components/features/Project/TokenTest";
+import { authProjectApi } from "../Api";
 import type {
   GetList,
   PageResultMemberProgress,
 } from "../generated/data-contracts";
-import { projectApi } from "../projectApi";
 
 export const getTeamProgress = async (
   projectId: number,
@@ -18,14 +17,10 @@ export const getTeamProgress = async (
     sort: query.sort,
   };
 
-  const testToken = getTestToken();
-  const response = await projectApi.getMemberProgress(
+  const response = await authProjectApi.getMemberProgress(
     projectId,
     { param: queryParams },
     {
-      headers: {
-        Authorization: `Bearer ${testToken}`,
-      },
       paramsSerializer: (params) =>
         qs.stringify(params, { arrayFormat: "brackets" }),
     }

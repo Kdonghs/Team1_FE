@@ -2,9 +2,8 @@ import type { UseMutationResult } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-import { getTestToken } from "../../components/features/Project/TokenTest";
+import { authProjectApi } from "../Api";
 import type { SingleResultMemberResponseDTO } from "../generated/data-contracts";
-import { projectApi } from "../projectApi";
 
 type DeleteMemberParams = {
   projectId: number;
@@ -12,13 +11,7 @@ type DeleteMemberParams = {
 };
 
 const deleteMember = async (projectId: number, memberId: number) => {
-  const testToken = getTestToken();
-
-  const response = await projectApi.deleteMember(projectId, memberId, {
-    headers: {
-      Authorization: `Bearer ${testToken}`,
-    },
-  });
+  const response = await authProjectApi.deleteMember(projectId, memberId, {});
   return response.data;
 };
 

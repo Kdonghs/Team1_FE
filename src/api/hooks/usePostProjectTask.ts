@@ -5,21 +5,14 @@ import type {
   TaskCreate,
 } from "@/api/generated/data-contracts";
 
-import { getTestToken } from "../../components/features/Project/TokenTest";
-import { projectApi } from "../projectApi";
+import { authProjectApi } from "../Api";
 
 const postTask = async (
   projectId: number,
   data: TaskCreate
 ): Promise<CreateTaskData> => {
   try {
-    const testToken = getTestToken();
-
-    const response = await projectApi.createTask(projectId, data, {
-      headers: {
-        Authorization: `Bearer ${testToken}`,
-      },
-    });
+    const response = await authProjectApi.createTask(projectId, data);
 
     if (!response.data) {
       throw new Error("Task creation failed");

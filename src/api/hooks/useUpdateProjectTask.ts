@@ -4,8 +4,7 @@ import type {
   TaskUpdate,
   UpdateTaskData,
 } from "../../api/generated/data-contracts";
-import { getTestToken } from "../../components/features/Project/TokenTest";
-import { projectApi } from "../projectApi";
+import { authProjectApi } from "../Api";
 
 export const useUpdateProjectTask = (taskId: number | null) => {
   return useMutation<UpdateTaskData, Error, TaskUpdate>({
@@ -15,13 +14,7 @@ export const useUpdateProjectTask = (taskId: number | null) => {
       }
       const updateData = data;
 
-      const testToken = getTestToken();
-
-      const response = await projectApi.updateTask(taskId, updateData, {
-        headers: {
-          Authorization: `Bearer ${testToken}`,
-        },
-      });
+      const response = await authProjectApi.updateTask(taskId, updateData);
       return response.data;
     },
     onSuccess: (data) => {

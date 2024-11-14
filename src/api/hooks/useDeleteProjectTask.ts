@@ -2,18 +2,11 @@ import type { UseMutationResult } from "@tanstack/react-query";
 import { useMutation } from "@tanstack/react-query";
 import type { AxiosError } from "axios";
 
-import { getTestToken } from "../../components/features/Project/TokenTest";
+import { authProjectApi } from "../Api";
 import type { DeleteTaskData } from "../generated/data-contracts";
-import { projectApi } from "../projectApi";
 
 const deleteProjectTask = async (taskId: number) => {
-  const testToken = getTestToken();
-
-  const response = await projectApi.deleteTask(taskId, {
-    headers: {
-      Authorization: `Bearer ${testToken}`,
-    },
-  });
+  const response = await authProjectApi.deleteTask(taskId);
   return response.data;
 };
 
