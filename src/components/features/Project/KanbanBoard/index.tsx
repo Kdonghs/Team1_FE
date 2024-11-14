@@ -29,10 +29,10 @@ export const KanbanBoard = ({
   sort?: string;
   status?: "PENDING" | "IN_PROGRESS" | "COMPLETED";
   priority?: string;
-  owner?: string;
+  owner?: number;
 }) => {
-  const [selectedOwner, setSelectedOwner] = useState<string | undefined>(
-    undefined,
+  const [selectedOwner, setSelectedOwner] = useState<number | undefined>(
+    undefined
   );
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,7 +43,7 @@ export const KanbanBoard = ({
     sort,
     "PENDING",
     undefined,
-    selectedOwner,
+    selectedOwner
   );
   const { data: inProgressData } = useGetProjectTaskList(
     projectId,
@@ -51,7 +51,7 @@ export const KanbanBoard = ({
     sort,
     "IN_PROGRESS",
     undefined,
-    selectedOwner,
+    selectedOwner
   );
   const { data: completedData } = useGetProjectTaskList(
     projectId,
@@ -59,22 +59,22 @@ export const KanbanBoard = ({
     sort,
     "COMPLETED",
     undefined,
-    selectedOwner,
+    selectedOwner
   );
 
   const [pendingTasks, setPendingTasks] = useState<TaskWithOwnerDetail[]>([]);
   const [inProgressTasks, setInProgressTasks] = useState<TaskWithOwnerDetail[]>(
-    [],
+    []
   );
   const [completedTasks, setCompletedTasks] = useState<TaskWithOwnerDetail[]>(
-    [],
+    []
   );
 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const ownerParam = queryParams.get("owner");
     if (ownerParam) {
-      setSelectedOwner(ownerParam);
+      setSelectedOwner(parseInt(ownerParam));
     }
   }, [location.search]);
 
@@ -123,8 +123,9 @@ export const KanbanBoard = ({
   const members = membersData?.pages[0].resultData as MemberResponseDTO[];
 
   const handleSelectChange = (value: string) => {
-    setSelectedOwner(value === "" ? undefined : value);
-    navigate(`?owner=${value}`);
+    const ownerId = value ? parseInt(value) : undefined;
+    setSelectedOwner(ownerId);
+    navigate(`#kanban?owner=${value}`, { replace: true });
   };
 
   const getColumns: Column[] = [
@@ -165,7 +166,7 @@ export const KanbanBoard = ({
         >
           <option value="">전체</option>
           {members.map((member) => (
-            <option key={member.id} value={member.name}>
+            <option key={member.id} value={member.id}>
               {member.name}
             </option>
           ))}

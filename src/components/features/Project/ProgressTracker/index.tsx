@@ -36,7 +36,7 @@ export const ProgressTracker = ({
           fetchNextPage();
         }
       },
-      { threshold: 1 },
+      { threshold: 1 }
     );
 
     if (currentLoader) {
@@ -67,12 +67,16 @@ export const ProgressTracker = ({
       p={8}
       overflow="hidden"
     >
-      {teamProgressData.length > 0 && (
+      {teamProgressData.length > 0 ? (
         <Stack spacing={1} align="center" width="100%">
           {teamProgressData.map((member) => (
             <TeamMemberProgress key={member.teamMember?.id} member={member} />
           ))}
         </Stack>
+      ) : (
+        <Text textAlign="center">
+          아직 팀원이 없습니다. 팀원을 초대해보세요!
+        </Text>
       )}
 
       <div ref={loaderRef} />

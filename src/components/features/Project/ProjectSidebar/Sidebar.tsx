@@ -65,12 +65,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </Link>
           </Flex>
         </Stack>
-
-        <Stack gap={2}>
-          <Text fontSize="20px" fontWeight="bold">
-            TODO
-          </Text>
-        </Stack>
       </Stack>
     </Box>
   );

@@ -203,26 +203,24 @@ const animationMap: Record<number, object> = {
   100: plantAnimation5,
 };
 
-//TODO: 단계별 수정 필요
 const growthLevels: Record<
   number,
   { growthLevel: string; description: string }
 > = {
   25: {
-    growthLevel: "새싹",
-    description: "아직 새싹이네요. \n본격적으로 프로젝트를 시작해볼까요?",
+    growthLevel: "작은 새싹",
+    description: "아직 작은 새싹이네요. \n본격적으로 프로젝트를 시작해볼까요?",
   },
   50: {
-    growthLevel: "묘목",
-    description:
-      "나무가 자라기 시작했어요. \n팀원들과 함께 나무를 열심히 키워봐요!",
+    growthLevel: "새싹",
+    description: "새싹이 돋아났어요. \n팀원들과 함께 새싹을 열심히 키워봐요!",
   },
   75: {
-    growthLevel: "어린 나무",
-    description: "나무가 자라고 있어요. \n프로젝트에 더욱더 박차를 가해봐요!",
+    growthLevel: "꽃봉오리",
+    description: "꽃봉오리가 생겼어요. \n프로젝트에 더욱더 박차를 가해봐요!",
   },
   100: {
-    growthLevel: "성장한 나무",
-    description: "나무가 거의 다 자랐어요. \n프로젝트 마무리까지 화이팅!",
+    growthLevel: "만개한 꽃",
+    description: "꽃이 활짝 피었어요! \n프로젝트 마무리까지 화이팅!",
   },
 };

@@ -18,6 +18,7 @@ import type { ProjectDetail } from "../../../api/generated/data-contracts";
 import { useGetProjectProgress } from "../../../api/hooks/useGetProjectProgress";
 import { useOptionContext } from "../../../provider/Option";
 import { ProgressTree } from "./ProgressTree";
+import { ProjectInfo } from "./ProjectInfo";
 
 export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
   const { projectDetail } = props;
@@ -74,7 +75,7 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
   useEffect(() => {
     const projectId = projectDetail?.id;
 
-    if (progressData >= 50 && projectDetail?.optionIds?.includes(3)) {
+    if (progressData >= 50 && projectDetail?.optionIds?.includes(2)) {
       if (!localStorage.getItem(`celebration-${projectId}`)) {
         setConfettiVisible(true);
         localStorage.setItem(`celebration-${projectId}`, "true");
@@ -131,7 +132,7 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
           </AccordionButton>
 
           <AccordionPanel pb={4}>
-            {/* TODO: 바로 적용이 안되는데 강제 새로고침을 할지, 아니면 바로 렌더링시킬 방법이 있는지 고민 */}
+            <ProjectInfo projectDetail={projectDetail} />
             {data?.resultData?.projectId &&
               projectDetail?.optionIds?.includes(1) && (
                 <ProgressTree projectId={data.resultData.projectId} />
