@@ -2,6 +2,8 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 
+import { useGetProjectDetail } from "../../../../api/hooks/useGetProjectDetail";
+import { ProjectInfo } from "../ProjectInfo";
 import { UserProfile } from "./UserProfile";
 
 interface SidebarProps {
@@ -10,7 +12,10 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-  const projectId = useParams().id;
+  const { id } = useParams<{ id: string }>();
+  const projectId = id ? parseInt(id, 10) : null;
+
+  const { data } = useGetProjectDetail(projectId);
 
   return (
     <Box
@@ -26,11 +31,9 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       zIndex={10}
     >
       <Flex justifyContent="space-between" padding={2}>
-        <Link to="/">
-          <Text fontSize="3xl" fontWeight="bold">
-            Seamless
-          </Text>
-        </Link>
+        <Text fontSize="3xl" fontWeight="bold">
+          Seamless
+        </Text>
 
         <Button
           onClick={onClose}
@@ -66,6 +69,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           </Flex>
         </Stack>
       </Stack>
+      {data && <ProjectInfo projectDetail={data} />}
     </Box>
   );
 };

@@ -18,7 +18,6 @@ import type { ProjectDetail } from "../../../api/generated/data-contracts";
 import { useGetProjectProgress } from "../../../api/hooks/useGetProjectProgress";
 import { useOptionContext } from "../../../provider/Option";
 import { ProgressTree } from "./ProgressTree";
-import { ProjectInfo } from "./ProjectInfo";
 
 export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
   const { projectDetail } = props;
@@ -132,7 +131,6 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
           </AccordionButton>
 
           <AccordionPanel pb={4}>
-            <ProjectInfo projectDetail={projectDetail} />
             {data?.resultData?.projectId &&
               projectDetail?.optionIds?.includes(1) && (
                 <ProgressTree projectId={data.resultData.projectId} />

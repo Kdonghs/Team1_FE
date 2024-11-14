@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -26,7 +27,6 @@ import { ProjectDetailSettingFields } from "./ProjectSettingForm/projectDetailSe
 import { renderFooterButtons } from "./renderFooterButtons";
 
 export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
-  //TODO: 프로젝트에 옵션을 저장하는 방법 알아본 뒤 로직 변경 필요할듯
   const { id } = useParams<{ id: string }>();
   const projectId = id ? parseInt(id, 10) : null;
 
@@ -49,6 +49,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
   const [selectedFeature, setSelectedFeature] = useState("기본");
   const { mutate } = useUpdateProject(projectId);
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (data) {
@@ -100,6 +101,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
           duration: 3000,
           isClosable: true,
         });
+        queryClient.refetchQueries({ queryKey: ["project", projectId] });
         onClose();
       },
       onError: () => {
@@ -115,7 +117,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
   });
 
   const preventEnterKeySubmission = (
-    e: React.KeyboardEvent<HTMLFormElement>,
+    e: React.KeyboardEvent<HTMLFormElement>
   ) => {
     const target = e.target as HTMLFormElement;
     if (e.key === "Enter" && !["TEXTAREA"].includes(target.tagName)) {
@@ -183,7 +185,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
                 handleNextPage,
                 handlePreviousPage,
                 onSubmit,
-                isValid,
+                isValid
               )}
             </ModalFooter>
           </form>
