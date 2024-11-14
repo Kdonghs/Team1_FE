@@ -2,7 +2,7 @@ import { Container, Stack } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useGetProjectDetail } from "../../api/hooks/useGetProjectDetail";
+import { useGetProjectDetail } from "../../api/hooks/project.api";
 import { Project } from "../../components/features/Project";
 import { KanbanBoard } from "../../components/features/Project/KanbanBoard";
 import { ProgressAccordion } from "../../components/features/Project/ProgressAccordion";

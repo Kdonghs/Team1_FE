@@ -9,7 +9,7 @@ import { useParams } from "react-router-dom";
 
 import type { MemberResponseDTO } from "@/api/generated/data-contracts";
 
-import { useGetProjectMembers } from "../../../api/hooks/useGetProjectMembers";
+import { useGetProjectMembers } from "../../../api/hooks/project.api";
 
 interface SelectFieldProps {
   label: string;

@@ -22,7 +22,7 @@ import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
 
 import type { MemberResponseDTO } from "../../../../api/generated/data-contracts";
-import { useUpdateMember } from "../../../../api/hooks/useUpdateMember";
+import { useUpdateMember } from "../../../../api/hooks/project.api";
 
 interface MemberUpdateModalProps extends MemberResponseDTO {
   isOpen: boolean;
@@ -96,13 +96,13 @@ export const MemberUpdateModal = ({
               isClosable: true,
             });
           },
-        },
+        }
       );
     }
   };
 
   const preventEnterKeySubmission = (
-    e: React.KeyboardEvent<HTMLFormElement>,
+    e: React.KeyboardEvent<HTMLFormElement>
   ) => {
     const target = e.target as HTMLFormElement;
     if (e.key === "Enter" && !["TEXTAREA"].includes(target.tagName)) {

@@ -21,9 +21,11 @@ import type {
   TaskUpdate,
   TaskWithOwnerDetail,
 } from "../../../../../api/generated/data-contracts";
-import { useGetProjectDetail } from "../../../../../api/hooks/useGetProjectDetail";
-import { usePostProjectTask } from "../../../../../api/hooks/usePostProjectTask";
-import { useUpdateProjectTask } from "../../../../../api/hooks/useUpdateProjectTask";
+import {
+  useGetProjectDetail,
+  usePostProjectTask,
+} from "../../../../../api/hooks/project.api";
+import { useUpdateProjectTask } from "../../../../../api/hooks/project.api";
 import { DateField } from "../../../../../components/common/Fields/dateField";
 import { RadioField } from "../../../../../components/common/Fields/radioField";
 import { SelectProjectMemberField } from "../../../../../components/common/Fields/selectProjectMemberField";

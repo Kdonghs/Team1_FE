@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { useContext, useEffect, useState } from "react";
 import { createContext } from "react";
 
-import { useGetUserData } from "../../api/hooks/useGetUserdata";
+import { useGetUserData } from "../../api/hooks/user.api";
 import { RouterPath } from "../../routes/path";
 import { authSessionStorage } from "../../utils/storage";
 
