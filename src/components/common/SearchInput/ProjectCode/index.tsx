@@ -9,7 +9,6 @@ import styled from "@emotion/styled";
 import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { RouterPath } from "../../../../routes/path";
 import { authSessionStorage } from "../../../../utils/storage";
 
 interface AuthResponse {
@@ -30,6 +29,13 @@ interface AuthResponse {
 interface SearchInputProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onError"> {
   onError?: (error: Error) => void;
+}
+
+class AuthenticationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthenticationError';
+  }
 }
 
 const validateCode = (code: string): boolean => {
@@ -53,7 +59,11 @@ const authenticateWithCode = async (
   const data = await response.json();
 
   if (!response.ok) {
-    throw new Error(data?.errorMessage || "인증에 실패했습니다.");
+    throw new AuthenticationError(data?.errorMessage || "인증에 실패했습니다.");
+  }
+
+  if (data.errorCode !== 200 || !data.resultData?.token) {
+    throw new AuthenticationError(data.errorMessage || "인증에 실패했습니다.");
   }
 
   return data;
@@ -84,34 +94,27 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     setIsLoading(true);
     try {
       const response = await authenticateWithCode(memberCode);
-      console.log("Authentication response:", response);
-      if (response.errorCode === 200 && response.resultData?.token) {
-        authSessionStorage.set(response.resultData.token);
-        toast({
-          title: "인증 성공",
-          description: "프로젝트로 이동합니다.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        navigate(`${RouterPath.project}/${response.resultData.projectId}`);
-      } else {
-        throw new Error(response.errorMessage || "인증에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("Authentication error:", error);
-      const errorMessage =
-        error instanceof Error ? error.message : "인증 중 오류가 발생했습니다.";
-
+      authSessionStorage.set(response.resultData.token);
+      console.log("Authenticated user:", response.resultData.token);
       toast({
-        title: "인증 실패",
-        description: errorMessage,
+        title: "인증 성공",
+        description: "프로젝트로 이동합니다.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+      navigate(`projects/${response.resultData.projectId}`);
+    } catch (error) {
+      console.error("Unexpected error:", error);
+      const unexpectedError = new Error("인증 중 예기치 않은 오류가 발생했습니다.");
+      toast({
+        title: "오류",
+        description: unexpectedError.message,
         status: "error",
         duration: 3000,
         isClosable: true,
       });
-
-      onError?.(error instanceof Error ? error : new Error(errorMessage));
+      onError?.(unexpectedError);
     } finally {
       setIsLoading(false);
     }
@@ -197,6 +200,7 @@ const StyledInput = styled.input`
     cursor: not-allowed;
   }
 `;
+
 const StyledInputRightElement = styled(InputRightElement)`
   height: 100%;
   width: 2.5rem;

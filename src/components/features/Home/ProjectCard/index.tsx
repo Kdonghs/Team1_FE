@@ -1,7 +1,10 @@
+import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import styled from "@emotion/styled";
 import { MoreVertical } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
+
+import { useDeleteProject } from "../../../../api/hooks/useDeleteProject";
 
 type ProjectOption = {
   type: "basic" | "custom";
@@ -21,6 +24,9 @@ type Props = {
   imageSrc?: string;
   width?: number | string;
   height?: number | string;
+  onDeleteSuccess?: () => void;
+  refetch: () => Promise<void>;
+  refetchSchedule: () => Promise<void>; // 추가된 prop
 };
 
 export const ProjectCard: React.FC<Props> = ({
@@ -32,8 +38,25 @@ export const ProjectCard: React.FC<Props> = ({
   imageSrc,
   width,
   height,
+  onDeleteSuccess,
+  refetch,
+  refetchSchedule,
 }) => {
   const navigate = useNavigate();
+  const { mutate: deleteProject } = useDeleteProject();
+
+  const handleDelete = async () => {
+    try {
+      await deleteProject({ projectId: id });
+      if (onDeleteSuccess) {
+        onDeleteSuccess();
+      }
+      // 프로젝트 목록과 스케줄 모두 리패치
+      await Promise.all([refetch(), refetchSchedule()]);
+    } catch (error) {
+      console.error("Delete project error:", error);
+    }
+  };
 
   const handleSettingsClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -64,9 +87,20 @@ export const ProjectCard: React.FC<Props> = ({
           <PurpleBackground />
         )}
       </ImageArea>
-      <SettingsButton onClick={handleSettingsClick}>
-        <MoreVertical size={16} />
-      </SettingsButton>
+      <Menu>
+        <SettingsButton onClick={handleSettingsClick}>
+          <MoreVertical size={16} />
+        </SettingsButton>
+        <MenuList
+          minW="120px"
+          boxShadow="md"
+          border="1px solid"
+          borderColor="gray.100"
+          zIndex={10}
+        >
+          <MenuItem textAlign="center" onClick={handleDelete} color="red.500">삭제</MenuItem>
+        </MenuList>
+      </Menu>
       <TextArea>
         <Title>{title}</Title>
         <DateInfo>
@@ -120,7 +154,7 @@ const PurpleBackground = styled.div`
   background-color: #d9d9ff;
 `;
 
-const SettingsButton = styled.button`
+const SettingsButton = styled(MenuButton)`
   position: absolute;
   top: 8px;
   right: 8px;
