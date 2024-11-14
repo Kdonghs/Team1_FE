@@ -32,7 +32,7 @@ interface MemberResponse {
 
 interface FormInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   projectId: number;
-  onJoinSuccess?: (member: MemberResponse['resultData']) => void;
+  onJoinSuccess?: (member: MemberResponse["resultData"]) => void;
   onJoinError?: (error: Error) => void;
 }
 
@@ -49,7 +49,7 @@ interface FormValidity {
 const createMember = async (
   projectId: number,
   email: string,
-  name: string
+  name: string,
 ): Promise<MemberResponse> => {
   try {
     const response = await fetch(`/api/project/${projectId}/member`, {
@@ -80,7 +80,7 @@ const createMember = async (
 const sendInvite = async (
   projectId: number,
   email: string,
-  name: string
+  name: string,
 ): Promise<InviteResponse> => {
   try {
     const response = await fetch(`/api/project/invite`, {
@@ -139,7 +139,7 @@ export const JoinInput: React.FC<FormInputProps> = ({
         [name]: name === "email" ? validateEmail(value) : validateName(value),
       }));
     },
-    []
+    [],
   );
 
   const isFormValid = validity.email && validity.name;
@@ -154,7 +154,7 @@ export const JoinInput: React.FC<FormInputProps> = ({
       const memberResponse = await createMember(
         projectId,
         formData.email,
-        formData.name
+        formData.name,
       );
 
       if (memberResponse.errorCode === 0 && memberResponse.resultData) {
@@ -163,7 +163,7 @@ export const JoinInput: React.FC<FormInputProps> = ({
         const inviteResponse = await sendInvite(
           projectId,
           formData.email,
-          formData.name
+          formData.name,
         );
 
         if (inviteResponse.errorCode === 0) {
@@ -171,10 +171,14 @@ export const JoinInput: React.FC<FormInputProps> = ({
           setFormData({ email: "", name: "" });
           setValidity({ email: false, name: false });
         } else {
-          throw new Error(inviteResponse.errorMessage || "초대 발송에 실패했습니다.");
+          throw new Error(
+            inviteResponse.errorMessage || "초대 발송에 실패했습니다.",
+          );
         }
       } else {
-        throw new Error(memberResponse.errorMessage || "멤버 생성에 실패했습니다.");
+        throw new Error(
+          memberResponse.errorMessage || "멤버 생성에 실패했습니다.",
+        );
       }
     } catch (error) {
       console.error("Error in join process:", error);

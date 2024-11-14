@@ -17,7 +17,7 @@ export const useUpdateProject = (projectId: number | null) => {
 
       const response = await authProjectApi.updateProject(
         projectId,
-        updateData
+        updateData,
       );
       return response.data;
     },

@@ -9,7 +9,7 @@ import { authProjectApi } from "../Api";
 
 const postTask = async (
   projectId: number,
-  data: TaskCreate
+  data: TaskCreate,
 ): Promise<CreateTaskData> => {
   try {
     const response = await authProjectApi.createTask(projectId, data);
@@ -21,7 +21,7 @@ const postTask = async (
     return response.data;
   } catch (error) {
     throw new Error(
-      error instanceof Error ? error.message : "Failed to create task"
+      error instanceof Error ? error.message : "Failed to create task",
     );
   }
 };

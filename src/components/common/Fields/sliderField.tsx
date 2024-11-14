@@ -36,7 +36,7 @@ export const SliderField = forwardRef<HTMLInputElement, SliderFieldProps>(
       errorMessage = "",
       ...sliderProps
     },
-    ref
+    ref,
   ) => {
     const [showTooltip, setShowTooltip] = useState(false);
 
@@ -99,5 +99,5 @@ export const SliderField = forwardRef<HTMLInputElement, SliderFieldProps>(
         </VStack>
       </FormControl>
     );
-  }
+  },
 );

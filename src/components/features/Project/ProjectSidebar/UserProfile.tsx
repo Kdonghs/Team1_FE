@@ -85,7 +85,7 @@ export const UserProfile = () => {
               isClosable: true,
             });
           },
-        }
+        },
       );
     } else {
       onClose();

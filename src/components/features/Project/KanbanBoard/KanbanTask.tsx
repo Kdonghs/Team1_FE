@@ -70,7 +70,7 @@ export const KanbanTask = ({ task, onDeleteTask }: TaskProps) => {
               isClosable: true,
             });
           },
-        }
+        },
       );
     }
   };
