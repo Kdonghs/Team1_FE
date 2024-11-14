@@ -120,12 +120,12 @@ export interface TaskUpdate {
    * @max 100
    */
   progress?: number;
-  status?: "PENDING" | "IN_PROGRESS" | "COMPLETED";
   priority?: "LOW" | "MEDIUM" | "HIGH";
   /** @format date-time */
   startDate?: string;
   /** @format date-time */
   endDate?: string;
+  status?: "PENDING" | "IN_PROGRESS" | "COMPLETED";
 }
 
 export interface SingleResultTaskDetail {
@@ -232,7 +232,6 @@ export interface TaskCreate {
   description?: string;
   /** @format int64 */
   ownerId: number;
-  status: "PENDING" | "IN_PROGRESS" | "COMPLETED";
   priority: "LOW" | "MEDIUM" | "HIGH";
   /**
    * @format int32
@@ -244,6 +243,8 @@ export interface TaskCreate {
   startDate: string;
   /** @format date-time */
   endDate: string;
+  status?: "PENDING" | "IN_PROGRESS" | "COMPLETED";
+  taskStatus: "PENDING" | "IN_PROGRESS" | "COMPLETED";
 }
 
 export interface CreateMember {
@@ -561,8 +562,10 @@ export type GetProjectOptionsData = ListResultOptionDetail;
 
 export type GetProjectDateData = PageResultProjectDate;
 
+export type TempData = SingleResultToken;
+
 export type MemberCodeJoinData = SingleResultToken;
 
-export type MemberCodeDecodeData = SingleResultString;
+export type AesDecodeData = SingleResultString;
 
-export type MemberCodeCreate1Data = SingleResultString;
+export type AttendUrlCreateData = SingleResultString;

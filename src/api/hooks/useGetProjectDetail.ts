@@ -1,20 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 
-import type { ProjectDetail } from "@/api/generated/data-contracts";
-
-import { projectApi } from "../../api/projectApi";
-import { getTestToken } from "../../components/features/Project/TokenTest";
+import { authProjectApi } from "../Api";
+import type { ProjectDetail } from "../generated/data-contracts";
 
 const getProjectDetail = async (
-  projectId: number,
+  projectId: number
 ): Promise<ProjectDetail | null> => {
   try {
-    const testToken = getTestToken();
-    const response = await projectApi.getProject(projectId, {
-      headers: {
-        Authorization: `Bearer ${testToken}`,
-      },
-    });
+    const response = await authProjectApi.getProject(projectId);
 
     if (!response.data || !response.data.resultData) {
       throw new Error("Project data not found");
@@ -23,9 +16,7 @@ const getProjectDetail = async (
     return response.data.resultData;
   } catch (error) {
     throw new Error(
-      error instanceof Error
-        ? error.message
-        : "Failed to fetch project details",
+      error instanceof Error ? error.message : "Failed to fetch project details"
     );
   }
 };

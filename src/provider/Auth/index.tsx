@@ -1,32 +1,31 @@
-import axios from "axios";
 import type { ReactNode } from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { createContext } from "react";
 
+import { useGetUserData } from "../../api/hooks/useGetUserdata";
 import { RouterPath } from "../../routes/path";
+import { authSessionStorage } from "../../utils/storage";
 
 type User = {
-  id: string;
-  name: string;
+  username: string;
   email: string;
   picture?: string;
+  role?: string;
+  createDate?: string;
 };
 
-type AuthContextType = {
+export const AuthContext = createContext<{
   user: User | null;
   login: () => void;
   logout: () => void;
-  handleGoogleCallback: (code: string) => Promise<void>;
-};
-
-const API_URL = process.env.REACT_APP_API_URL;
-const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-const REDIRECT_URI = process.env.REACT_APP_REDIRECT_URI;
-
-const AuthContext = createContext<AuthContextType>({
+  handleGoogleCallback: () => void;
+  isReady: boolean;
+}>({
   user: null,
   login: () => {},
   logout: () => {},
-  handleGoogleCallback: async () => {},
+  handleGoogleCallback: () => {},
+  isReady: false,
 });
 
 export const useAuth = () => {
@@ -38,114 +37,83 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    try {
-      const storedUser = localStorage.getItem("user");
-      return storedUser ? JSON.parse(storedUser) : null;
-    } catch (error) {
-      console.error("Error parsing stored user:", error);
-      return null;
-    }
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [isReady, setIsReady] = useState(false);
+  const { data, error } = useGetUserData();
 
-  useEffect(() => {
-    const checkAuth = () => {
-      const token = localStorage.getItem("token");
-      const storedUser = localStorage.getItem("user");
-
-      console.log("Checking auth - Token:", token);
-      console.log("Checking auth - Stored user:", storedUser);
-
-      if (!token || !storedUser) {
-        console.log("No token or user found, clearing user state");
-        setUser(null);
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-      } else {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          console.log("Setting user from stored data:", parsedUser);
-          setUser(parsedUser);
-        } catch (error) {
-          console.error("Error parsing stored user:", error);
-          setUser(null);
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-        }
-      }
-    };
-
-    checkAuth();
-  }, []);
-
-  useEffect(() => {
-    console.log("User state changed:", user);
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-    }
-  }, [user]);
+  const currentAuthToken = authSessionStorage.get();
 
   const login = () => {
-    console.log("Initiating Google login");
-    const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&response_type=code&scope=email%20profile&redirect_uri=${encodeURIComponent(
-      REDIRECT_URI,
-    )}`;
+    const googleAuthUrl = `https://seamlessup.com/api/login`;
     window.location.href = googleAuthUrl;
   };
 
-  const handleGoogleCallback = async (code: string) => {
-    try {
-      console.log("Starting Google callback process with code:", code);
-      const response = await axios.post(`${API_URL}/api/v1/login/google`, {
-        code,
-      });
-      console.log("Received response from backend:", response.data);
+  const logout = () => {
+    authSessionStorage.set(undefined);
+    localStorage.removeItem("user");
 
-      const { accessToken, userData } = response.data;
+    window.location.href = RouterPath.root;
+  };
 
-      if (!accessToken || !userData) {
-        console.error("Missing token or user data in response");
-        throw new Error("Invalid response format");
-      }
+  const handleGoogleCallback = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get("accessToken");
 
-      localStorage.setItem("token", accessToken);
-      const newUser = {
-        id: userData.id,
-        name: userData.name,
-        email: userData.email,
-        picture: userData.picture,
-      };
-
-      console.log("Setting user state to:", newUser);
-      setUser(newUser);
-      localStorage.setItem("user", JSON.stringify(newUser));
-
+    if (accessToken) {
+      authSessionStorage.set(accessToken);
+      localStorage.getItem("user");
       window.location.href = RouterPath.projectList;
-    } catch (error) {
-      console.error("Google login error:", error);
-      if (axios.isAxiosError(error)) {
-        console.error("Response data:", error.response?.data);
-      }
-      throw error;
+    } else {
+      window.location.href = RouterPath.root;
     }
   };
 
-  const logout = () => {
-    console.log("Logging out");
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    setUser(null);
-    window.location.href = RouterPath.root;
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        if (!currentAuthToken) {
+          setIsReady(true);
+          return;
+        }
+
+        if (data) {
+          const newUser = {
+            username: data?.resultData?.username || "",
+            email: data?.resultData?.email || "",
+            picture: data?.resultData?.picture || "",
+            role: data?.resultData?.role || "",
+            createDate: data?.resultData?.createDate || "",
+          };
+
+          setUser(newUser);
+          localStorage.setItem("user", JSON.stringify(newUser));
+        }
+
+        if (error) {
+          setUser(null);
+          localStorage.removeItem("user");
+        }
+
+        setIsReady(true);
+      } catch (err) {
+        console.error("Error:", err);
+        setUser(null);
+        localStorage.removeItem("user");
+        setIsReady(true);
+      }
+    };
+
+    fetchUserData();
+  }, [currentAuthToken, data, error]);
+
+  if (!isReady) return null;
 
   const value = {
     user,
     login,
-    logout,
     handleGoogleCallback,
+    logout,
+    isReady,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
