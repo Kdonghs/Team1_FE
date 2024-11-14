@@ -69,9 +69,8 @@ export const memberMockHandler = [
       const deleteMemberId = parseInt(memberId as string, 10);
 
       if (mockProjectMembers.resultData) {
-
         mockProjectMembers.resultData = mockProjectMembers.resultData.filter(
-          (member) => member.id !== deleteMemberId
+          (member) => member.id !== deleteMemberId,
         );
 
         return res(
@@ -79,7 +78,7 @@ export const memberMockHandler = [
           ctx.json({
             message: `프로젝트 ${projectId}번의 ${deleteMemberId}번 멤버 삭제 성공`,
             updatedMembers: mockProjectMembers.resultData,
-          })
+          }),
         );
       }
 
@@ -103,7 +102,7 @@ export const memberMockHandler = [
 
       if (mockProjectMembers.resultData) {
         const memberIndex = mockProjectMembers.resultData.findIndex(
-          (member) => member.id === updateMemberId
+          (member) => member.id === updateMemberId,
         );
 
         if (memberIndex !== -1) {
@@ -119,15 +118,15 @@ export const memberMockHandler = [
             ctx.json({
               message: `멤버 ${updateMemberId}번 정보가 성공적으로 업데이트되었습니다.`,
               updatedMember: mockProjectMembers.resultData[memberIndex],
-            })
+            }),
           );
         }
       }
 
       return res(
         ctx.status(404),
-        ctx.json({ message: "업데이트할 멤버를 찾을 수 없습니다." })
+        ctx.json({ message: "업데이트할 멤버를 찾을 수 없습니다." }),
       );
-    }
+    },
   ),
 ];

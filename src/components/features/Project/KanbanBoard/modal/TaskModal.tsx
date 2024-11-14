@@ -21,6 +21,7 @@ import type {
   TaskUpdate,
   TaskWithOwnerDetail,
 } from "../../../../../api/generated/data-contracts";
+import { useGetProjectDetail } from "../../../../../api/hooks/useGetProjectDetail";
 import { usePostProjectTask } from "../../../../../api/hooks/usePostProjectTask";
 import { useUpdateProjectTask } from "../../../../../api/hooks/useUpdateProjectTask";
 import { DateField } from "../../../../../components/common/Fields/dateField";
@@ -48,6 +49,7 @@ export const TaskModal = ({
   isOpen,
   taskStatus,
 }: TaskModalProps) => {
+  const { data: projectData } = useGetProjectDetail(projectId);
   const { mutate: createTask } = usePostProjectTask(projectId);
   const { mutate: updateTask } = useUpdateProjectTask(taskId);
   const queryClient = useQueryClient();
@@ -76,7 +78,7 @@ export const TaskModal = ({
     },
   });
   const [previousStatus, setPreviousStatus] = useState<TaskStatus>(
-    initialData?.status || "PENDING"
+    initialData?.status || "PENDING",
   );
 
   const startDate = watch("startDate");
@@ -118,7 +120,7 @@ export const TaskModal = ({
               isClosable: true,
             });
           },
-        }
+        },
       );
     }
   };
@@ -260,10 +262,21 @@ export const TaskModal = ({
               rules={{
                 required: "시작일은 필수 입력 사항입니다.",
                 validate: (value) => {
-                  if (value && endDate) {
-                    const start = new Date(value);
+                  const start = new Date(value);
+                  if (!value) return true;
+
+                  if (projectData?.startDate) {
+                    const projectStartDate = new Date(projectData.startDate);
+                    if (start < projectStartDate) {
+                      return "프로젝트 시작일보다 빠를 수 없습니다.";
+                    }
+                  }
+
+                  if (endDate) {
                     const end = new Date(endDate);
-                    return start < end || "시작일은 종료일 이전이어야 합니다.";
+                    if (start >= end) {
+                      return "시작일은 종료일 이전이어야 합니다.";
+                    }
                   }
                   return true;
                 },
@@ -284,9 +297,16 @@ export const TaskModal = ({
                 required: "종료일은 필수 입력 사항입니다.",
                 validate: (value) => {
                   if (!value) return "종료일은 필수 입력 사항입니다.";
+                  const end = new Date(value);
+
+                  if (projectData?.endDate) {
+                    const projectEndDate = new Date(projectData.endDate);
+                    if (end > projectEndDate) {
+                      return "종료일은 프로젝트 종료일 이전이어야 합니다.";
+                    }
+                  }
                   if (startDate) {
                     const start = new Date(startDate);
-                    const end = new Date(value);
                     if (end <= start) return "종료일은 시작일 이후여야 합니다.";
                   }
                   return true;

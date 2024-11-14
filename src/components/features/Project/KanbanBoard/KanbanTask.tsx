@@ -22,6 +22,7 @@ import {
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import { EllipsisVertical } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 import type {
@@ -31,6 +32,7 @@ import type {
 import type { TaskPriority, TaskStatus } from "@/types/index";
 
 import { useDeleteProjectTask } from "../../../../api/hooks/useDeleteProjectTask";
+import { useOptionContext } from "../../../../provider/Option";
 import { TaskModal } from "./modal/TaskModal";
 interface TaskProps {
   task: TaskWithOwnerDetail;
@@ -44,6 +46,26 @@ export const KanbanTask = ({ task, onDeleteTask }: TaskProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { mutate: deleteTaskMutate } = useDeleteProjectTask();
+
+  const { isOptionThreeEnabled } = useOptionContext();
+
+  const [taskColorChange, setTaskColorChange] = useState<
+    Record<number, boolean>
+  >({});
+
+  useEffect(() => {
+    if (isOptionThreeEnabled && task.endDate) {
+      const today = dayjs();
+      const endDate = dayjs(task.endDate);
+
+      const timeDiff = endDate.diff(today, "hour");
+
+      setTaskColorChange((prev) => ({
+        ...prev,
+        [task.id as number]: timeDiff >= 0 && timeDiff <= 24,
+      }));
+    }
+  }, [isOptionThreeEnabled, task.endDate, task.id]);
 
   const handleDeleteTask = () => {
     if (task.id !== undefined) {
@@ -70,7 +92,7 @@ export const KanbanTask = ({ task, onDeleteTask }: TaskProps) => {
               isClosable: true,
             });
           },
-        }
+        },
       );
     }
   };
@@ -165,7 +187,10 @@ export const KanbanTask = ({ task, onDeleteTask }: TaskProps) => {
           </Text>
         )}
         <Spacer h={1} />
-        <Text fontSize="xs" color="#666666">
+        <Text
+          fontSize="xs"
+          color={task?.id && taskColorChange[task.id] ? "red" : "#666666"}
+        >
           {dayjs(task.endDate).locale("ko").format("YYYY.M.D H시 m분")}
         </Text>
         <Spacer h={1} />

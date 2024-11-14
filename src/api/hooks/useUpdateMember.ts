@@ -17,7 +17,7 @@ type UpdateMemberParams = {
 const updateMember = async (
   projectId: number,
   memberId: number,
-  data: UpdateMember
+  data: UpdateMember,
 ) => {
   const response = await authProjectApi.updateMember(projectId, memberId, data);
   return response.data;

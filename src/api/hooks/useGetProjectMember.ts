@@ -5,7 +5,7 @@ import type { SingleResultMemberResponseDTO } from "../generated/data-contracts"
 
 export const getProjectMember = async (
   projectId: number,
-  memberId: number
+  memberId: number,
 ): Promise<SingleResultMemberResponseDTO> => {
   const response = await authProjectApi.getMember(projectId, memberId, {});
 

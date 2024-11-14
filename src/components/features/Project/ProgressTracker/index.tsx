@@ -36,7 +36,7 @@ export const ProgressTracker = ({
           fetchNextPage();
         }
       },
-      { threshold: 1 }
+      { threshold: 1 },
     );
 
     if (currentLoader) {

@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 
 import { useGetUserData } from "../../../../api/hooks/useGetUserdata";
 import { useUpdateUser } from "../../../../api/hooks/useUpdateUserdata";
+import { useAuth } from "../../../../provider/Auth";
 
 interface UserProfileForm {
   username: string;
@@ -37,8 +38,16 @@ interface UserProfileForm {
 export const UserProfile = () => {
   const { data, error, isLoading } = useGetUserData();
   const { onOpen, onClose, isOpen } = useDisclosure();
+  const { user, logout } = useAuth();
   const updateMemberMutation = useUpdateUser();
   const toast = useToast();
+
+  const handleAuthLogout = () => {
+    if (user) {
+      console.log("Logging out user:", user);
+      logout();
+    }
+  };
 
   const {
     register,
@@ -85,7 +94,7 @@ export const UserProfile = () => {
               isClosable: true,
             });
           },
-        }
+        },
       );
     } else {
       onClose();
@@ -127,7 +136,11 @@ export const UserProfile = () => {
             프로필 수정
           </MenuItem>
 
-          <MenuItem textAlign="center" icon={<LogOutIcon size={13} />}>
+          <MenuItem
+            textAlign="center"
+            onClick={handleAuthLogout}
+            icon={<LogOutIcon size={13} />}
+          >
             로그아웃
           </MenuItem>
         </MenuList>

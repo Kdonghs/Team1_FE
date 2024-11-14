@@ -17,11 +17,5 @@ export const useUpdateProjectTask = (taskId: number | null) => {
       const response = await authProjectApi.updateTask(taskId, updateData);
       return response.data;
     },
-    onSuccess: (data) => {
-      console.log("태스크 수정 성공:", data);
-    },
-    onError: (error) => {
-      console.error("태스크 수정 오류:", error);
-    },
   });
 };
