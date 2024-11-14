@@ -8,7 +8,7 @@ export const getProjectTaskList = async (
   query: { page: number; size: number; sort: string },
   status?: string,
   priority?: string,
-  owner?: string,
+  owner?: number
 ): Promise<GetTaskListData> => {
   //TODO: any 해결방법 찾기
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,7 +30,7 @@ export const useGetProjectTaskList = (
   sort: string,
   status?: string,
   priority?: string,
-  owner?: string,
+  owner?: number
 ) =>
   useInfiniteQuery<GetTaskListData, Error>({
     queryKey: ["taskList", projectId, status, priority, owner],
@@ -40,7 +40,7 @@ export const useGetProjectTaskList = (
         { page: Number(pageParam), size, sort },
         status,
         priority,
-        owner,
+        owner
       );
     },
     getNextPageParam: (lastPage) => {

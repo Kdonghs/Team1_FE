@@ -78,7 +78,7 @@ export const TaskModal = ({
     },
   });
   const [previousStatus, setPreviousStatus] = useState<TaskStatus>(
-    initialData?.status || "PENDING",
+    initialData?.status || "PENDING"
   );
 
   const startDate = watch("startDate");
@@ -120,7 +120,7 @@ export const TaskModal = ({
               isClosable: true,
             });
           },
-        },
+        }
       );
     }
   };
@@ -230,7 +230,7 @@ export const TaskModal = ({
               render={({ field, fieldState }) => (
                 <SelectProjectMemberField
                   label="팀원 선택"
-                  value={field.value}
+                  value={field.value as number} // TODO: 여기 고쳐야됨
                   onChange={field.onChange}
                   isInvalid={!!fieldState?.error}
                   errorMessage={fieldState?.error?.message}

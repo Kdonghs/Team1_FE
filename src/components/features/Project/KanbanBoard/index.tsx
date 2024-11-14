@@ -29,9 +29,9 @@ export const KanbanBoard = ({
   sort?: string;
   status?: "PENDING" | "IN_PROGRESS" | "COMPLETED";
   priority?: string;
-  owner?: string;
+  owner?: number;
 }) => {
-  const [selectedOwner, setSelectedOwner] = useState<string | undefined>(
+  const [selectedOwner, setSelectedOwner] = useState<number | undefined>(
     undefined
   );
   const navigate = useNavigate();
@@ -74,7 +74,7 @@ export const KanbanBoard = ({
     const queryParams = new URLSearchParams(location.search);
     const ownerParam = queryParams.get("owner");
     if (ownerParam) {
-      setSelectedOwner(ownerParam);
+      setSelectedOwner(parseInt(ownerParam));
     }
   }, [location.search]);
 
@@ -123,7 +123,8 @@ export const KanbanBoard = ({
   const members = membersData?.pages[0].resultData as MemberResponseDTO[];
 
   const handleSelectChange = (value: string) => {
-    setSelectedOwner(value === "" ? undefined : value);
+    const ownerId = value ? parseInt(value) : undefined;
+    setSelectedOwner(ownerId);
     navigate(`#kanban?owner=${value}`, { replace: true });
   };
 
@@ -165,7 +166,7 @@ export const KanbanBoard = ({
         >
           <option value="">전체</option>
           {members.map((member) => (
-            <option key={member.id} value={member.name}>
+            <option key={member.id} value={member.id}>
               {member.name}
             </option>
           ))}
