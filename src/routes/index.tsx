@@ -12,7 +12,6 @@ import { JoinProjectPage } from "../pages/JoinProject";
 import { LoginPage } from "../pages/Login";
 import { MemberDetailsPage } from "../pages/MemberDetails";
 import { ProjectPage } from "../pages/Project";
-import { ProjectKanbanPage } from "../pages/ProjectKanban";
 import { ProjectListPage } from "../pages/ProjectList";
 import { AuthProvider } from "../provider/Auth";
 import { PrivateRoute } from "./components/PrivateRoute";
@@ -70,10 +69,6 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <ProjectPage />,
-          },
-          {
-            path: RouterPath.projectKanban,
-            element: <ProjectKanbanPage />,
           },
         ],
       },

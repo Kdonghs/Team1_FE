@@ -67,7 +67,7 @@ export const ProjectRoute = () => {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div />;
   }
 
   if (!response || response.errorCode !== 200) {
