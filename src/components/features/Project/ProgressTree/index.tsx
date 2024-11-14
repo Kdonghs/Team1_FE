@@ -94,21 +94,6 @@ export const ProgressTree = ({ projectId }: ProgressTreeProps) => {
     }, 3000);
   };
 
-  const getRemainingPercentage = () => {
-    const progress = growData?.projectProgress ?? 0;
-
-    if (progress < 25) {
-      return 25 - progress;
-    } else if (progress < 50) {
-      return 50 - progress;
-    } else if (progress < 75) {
-      return 75 - progress;
-    } else {
-      return 100 - progress;
-    }
-  };
-
-  const expPoint = Math.round(25 / getRemainingPercentage());
   return (
     <Flex
       onClick={handleClick}
@@ -192,11 +177,11 @@ export const ProgressTree = ({ projectId }: ProgressTreeProps) => {
                 {getGrowInfo().growthLevel}
               </Text>
               <Text fontSize={subheaderFontSize} fontWeight="600">
-                {`${Math.round(expPoint)}%`}
+                {growData?.projectProgress}%
               </Text>
             </Flex>
             <Progress
-              value={25 - getRemainingPercentage()}
+              value={growData?.projectProgress}
               size="md"
               width="80%"
               colorScheme={isProjectColorChangeEnabled ? "red" : "blue"}

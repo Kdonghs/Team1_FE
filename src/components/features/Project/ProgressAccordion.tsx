@@ -28,10 +28,16 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
     return savedState === "open";
   });
   const progressData = data?.resultData?.projectProgress || 0;
-  const { isProjectColorChangeEnabled, setIsProjectColorChangeEnabled } =
-    useOptionContext();
+  const {
+    isOptionThreeEnabled,
+    setIsOptionThreeEnabled,
+    isProjectColorChangeEnabled,
+    setIsProjectColorChangeEnabled,
+  } = useOptionContext();
 
   useEffect(() => {
+    setIsOptionThreeEnabled(projectDetail?.optionIds?.includes(3) || false);
+
     if (projectDetail?.endDate) {
       const today = new Date();
       const endDate = new Date(projectDetail.endDate);
@@ -48,8 +54,15 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
       } else {
         setIsProjectColorChangeEnabled(false);
       }
+    } else {
+      setIsProjectColorChangeEnabled(false);
     }
-  }, [projectDetail, setIsProjectColorChangeEnabled]);
+  }, [
+    isOptionThreeEnabled,
+    projectDetail,
+    setIsOptionThreeEnabled,
+    setIsProjectColorChangeEnabled,
+  ]);
 
   const handleToggle = () => {
     const newState = !isOpen;
@@ -58,10 +71,12 @@ export const ProgressAccordion = (props: { projectDetail: ProjectDetail }) => {
   };
 
   useEffect(() => {
+    const projectId = projectDetail?.id;
+
     if (progressData >= 50 && projectDetail?.optionIds?.includes(3)) {
-      if (!localStorage.getItem("celebration")) {
+      if (!localStorage.getItem(`celebration-${projectId}`)) {
         setConfettiVisible(true);
-        localStorage.setItem("celebration", "true");
+        localStorage.setItem(`celebration-${projectId}`, "true");
 
         setTimeout(() => {
           setConfettiVisible(false);
