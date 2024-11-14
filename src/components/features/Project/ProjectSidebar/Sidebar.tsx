@@ -2,7 +2,7 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
 import { Link, useParams } from "react-router-dom";
 
-import { useGetProjectDetail } from "../../../../api/hooks/useGetProjectDetail";
+import { useGetProjectDetail } from "../../../../api/hooks/project.api";
 import { ProjectInfo } from "../ProjectInfo";
 import { UserProfile } from "./UserProfile";
 

@@ -18,8 +18,10 @@ import type {
   ProjectDetail,
   ProjectUpdate,
 } from "../../../../api/generated/data-contracts";
-import { useGetProjectDetail } from "../../../../api/hooks/useGetProjectDetail";
-import { useUpdateProject } from "../../../../api/hooks/useUpdateProject";
+import {
+  useGetProjectDetail,
+  useUpdateProject,
+} from "../../../../api/hooks/project.api";
 import { getKoreanTimeISO } from "../../../../utils/dateUtils";
 import { ProjectOptionSettingFields } from "../ProjectSetting/ProjectSettingForm/projectOptionSettingFields";
 import { AnimatedPageTransition } from "./animatedPageTransition";

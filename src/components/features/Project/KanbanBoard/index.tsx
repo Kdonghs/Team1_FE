@@ -8,8 +8,10 @@ import type {
   MemberResponseDTO,
   TaskWithOwnerDetail,
 } from "../../../../api/generated/data-contracts";
-import { useGetProjectMembers } from "../../../../api/hooks/useGetProjectMembers";
-import { useGetProjectTaskList } from "../../../../api/hooks/useGetProjectTaskList";
+import {
+  useGetProjectMembers,
+  useGetProjectTaskList,
+} from "../../../../api/hooks/project.api";
 import { KanbanColumn } from "./KanbanColumn";
 
 interface Column {

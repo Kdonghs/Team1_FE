@@ -15,7 +15,7 @@ import { useEffect, useState } from "react";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 import type { ProjectDetail } from "../../../api/generated/data-contracts";
-import { useGetProjectProgress } from "../../../api/hooks/useGetProjectProgress";
+import { useGetProjectProgress } from "../../../api/hooks/project.api";
 import { useOptionContext } from "../../../provider/Option";
 import { ProgressTree } from "./ProgressTree";
 
