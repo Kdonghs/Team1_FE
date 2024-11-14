@@ -83,8 +83,9 @@ const useGetProjectDates = () => {
       console.log("프로젝트 일정 조회 응답:", response.data);
       return response.data;
     },
-    staleTime: 0,
-    refetchOnMount: true,
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     retry: 1,
   });
 };
