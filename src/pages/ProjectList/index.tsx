@@ -106,14 +106,8 @@ export const ProjectListPage: React.FC = () => {
                 type: project.optionIds.length === 2 ? "basic" : "custom",
               }}
               imageSrc={project.imageURL}
-              refetch={async (options) => {
-                const result = await refetchProjects(options);
-                return result;
-              }}
-              refetchSchedule={async (options) => {
-                const result = await refetchSchedule(options);
-                return result;
-              }}
+              refetch={refetchProjects}
+              refetchSchedule={refetchSchedule}
             />
           ))}
         </Flex>
