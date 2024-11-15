@@ -46,8 +46,6 @@ export const useGetProjects = (
         throw new Error("인증 토큰이 없습니다.");
       }
 
-      console.log("프로젝트 목록 조회 요청:", params);
-
       try {
         const response = await axios.get<ProjectListResponse>("/api/project", {
           params,
@@ -60,8 +58,6 @@ export const useGetProjects = (
         if (!response.data || !Array.isArray(response.data.resultData)) {
           throw new Error("프로젝트 목록을 조회할 수 없습니다.");
         }
-
-        console.log("프로젝트 목록 조회 응답:", response.data);
         return response.data;
       } catch (error) {
         if (error instanceof AxiosError) {

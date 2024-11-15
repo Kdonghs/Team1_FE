@@ -80,7 +80,6 @@ const useGetProjectDates = () => {
           },
         }
       );
-      console.log("프로젝트 일정 조회 응답:", response.data);
       return response.data;
     },
     staleTime: Infinity,

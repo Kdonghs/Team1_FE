@@ -9,7 +9,6 @@ export const PrivateRoute = () => {
   const token = authSessionStorage.get()?.token;
 
   if (!user || !token) {
-    console.log(user, token);
     return <Navigate to={RouterPath.root} />;
   }
 

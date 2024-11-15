@@ -18,12 +18,6 @@ export const useDeleteProject = (): UseMutationResult<
   return useMutation<DeleteProjectData, AxiosError, { projectId: number }>({
     mutationFn: async ({ projectId }) => {
       return deleteProject(projectId);
-    },
-    onSuccess: (data) => {
-      console.log("프로젝트 삭제 성공:", data);
-    },
-    onError: (error) => {
-      console.error("프로젝트 삭제 실패:", error);
-    },
+    }
   });
 };

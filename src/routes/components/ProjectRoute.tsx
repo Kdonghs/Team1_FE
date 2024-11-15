@@ -54,22 +54,18 @@ export const ProjectRoute = () => {
     queryKey: ["project", id],
     queryFn: async () => {
       const currentToken = authSessionStorage.get()?.token;
-
       if (!currentToken) {
         throw new Error("인증 토큰이 없습니다.");
       }
       if (!id) {
         throw new Error("Project ID is required");
       }
-
-      console.log("프로젝트 상세 조회 요청:", id);
       const response = await axios.get<ProjectResponse>(`/api/project/${id}`, {
         headers: {
           Authorization: `Bearer ${currentToken}`,
           "Content-Type": "application/json",
         },
       });
-      console.log("프로젝트 상세 조회 응답:", response.data);
       return response.data;
     },
     enabled: !!id,
@@ -86,11 +82,9 @@ export const ProjectRoute = () => {
     queryKey: ["project-member-me", id],
     queryFn: async () => {
       const currentToken = authSessionStorage.get()?.token;
-
       if (!currentToken || !id) {
         throw new Error("인증 정보 또는 프로젝트 ID가 없습니다.");
       }
-
       const response = await axios.get<ProjectMemberResponse>(
         `/api/project/${id}/member/me`,
         {
@@ -112,7 +106,8 @@ export const ProjectRoute = () => {
     return <Navigate to={RouterPath.login} />;
   }
 
-  if (isProjectLoading || isMemberLoading) {
+  // 로딩 중인 경우 로딩 UI 표시
+  if (isProjectLoading || (isMemberLoading && projectResponse?.errorCode !== 200)) {
     return <div>Loading...</div>;
   }
 
@@ -123,8 +118,7 @@ export const ProjectRoute = () => {
 
   // 프로젝트 멤버 본인 조회 성공한 경우
   if (memberResponse?.errorCode === 200) {
-    window.location.href = `/project/${id}`;
-    return null;
+    return <Outlet />;  // window.location.href 대신 직접 Outlet 렌더링
   }
 
   // 모든 접근 시도 실패

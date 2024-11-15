@@ -32,14 +32,12 @@ export const useGetProjectDates = () => {
             throw new Error("인증 토큰이 없습니다.");
           }
 
-          console.log("프로젝트 일정 조회 요청");
           const response = await axios.get<ProjectDateResponse>("/api/project/date", {
             headers: {
               Authorization: `Bearer ${accessToken}`,
               "Content-Type": "application/json",
             },
           });
-          console.log("프로젝트 일정 조회 응답:", response.data);
           return response.data;
         },
         staleTime: Infinity,
