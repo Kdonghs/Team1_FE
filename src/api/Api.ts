@@ -3,7 +3,7 @@ import { Auth } from "./generated/Auth";
 import { Project } from "./generated/Project";
 import { User } from "./generated/User";
 
-const authToken = authSessionStorage.get();
+const authToken = authSessionStorage.get()?.token;
 
 const axiosConfig = {
   headers: {

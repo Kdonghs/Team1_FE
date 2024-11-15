@@ -23,30 +23,28 @@ interface ProjectDateResponse {
 }
 
 export const useGetProjectDates = () => {
-  return useQuery<ProjectDateResponse, AxiosError>({
-    queryKey: ["projectDates"],
-    queryFn: async () => {
-      const accessToken = authSessionStorage.get();
+      return useQuery<ProjectDateResponse, AxiosError>({
+        queryKey: ["projectDates"],
+        queryFn: async () => {
+          const accessToken = authSessionStorage.get()?.token;
 
-      if (!accessToken) {
-        throw new Error("인증 토큰이 없습니다.");
-      }
+          if (!accessToken) {
+            throw new Error("인증 토큰이 없습니다.");
+          }
 
-      const response = await axios.get<ProjectDateResponse>(
-        "/api/project/date",
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
+          console.log("프로젝트 일정 조회 요청");
+          const response = await axios.get<ProjectDateResponse>("/api/project/date", {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+              "Content-Type": "application/json",
+            },
+          });
+          console.log("프로젝트 일정 조회 응답:", response.data);
+          return response.data;
         },
-      );
-      console.log("프로젝트 일정 조회 응답:", response.data);
-      return response.data;
-    },
-    staleTime: Infinity,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    retry: 1,
-  });
-};
+        staleTime: Infinity,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false,
+        retry: 1,
+      });
+    };

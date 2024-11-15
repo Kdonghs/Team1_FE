@@ -19,7 +19,7 @@ export const TeamMemberProfile = ({
       bgColor="gray.600"
     >
       <Link
-        href={`/projects/${projectId}/kanban/?owner=${teamMember?.name}`}
+        href={`/projects/${projectId}/kanban/?owner=${teamMember?.id}`}
         _hover={{ textDecoration: "none" }}
       >
         <Flex

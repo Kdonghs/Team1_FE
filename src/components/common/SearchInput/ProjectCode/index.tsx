@@ -34,7 +34,7 @@ interface SearchInputProps
 class AuthenticationError extends Error {
   constructor(message: string) {
     super(message);
-    this.name = 'AuthenticationError';
+    this.name = "AuthenticationError";
   }
 }
 
@@ -44,7 +44,7 @@ const validateCode = (code: string): boolean => {
 };
 
 const authenticateWithCode = async (
-  memberCode: string,
+  memberCode: string
 ): Promise<AuthResponse> => {
   const response = await fetch(
     `/api/auth/memberCode?memberCode=${encodeURIComponent(memberCode)}`,
@@ -53,7 +53,7 @@ const authenticateWithCode = async (
       headers: {
         Accept: "application/json",
       },
-    },
+    }
   );
 
   const data = await response.json();
@@ -85,7 +85,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       setMemberCode(value);
       setIsValid(validateCode(value));
     },
-    [],
+    []
   );
 
   const handleAuth = useCallback(async () => {
@@ -94,7 +94,10 @@ export const SearchInput: React.FC<SearchInputProps> = ({
     setIsLoading(true);
     try {
       const response = await authenticateWithCode(memberCode);
-      authSessionStorage.set(response.resultData.token);
+      authSessionStorage.set({
+        role: "MEMBER",
+        token: response.resultData.token,
+      });
       console.log("Authenticated user:", response.resultData.token);
       toast({
         title: "인증 성공",
@@ -106,7 +109,9 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       navigate(`projects/${response.resultData.projectId}`);
     } catch (error) {
       console.error("Unexpected error:", error);
-      const unexpectedError = new Error("인증 중 예기치 않은 오류가 발생했습니다.");
+      const unexpectedError = new Error(
+        "인증 중 예기치 않은 오류가 발생했습니다."
+      );
       toast({
         title: "오류",
         description: unexpectedError.message,
@@ -126,7 +131,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         handleAuth();
       }
     },
-    [handleAuth, isValid, isLoading],
+    [handleAuth, isValid, isLoading]
   );
 
   return (

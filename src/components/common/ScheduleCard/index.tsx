@@ -42,7 +42,7 @@ const useGetUser = () => {
   return useQuery<UserResponse, AxiosError>({
     queryKey: ["user"],
     queryFn: async () => {
-      const accessToken = authSessionStorage.get();
+      const accessToken = authSessionStorage.get()?.token;
 
       if (!accessToken) {
         throw new Error("인증 토큰이 없습니다.");
@@ -65,7 +65,7 @@ const useGetProjectDates = () => {
   return useQuery<ProjectDateResponse, AxiosError>({
     queryKey: ["projectDates"],
     queryFn: async () => {
-      const accessToken = authSessionStorage.get();
+      const accessToken = authSessionStorage.get()?.token;
 
       if (!accessToken) {
         throw new Error("인증 토큰이 없습니다.");
@@ -78,7 +78,7 @@ const useGetProjectDates = () => {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
-        },
+        }
       );
       console.log("프로젝트 일정 조회 응답:", response.data);
       return response.data;
@@ -154,7 +154,6 @@ const ScheduleCard: React.FC<{ date: string; projects: Project[] }> = ({
     </Box>
   );
 };
-
 
 export const ScheduleList: React.FC = () => {
   const {
