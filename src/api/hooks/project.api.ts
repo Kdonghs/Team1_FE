@@ -17,6 +17,7 @@ import type {
   GetMemberListData,
   GetProjectProgressData,
   GetTaskListData,
+  MemberResponseDTO,
   PageResultMemberProgress,
   ProjectDetail,
   ProjectUpdate,
@@ -444,5 +445,37 @@ export const useDeleteMember = (): UseMutationResult<
     onError: (error) => {
       console.error("팀원 삭제 오류:", error);
     },
+  });
+};
+
+const getMyMember = async (
+  projectId: number
+): Promise<MemberResponseDTO | null> => {
+  try {
+    const response = await authProjectApi.getMyMember(projectId);
+
+    if (!response.data || !response.data.resultData) {
+      throw new Error("Project data not found");
+    }
+
+    return response.data.resultData;
+  } catch (error) {
+    throw new Error(
+      error instanceof Error ? error.message : "Failed to fetch my data"
+    );
+  }
+};
+
+export const useGetMyMember = (projectId: number | null) => {
+  return useQuery<MemberResponseDTO | null, Error>({
+    queryKey: ["project", projectId],
+    queryFn: () => {
+      if (projectId === null) {
+        throw new Error("Project ID cannot be null");
+      }
+
+      return getMyMember(projectId);
+    },
+    enabled: !!projectId,
   });
 };

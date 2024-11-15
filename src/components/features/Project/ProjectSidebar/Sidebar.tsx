@@ -5,8 +5,8 @@ import { Link, useParams } from "react-router-dom";
 
 import { useGetProjectDetail } from "../../../../api/hooks/project.api";
 import { authSessionStorage } from "../../../../utils/storage";
-import { MemberProfile } from "../MemberManagementModal/MemberProfile";
 import { ProjectInfo } from "../ProjectInfo";
+import { MyMemberProfile } from "./MyMemberProfile";
 import { UserProfile } from "./UserProfile";
 
 interface SidebarProps {
@@ -61,7 +61,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         {role === "USER" ? (
           <UserProfile />
         ) : role === "MEMBER" ? (
-          <MemberProfile />
+          <MyMemberProfile />
         ) : null}
       </Flex>
       <Stack padding={2} gap={8}>
