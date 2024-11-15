@@ -127,7 +127,7 @@ export const KanbanBoard = ({
   const handleSelectChange = (value: string) => {
     const ownerId = value ? parseInt(value) : undefined;
     setSelectedOwner(ownerId);
-    navigate(`#kanban?owner=${value}`, { replace: true });
+    navigate(`?owner=${value}`, { replace: true });
   };
 
   const getColumns: Column[] = [
