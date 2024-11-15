@@ -5,6 +5,7 @@ import { useRef, useState } from "react";
 
 import type { MemberProgress } from "@/api/generated/data-contracts";
 
+import { useOptionContext } from "../../../../provider/Option";
 import { ProgressLabel } from "./ProgressLabel";
 import { TeamMemberProfile } from "./TeamMemberProfile";
 
@@ -14,6 +15,7 @@ const createFillAnimation = (progress: number) => keyframes`
 `;
 
 export const TeamMemberProgress = ({ member }: { member: MemberProgress }) => {
+  const { isProjectColorChangeEnabled } = useOptionContext();
   const { teamMember, progress } = member;
   const activeTasks = member.activeTasks || [];
 
@@ -30,6 +32,10 @@ export const TeamMemberProgress = ({ member }: { member: MemberProgress }) => {
     }
   };
 
+  const progressColor = isProjectColorChangeEnabled
+    ? `rgba(255, 0, 0, ${0.5 + (progress || 0) / 200})`
+    : `rgba(49, 130, 206, ${0.5 + (progress || 0) / 200})`;
+
   return (
     <Flex
       mt={2}
@@ -40,8 +46,12 @@ export const TeamMemberProgress = ({ member }: { member: MemberProgress }) => {
     >
       <TeamMemberProfile teamMember={teamMember} />
       <Tooltip
-        label={`${activeTasks[0]?.name ? `${activeTasks[0]?.name}${activeTasks.length > 1 ? ` 외 ${activeTasks.length - 1}건 진행 중` : " 진행 중"}` : "진행 중인 태스크 없음"}`}
-        placement="auto-start"
+        label={
+          activeTasks.length === 0
+            ? "진행 중인 태스크 없음"
+            : `${activeTasks[0]?.name}${activeTasks.length > 1 ? ` 외 ${activeTasks.length - 1}건` : ""}`
+        }
+        placement="top-start"
         aria-label="activeTask"
         offset={[tooltipX, 0]}
         borderRadius={5}
@@ -62,7 +72,7 @@ export const TeamMemberProgress = ({ member }: { member: MemberProgress }) => {
               "& > div": {
                 animation: `${fillAnimation} 2s ease-in-out forwards`,
                 width: `${progress || 0}%`,
-                backgroundColor: `rgba(49, 130, 206, ${0.5 + (progress || 0) / 200})`,
+                backgroundColor: progressColor,
               },
             }}
           />

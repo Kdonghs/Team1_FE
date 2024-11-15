@@ -1,59 +1,120 @@
 import type { ReactNode } from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { createContext } from "react";
+
+import { useGetUserData } from "../../api/hooks/user.api";
+import { RouterPath } from "../../routes/path";
+import { authSessionStorage } from "../../utils/storage";
 
 type User = {
-  id: string;
-  name: string;
+  username: string;
   email: string;
+  picture?: string;
+  role?: string;
+  createDate?: string;
 };
 
-type AuthContextType = {
+export const AuthContext = createContext<{
   user: User | null;
-  login: (email: string) => void;
+  login: () => void;
   logout: () => void;
-};
-
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
-
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
-    }
-  }, [user]);
-
-  const login = (email: string) => {
-    // 임시 로그인 로직
-    const mockUser: User = {
-      id: Math.random().toString(36).substr(2, 9),
-      name: email.split("@")[0],
-      email: email,
-    };
-    setUser(mockUser);
-  };
-
-  const logout = () => {
-    setUser(null);
-  };
-
-  return (
-    <AuthContext.Provider value={{ user, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
-};
+  handleGoogleCallback: () => void;
+  isReady: boolean;
+}>({
+  user: null,
+  login: () => {},
+  logout: () => {},
+  handleGoogleCallback: () => {},
+  isReady: false,
+});
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error("에러: AuthProvider를 찾을 수 없습니다.");
   }
   return context;
+};
+
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isReady, setIsReady] = useState(false);
+  const { data, error } = useGetUserData();
+
+  const currentAuthToken = authSessionStorage.get()?.token;
+
+  const login = () => {
+    const googleAuthUrl = `https://seamlessup.com/api/login`;
+    window.location.href = googleAuthUrl;
+  };
+
+  const logout = () => {
+    authSessionStorage.set(undefined);
+    localStorage.removeItem("user");
+
+    window.location.href = RouterPath.root;
+  };
+
+  const handleGoogleCallback = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get("accessToken");
+
+    if (accessToken) {
+      authSessionStorage.set({ role: "USER", token: accessToken });
+      localStorage.getItem("user");
+      window.location.href = RouterPath.projectList;
+    } else {
+      window.location.href = RouterPath.root;
+    }
+  };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        if (!currentAuthToken) {
+          setIsReady(true);
+          return;
+        }
+
+        if (data) {
+          const newUser = {
+            username: data?.resultData?.username || "",
+            email: data?.resultData?.email || "",
+            picture: data?.resultData?.picture || "",
+            role: data?.resultData?.role || "",
+            createDate: data?.resultData?.createDate || "",
+          };
+
+          setUser(newUser);
+          localStorage.setItem("user", JSON.stringify(newUser));
+        }
+
+        if (error) {
+          setUser(null);
+          localStorage.removeItem("user");
+        }
+
+        setIsReady(true);
+      } catch (err) {
+        console.error("Error:", err);
+        setUser(null);
+        localStorage.removeItem("user");
+        setIsReady(true);
+      }
+    };
+
+    fetchUserData();
+  }, [currentAuthToken, data, error]);
+
+  if (!isReady) return null;
+
+  const value = {
+    user,
+    login,
+    handleGoogleCallback,
+    logout,
+    isReady,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

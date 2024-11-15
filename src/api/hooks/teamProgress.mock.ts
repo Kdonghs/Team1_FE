@@ -5,7 +5,7 @@ export const teamProgressMockHandler = [
     `https://seamlessup.com/api/project/:projectId/task/progress`,
     (_, res, ctx) => {
       return res(ctx.status(200), ctx.json(mockTeamProgressData));
-    }
+    },
   ),
 ];
 

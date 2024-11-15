@@ -31,9 +31,13 @@ export const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     }
   }, [user, navigate, onClose]);
 
-  const loginWithGoogle = () => {
-    console.log("Google login clicked");
-    login("user@example.com");
+  const handleGoogleLogin = async () => {
+    try {
+      await login();
+    } catch (error) {
+      console.error("Google login error:", error);
+      alert("로그인 중 오류가 발생했습니다.");
+    }
   };
 
   const appleKakaoLogin = () => {
@@ -49,9 +53,9 @@ export const LoginModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <br />
           Nice Meet You
         </ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton onClick={onClose} />
         <VStack spacing={5} align="stretch">
-          <StyledButton onClick={loginWithGoogle}>
+          <StyledButton onClick={handleGoogleLogin}>
             <IconWrapper>
               <FcGoogle />
             </IconWrapper>

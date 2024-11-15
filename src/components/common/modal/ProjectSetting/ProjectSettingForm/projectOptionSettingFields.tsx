@@ -21,7 +21,7 @@ const options = [
   {
     id: 3,
     title: "마감 기한에 따른 색 변화!",
-    description: "마감 기한이 1일 남았을 때 아이콘이 빨간색으로 바뀌어요!",
+    description: "마감 기한이 1일 남았을 때 색상이 빨간색으로 바뀌어요!",
     fieldId: "colorChange",
   },
   {

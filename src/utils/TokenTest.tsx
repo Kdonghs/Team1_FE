@@ -7,7 +7,7 @@ export const getTestToken = (): string | null => {
 
 export const TokenTest = () => {
   const [testToken, setToken] = useState<string>(
-    localStorage.getItem("authToken") || ""
+    localStorage.getItem("authToken") || "",
   );
 
   const handleSaveTestToken = () => {

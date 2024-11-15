@@ -1,8 +1,12 @@
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
-import { TokenTest } from "../TokenTest";
+import { useGetProjectDetail } from "../../../../api/hooks/project.api";
+import { authSessionStorage } from "../../../../utils/storage";
+import { ProjectInfo } from "../ProjectInfo";
+import { MyMemberProfile } from "./MyMemberProfile";
 import { UserProfile } from "./UserProfile";
 
 interface SidebarProps {
@@ -11,7 +15,19 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-  const projectId = useParams().id;
+  const { id } = useParams<{ id: string }>();
+  const projectId = id ? parseInt(id, 10) : null;
+
+  const { data } = useGetProjectDetail(projectId);
+
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const authData = authSessionStorage.get();
+    if (authData) {
+      setRole(authData.role);
+    }
+  }, []);
 
   return (
     <Box
@@ -27,11 +43,17 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       zIndex={10}
     >
       <Flex justifyContent="space-between" padding={2}>
-        <Link to="/">
+        {role === "USER" ? (
+          <Link to={`/projects`}>
+            <Text fontSize="3xl" fontWeight="bold">
+              Seamless
+            </Text>
+          </Link>
+        ) : role === "MEMBER" ? (
           <Text fontSize="3xl" fontWeight="bold">
             Seamless
           </Text>
-        </Link>
+        ) : null}
 
         <Button
           onClick={onClose}
@@ -43,10 +65,13 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </Button>
       </Flex>
 
-      <Flex padding={2}>
-        <UserProfile />
+      <Flex>
+        {role === "USER" ? (
+          <UserProfile />
+        ) : role === "MEMBER" ? (
+          <MyMemberProfile />
+        ) : null}
       </Flex>
-
       <Stack padding={2} gap={8}>
         <Stack gap={2}>
           <Text fontSize="20px" fontWeight="bold">
@@ -66,14 +91,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </Link>
           </Flex>
         </Stack>
-
-        <Stack gap={2}>
-          <Text fontSize="20px" fontWeight="bold">
-            TODO
-          </Text>
-        </Stack>
       </Stack>
-      <TokenTest />
+      {data && <ProjectInfo projectDetail={data} />}
     </Box>
   );
 };

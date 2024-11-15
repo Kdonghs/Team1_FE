@@ -9,12 +9,10 @@
  * ---------------------------------------------------------------
  */
 
-import { MemberCodeCreate1Data, MemberCodeDecodeData, MemberCodeJoinData } from "./data-contracts";
+import { AesDecodeData, AttendUrlCreateData, MemberCodeJoinData } from "./data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
-export class Auth<
-  SecurityDataType = unknown,
-> extends HttpClient<SecurityDataType> {
+export class Auth<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
@@ -42,19 +40,19 @@ export class Auth<
    * No description
    *
    * @tags 인증기능 구현
-   * @name MemberCodeDecode
+   * @name AesDecode
    * @summary 인증 코드 복호화(테스트용)
    * @request GET:/api/auth/memberCode/decode
    * @secure
-   * @response `200` `MemberCodeDecodeData` OK
+   * @response `200` `AesDecodeData` OK
    */
-  memberCodeDecode = (
+  aesDecode = (
     query: {
       memberCode: string;
     },
     params: RequestParams = {},
   ) =>
-    this.request<MemberCodeDecodeData, any>({
+    this.request<AesDecodeData, any>({
       path: `/api/auth/memberCode/decode`,
       method: "GET",
       query: query,
@@ -65,14 +63,14 @@ export class Auth<
    * No description
    *
    * @tags 인증기능 구현
-   * @name MemberCodeCreate1
+   * @name AttendUrlCreate
    * @summary 인증 코드 생성(테스트용)
    * @request GET:/api/auth/memberCode/create
    * @secure
-   * @response `200` `MemberCodeCreate1Data` OK
+   * @response `200` `AttendUrlCreateData` OK
    */
-  memberCodeCreate1 = (params: RequestParams = {}) =>
-    this.request<MemberCodeCreate1Data, any>({
+  attendUrlCreate = (params: RequestParams = {}) =>
+    this.request<AttendUrlCreateData, any>({
       path: `/api/auth/memberCode/create`,
       method: "GET",
       secure: true,

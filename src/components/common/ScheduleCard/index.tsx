@@ -1,46 +1,97 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
+import axios from "axios";
+import { format } from "date-fns";
+import { ko } from "date-fns/locale";
 import React from "react";
 
-type TaskOwner = {
-  id: number;
-  name: string;
-  role: string;
-  imageURL: string;
-};
+import { authSessionStorage } from "../../../utils/storage";
 
-type Task = {
+type Project = {
   id: number;
   name: string;
-  description: string;
-  owner: TaskOwner;
-  startTime: string; // 시작 시간 추가
-  endTime: string; // 종료 시간 추가
   startDate: string;
   endDate: string;
-  priority: "HIGH" | "MEDIUM" | "LOW";
-  status: number;
 };
 
-type ApiResponse = {
+interface ProjectDateResponse {
   errorCode: number;
   errorMessage: string;
-  resultData: Task[];
+  resultData: Project[];
   size: number;
   page: number;
   pages: number;
   hasNext: boolean;
   total: number;
+}
+
+interface UserResponse {
+  errorCode: number;
+  errorMessage: string;
+  resultData: {
+    username: string;
+    email: string;
+    picture: string;
+    role: string;
+    createDate: string;
+  };
+}
+
+const useGetUser = () => {
+  return useQuery<UserResponse, AxiosError>({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const accessToken = authSessionStorage.get()?.token;
+
+      if (!accessToken) {
+        throw new Error("인증 토큰이 없습니다.");
+      }
+
+      const response = await axios.get<UserResponse>("/api/user", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    },
+    staleTime: 300000,
+    retry: 1,
+  });
 };
 
-// 현재 로그인한 사용자 정보
-const CURRENT_USER = {
-  id: 1,
-  name: "채연",
+const useGetProjectDates = () => {
+  return useQuery<ProjectDateResponse, AxiosError>({
+    queryKey: ["projectDates"],
+    queryFn: async () => {
+      const accessToken = authSessionStorage.get()?.token;
+
+      if (!accessToken) {
+        throw new Error("인증 토큰이 없습니다.");
+      }
+
+      const response = await axios.get<ProjectDateResponse>(
+        "/api/project/date",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return response.data;
+    },
+    staleTime: Infinity,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    retry: 1,
+  });
 };
 
-const ScheduleCard: React.FC<{ date: string; tasks: Task[] }> = ({
+const ScheduleCard: React.FC<{ date: string; projects: Project[] }> = ({
   date,
-  tasks,
+  projects,
 }) => {
   const getDisplayDate = (dateStr: string): string => {
     const today = new Date();
@@ -56,12 +107,23 @@ const ScheduleCard: React.FC<{ date: string; tasks: Task[] }> = ({
       case 0:
         return "오늘";
       case 1:
-        return "내일";
+        return format(targetDate, "EEE요일", { locale: ko });
       case 2:
-        return "모레";
+        return format(targetDate, "EEE요일", { locale: ko });
       default:
         return `${targetDate.getMonth() + 1}월 ${targetDate.getDate()}일`;
     }
+  };
+
+  const formatDateRange = (startDate: string, endDate: string): string => {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    if (start.toDateString() === end.toDateString()) {
+      return format(start, "M.d(EEE)", { locale: ko });
+    }
+
+    return `${format(start, "M.d(EEE)", { locale: ko })} - ${format(end, "M.d(EEE)", { locale: ko })}`;
   };
 
   return (
@@ -70,19 +132,19 @@ const ScheduleCard: React.FC<{ date: string; tasks: Task[] }> = ({
         {getDisplayDate(date)}
       </Text>
       <VStack spacing={2} align="stretch">
-        {tasks.length === 0 ? (
+        {projects.length === 0 ? (
           <Text fontSize="14px" color="gray.500">
             예정된 일정이 없습니다
           </Text>
         ) : (
-          tasks.map((task) => (
-            <Flex key={task.id} align="center">
+          projects.map((project) => (
+            <Flex key={project.id} align="center">
               <Box w="4px" h="40px" bg="#95A4FC" mr={2} borderRadius="2px" />
               <VStack align="start" spacing={0}>
                 <Text color="#95A4FC" fontSize="12px">
-                  {`오전 ${task.startTime} - ${task.endTime}`}
+                  {formatDateRange(project.startDate, project.endDate)}
                 </Text>
-                <Text fontSize="14px">{task.name}</Text>
+                <Text fontSize="14px">{project.name}</Text>
               </VStack>
             </Flex>
           ))
@@ -93,96 +155,31 @@ const ScheduleCard: React.FC<{ date: string; tasks: Task[] }> = ({
 };
 
 export const ScheduleList: React.FC = () => {
-  // Mock API response
-  const mockApiResponse: ApiResponse = {
-    errorCode: 200,
-    errorMessage: "Success",
-    resultData: [
-      {
-        id: 1,
-        name: "팀 회의",
-        description: "주간 업무 계획 회의",
-        owner: { id: 1, name: "채연", role: "팀원", imageURL: "" },
-        startTime: "10:00",
-        endTime: "11:00",
-        startDate: new Date().toISOString(),
-        endDate: new Date(
-          new Date().setDate(new Date().getDate() + 1),
-        ).toISOString(),
-        priority: "HIGH",
-        status: 0,
-      },
-      {
-        id: 2,
-        name: "팀 회의2",
-        description: "스프린트 회고",
-        owner: { id: 1, name: "채연", role: "팀원", imageURL: "" },
-        startTime: "11:00",
-        endTime: "12:00",
-        startDate: new Date().toISOString(),
-        endDate: new Date(
-          new Date().setDate(new Date().getDate()),
-        ).toISOString(),
-        priority: "MEDIUM",
-        status: 0,
-      },
-      {
-        id: 3,
-        name: "팀 회의",
-        description: "일일 스크럼",
-        owner: { id: 1, name: "채연", role: "팀원", imageURL: "" },
-        startTime: "10:00",
-        endTime: "11:00",
-        startDate: new Date(
-          new Date().setDate(new Date().getDate() + 1),
-        ).toISOString(),
-        endDate: new Date(
-          new Date().setDate(new Date().getDate() + 2),
-        ).toISOString(),
-        priority: "HIGH",
-        status: 0,
-      },
-      {
-        id: 4,
-        name: "팀 회의",
-        description: "기술 리뷰",
-        owner: { id: 1, name: "채연", role: "팀원", imageURL: "" },
-        startTime: "10:00",
-        endTime: "13:00",
-        startDate: new Date(
-          new Date().setDate(new Date().getDate() + 2),
-        ).toISOString(),
-        endDate: new Date(
-          new Date().setDate(new Date().getDate() + 2),
-        ).toISOString(),
-        priority: "LOW",
-        status: 0,
-      },
-    ],
-    size: 10,
-    page: 0,
-    pages: 1,
-    hasNext: false,
-    total: 4,
-  };
+  const {
+    data: userData,
+    isError: isUserError,
+    error: userError,
+  } = useGetUser();
+  const {
+    data: scheduleData,
+    isError: isScheduleError,
+    error: scheduleError,
+    isLoading,
+  } = useGetProjectDates();
 
-  // 현재 사용자의 태스크만 필터링
-  const filterUserTasks = (tasks: Task[]): Task[] => {
-    return tasks.filter((task) => task.owner.id === CURRENT_USER.id);
-  };
+  const getProjectsByDate = (date: string): Project[] => {
+    if (!scheduleData?.resultData) return [];
 
-  const getTasksByDate = (date: string): Task[] => {
-    const filteredTasks = filterUserTasks(mockApiResponse.resultData);
-    return filteredTasks.filter((task) => {
-      const taskStart = new Date(task.startDate);
-      const taskEnd = new Date(task.endDate);
+    return scheduleData.resultData.filter((project) => {
+      const projectStart = new Date(project.startDate);
+      const projectEnd = new Date(project.endDate);
       const targetDate = new Date(date);
 
-      taskStart.setHours(0, 0, 0, 0);
-      taskEnd.setHours(0, 0, 0, 0);
+      projectStart.setHours(0, 0, 0, 0);
+      projectEnd.setHours(0, 0, 0, 0);
       targetDate.setHours(0, 0, 0, 0);
 
-      return targetDate >= taskStart && targetDate <= taskEnd;
+      return targetDate >= projectStart && targetDate <= projectEnd;
     });
   };
 
@@ -201,6 +198,43 @@ export const ScheduleList: React.FC = () => {
 
   const dates = getDates();
 
+  if (isLoading) {
+    return (
+      <Box p={6}>
+        <Text fontSize="18px" fontWeight="bold" mb={6}>
+          예정 일정
+        </Text>
+        <Text>로딩 중...</Text>
+      </Box>
+    );
+  }
+
+  if (isUserError || isScheduleError) {
+    return (
+      <Box p={6}>
+        <Text fontSize="18px" fontWeight="bold" mb={6}>
+          예정 일정
+        </Text>
+        <Text color="red.500">
+          {(userError as AxiosError)?.message ||
+            (scheduleError as AxiosError)?.message ||
+            "데이터를 불러오는데 실패했습니다."}
+        </Text>
+      </Box>
+    );
+  }
+
+  if (!userData?.resultData) {
+    return (
+      <Box p={6}>
+        <Text fontSize="18px" fontWeight="bold" mb={6}>
+          예정 일정
+        </Text>
+        <Text color="red.500">사용자 정보를 불러올 수 없습니다.</Text>
+      </Box>
+    );
+  }
+
   return (
     <Box>
       <Box px={6}>
@@ -215,7 +249,10 @@ export const ScheduleList: React.FC = () => {
         >
           <Flex position="relative">
             <Box flex="1" p={6}>
-              <ScheduleCard date={dates[0]} tasks={getTasksByDate(dates[0])} />
+              <ScheduleCard
+                date={dates[0]}
+                projects={getProjectsByDate(dates[0])}
+              />
             </Box>
 
             <Box
@@ -232,11 +269,11 @@ export const ScheduleList: React.FC = () => {
               <VStack spacing={6} align="stretch">
                 <ScheduleCard
                   date={dates[1]}
-                  tasks={getTasksByDate(dates[1])}
+                  projects={getProjectsByDate(dates[1])}
                 />
                 <ScheduleCard
                   date={dates[2]}
-                  tasks={getTasksByDate(dates[2])}
+                  projects={getProjectsByDate(dates[2])}
                 />
               </VStack>
             </Box>

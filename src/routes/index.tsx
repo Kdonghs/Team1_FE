@@ -14,14 +14,19 @@ import { MemberDetailsPage } from "../pages/MemberDetails";
 import { ProjectPage } from "../pages/Project";
 import { ProjectKanbanPage } from "../pages/ProjectKanban";
 import { ProjectListPage } from "../pages/ProjectList";
-import { SignupPage } from "../pages/Signup";
+import { AuthProvider } from "../provider/Auth";
 import { PrivateRoute } from "./components/PrivateRoute";
+import { ProjectRoute } from "./components/ProjectRoute";
 import { RouterPath } from "./path";
 
 const router = createBrowserRouter([
   {
     path: RouterPath.root,
-    element: <Layout />,
+    element: (
+      <AuthProvider>
+        <Layout />
+      </AuthProvider>
+    ),
     children: [
       {
         index: true,
@@ -45,29 +50,42 @@ const router = createBrowserRouter([
   },
   {
     path: RouterPath.memberDetails,
-    element: <MemberDetailsPage />,
+    element: (
+      <AuthProvider>
+        <MemberDetailsPage />
+      </AuthProvider>
+    ),
   },
   {
     path: RouterPath.project,
-    element: <ProjectSidebar />,
+    element: (
+      <AuthProvider>
+        <ProjectRoute />
+      </AuthProvider>
+    ),
     children: [
       {
-        index: true,
-        element: <ProjectPage />,
-      },
-      {
-        path: RouterPath.projectKanban,
-        element: <ProjectKanbanPage />,
+        element: <ProjectSidebar />,
+        children: [
+          {
+            index: true,
+            element: <ProjectPage />,
+          },
+          {
+            path: RouterPath.projectKanban,
+            element: <ProjectKanbanPage />,
+          },
+        ],
       },
     ],
   },
   {
     path: RouterPath.login,
-    element: <LoginPage />,
-  },
-  {
-    path: RouterPath.signup,
-    element: <SignupPage />,
+    element: (
+      <AuthProvider>
+        <LoginPage />
+      </AuthProvider>
+    ),
   },
   {
     path: RouterPath.notFound,

@@ -9,6 +9,8 @@ import {
 } from "@chakra-ui/react";
 import { useToast } from "@chakra-ui/react";
 import styled from "@emotion/styled";
+import { useQueryClient } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -17,15 +19,17 @@ import type {
   ProjectDetail,
   ProjectUpdate,
 } from "../../../../api/generated/data-contracts";
-import { useGetProjectDetail } from "../../../../api/hooks/useGetProjectDetail";
-import { useUpdateProject } from "../../../../api/hooks/useUpdateProject";
+import {
+  useGetProjectDetail,
+  useUpdateProject,
+} from "../../../../api/hooks/project.api";
+import { getKoreanTimeISO } from "../../../../utils/dateUtils";
 import { ProjectOptionSettingFields } from "../ProjectSetting/ProjectSettingForm/projectOptionSettingFields";
 import { AnimatedPageTransition } from "./animatedPageTransition";
 import { ProjectDetailSettingFields } from "./ProjectSettingForm/projectDetailSettingFields";
 import { renderFooterButtons } from "./renderFooterButtons";
 
 export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
-  //TODO: 프로젝트에 옵션을 저장하는 방법 알아본 뒤 로직 변경 필요할듯
   const { id } = useParams<{ id: string }>();
   const projectId = id ? parseInt(id, 10) : null;
 
@@ -46,8 +50,9 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
 
   const { data, error, isLoading } = useGetProjectDetail(projectId);
   const [selectedFeature, setSelectedFeature] = useState("기본");
-  const { mutate } = useUpdateProject(projectId);
+  const { mutateAsync } = useUpdateProject(projectId);
   const toast = useToast();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (data) {
@@ -69,49 +74,50 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
     }
   }, [data, methods]);
 
-  const onSubmit = handleSubmit((updatedData) => {
-    if (!isValid) {
-      return;
-    }
+  const onSubmit = handleSubmit(async (updatedData) => {
+    if (!isValid) return;
 
-    const newName = updatedData.name?.trim();
-    const newStartDate = updatedData.startDate
-      ? new Date(updatedData.startDate).toISOString()
-      : undefined;
-    const newEndDate = updatedData.endDate
-      ? new Date(updatedData.endDate).toISOString()
-      : undefined;
-    const newOptionIds =
-      selectedFeature === "기본" ? [2, 4] : updatedData.optionIds || [];
-    const updatedProjectData: ProjectUpdate = {
-      name: newName || "",
-      startDate: newStartDate,
-      endDate: newEndDate,
-      optionIds: newOptionIds,
-    };
-    console.log(updatedProjectData.optionIds);
-    mutate(updatedProjectData, {
-      onSuccess: () => {
-        toast({
-          title: "프로젝트 업데이트 성공",
-          description: "프로젝트가 성공적으로 업데이트되었습니다.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        onClose();
-      },
-      onError: (err) => {
-        toast({
-          title: "프로젝트 업데이트 오류",
-          description: "업데이트 중 오류가 발생했습니다.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-        console.log(err);
-      },
-    });
+    try {
+      const newName = updatedData.name?.trim();
+      const newStartDate = updatedData.startDate
+        ? getKoreanTimeISO(new Date(updatedData.startDate))
+        : undefined;
+      const newEndDate = updatedData.endDate
+        ? getKoreanTimeISO(new Date(updatedData.endDate))
+        : undefined;
+      const newOptionIds =
+        selectedFeature === "기본" ? [2, 4] : updatedData.optionIds || [];
+
+      const updatedProjectData: ProjectUpdate = {
+        name: newName || "",
+        startDate: newStartDate,
+        endDate: newEndDate,
+        optionIds: newOptionIds,
+      };
+
+      await mutateAsync(updatedProjectData);
+
+      toast({
+        title: "프로젝트 업데이트 성공",
+        description: "프로젝트가 성공적으로 업데이트되었습니다.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      queryClient.refetchQueries({ queryKey: ["project", projectId] });
+      onClose();
+    } catch (axiosError) {
+      const err = axiosError as AxiosError;
+      const errorMessage = err.request.responseText;
+      toast({
+        title: "업데이트 실패",
+        description: errorMessage,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   });
 
   const preventEnterKeySubmission = (

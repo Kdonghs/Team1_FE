@@ -25,7 +25,7 @@ const footerConfig: Record<number, Record<string, FooterButtonConfig[]>> = {
 const createButtonActions = (
   handleNextPage: () => void,
   handlePreviousPage: () => void,
-  onSubmit: () => void
+  onSubmit: () => void,
 ): ButtonActionHandlers => ({
   next: handleNextPage,
   prev: handlePreviousPage,
@@ -38,14 +38,14 @@ export const renderFooterButtons = (
   handleNextPage: () => void,
   handlePreviousPage: () => void,
   onSubmit: () => void,
-  isValid: boolean
+  isValid: boolean,
 ) => {
   const currentConfig = footerConfig[currentPage]?.[selectedFeature] || [];
 
   const buttonAction = createButtonActions(
     handleNextPage,
     handlePreviousPage,
-    onSubmit
+    onSubmit,
   );
 
   return (

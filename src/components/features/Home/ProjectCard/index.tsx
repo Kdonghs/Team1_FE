@@ -1,6 +1,11 @@
+import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import styled from "@emotion/styled";
+import type { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { MoreVertical } from "lucide-react";
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
+import { useDeleteProject } from "../../../../api/hooks/useDeleteProject";
 
 type ProjectOption = {
   type: "basic" | "custom";
@@ -12,6 +17,7 @@ type ProjectOption = {
 };
 
 type Props = {
+  id: number;
   title: string;
   startDate: string;
   endDate: string;
@@ -19,9 +25,13 @@ type Props = {
   imageSrc?: string;
   width?: number | string;
   height?: number | string;
+  onDeleteSuccess?: () => void;
+  refetch: (options?: RefetchOptions) => Promise<QueryObserverResult>;
+  refetchSchedule: (options?: RefetchOptions) => Promise<QueryObserverResult>;
 };
 
 export const ProjectCard: React.FC<Props> = ({
+  id,
   title,
   startDate,
   endDate,
@@ -29,8 +39,28 @@ export const ProjectCard: React.FC<Props> = ({
   imageSrc,
   width,
   height,
+  onDeleteSuccess,
+  refetch,
+  refetchSchedule,
 }) => {
-  const handleSettingsClick = () => {
+  const navigate = useNavigate();
+  const { mutate: deleteProject } = useDeleteProject();
+
+  const handleDelete = async () => {
+    try {
+      await deleteProject({ projectId: id });
+      if (onDeleteSuccess) {
+        onDeleteSuccess();
+      }
+      // 프로젝트 목록과 스케줄 모두 리패치
+      await Promise.all([refetch(), refetchSchedule()]);
+    } catch (error) {
+      console.error("Delete project error:", error);
+    }
+  };
+
+  const handleSettingsClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
     console.log("Project details:", {
       title,
       startDate,
@@ -39,8 +69,18 @@ export const ProjectCard: React.FC<Props> = ({
     });
   };
 
+  const handleCardClick = () => {
+    navigate(`/projects/${id}`);
+  };
+
   return (
-    <Wrapper width={width} height={height}>
+    <Wrapper
+      width={width}
+      height={height}
+      onClick={handleCardClick}
+      role="button"
+      tabIndex={0}
+    >
       <ImageArea>
         {imageSrc ? (
           <StyledImage src={imageSrc} alt="" />
@@ -48,11 +88,26 @@ export const ProjectCard: React.FC<Props> = ({
           <PurpleBackground />
         )}
       </ImageArea>
-      <SettingsButton onClick={handleSettingsClick}>
-        <MoreVertical size={16} />
-      </SettingsButton>
+      <Menu>
+        <SettingsButton onClick={handleSettingsClick}>
+          <MoreVertical size={16} />
+        </SettingsButton>
+        <MenuList
+          minW="120px"
+          boxShadow="md"
+          border="1px solid"
+          borderColor="gray.100"
+          zIndex={10}
+        >
+          <MenuItem textAlign="center" onClick={handleDelete} color="red.500">삭제</MenuItem>
+        </MenuList>
+      </Menu>
       <TextArea>
         <Title>{title}</Title>
+        <DateInfo>
+          {new Date(startDate).toLocaleDateString()} -{" "}
+          {new Date(endDate).toLocaleDateString()}
+        </DateInfo>
       </TextArea>
     </Wrapper>
   );
@@ -68,6 +123,19 @@ const Wrapper = styled.div<{
   overflow: hidden;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  background: white;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  &:focus {
+    outline: 2px solid #95a4fc;
+    outline-offset: 2px;
+  }
 `;
 
 const ImageArea = styled.div`
@@ -87,7 +155,7 @@ const PurpleBackground = styled.div`
   background-color: #d9d9ff;
 `;
 
-const SettingsButton = styled.button`
+const SettingsButton = styled(MenuButton)`
   position: absolute;
   top: 8px;
   right: 8px;
@@ -96,6 +164,8 @@ const SettingsButton = styled.button`
   cursor: pointer;
   color: black;
   padding: 4px;
+  z-index: 1;
+
   &:hover {
     background: rgba(0, 0, 0, 0.1);
     border-radius: 50%;
@@ -107,13 +177,23 @@ const TextArea = styled.div`
   background: white;
   padding: 8px;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
 `;
 
 const Title = styled.h3`
   margin: 0;
   font-size: 14px;
   font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const DateInfo = styled.p`
+  margin: 0;
+  font-size: 12px;
+  color: #666;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
