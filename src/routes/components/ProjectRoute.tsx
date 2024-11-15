@@ -106,21 +106,17 @@ export const ProjectRoute = () => {
     return <Navigate to={RouterPath.login} />;
   }
 
-  // 로딩 중인 경우 로딩 UI 표시
   if (isProjectLoading || (isMemberLoading && projectResponse?.errorCode !== 200)) {
     return <div>Loading...</div>;
   }
 
-  // 프로젝트 상세 조회 성공한 경우
   if (projectResponse?.errorCode === 200) {
     return <Outlet />;
   }
 
-  // 프로젝트 멤버 본인 조회 성공한 경우
   if (memberResponse?.errorCode === 200) {
-    return <Outlet />;  // window.location.href 대신 직접 Outlet 렌더링
+    return <Outlet />;
   }
 
-  // 모든 접근 시도 실패
   return <Navigate to={RouterPath.projectList} />;
 };
