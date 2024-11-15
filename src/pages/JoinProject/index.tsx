@@ -4,15 +4,6 @@ import { useParams } from "react-router-dom";
 import { Image } from "../../components/common/Image";
 import { JoinInput } from "../../components/common/SearchInput/ProjectJoin";
 
-// interface MemberData {
-//   message: string;
-//   name: string;
-//   role: string;
-//   email: string;
-//   getattendURL: string;
-//   id: number;
-// }
-
 export const JoinProjectPage = () => {
   const { projectId } = useParams();
   const toast = useToast();

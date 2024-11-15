@@ -51,7 +51,7 @@ export interface ApiResponse<T> {
   errorCode: number;
   errorMessage: string;
   resultData: T;
-  success: boolean; // 성공 여부 필드 추가
+  success: boolean;
 }
 
 interface ErrorResponse {

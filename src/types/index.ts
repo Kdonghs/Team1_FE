@@ -62,3 +62,17 @@ export interface Profile {
   role: string;
   createDate: string;
 }
+
+// api/types.ts
+export interface ProjectListResponse {
+  resultData: Array<{
+    id: string | number;
+    name: string;
+    startDate: string;
+    endDate: string;
+    optionIds: string[];
+    imageURL?: string;
+  }>;
+  hasNext: boolean;
+  // ... 기타 필요한 필드들
+}
