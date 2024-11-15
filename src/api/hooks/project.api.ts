@@ -20,6 +20,7 @@ import type {
   PageResultMemberProgress,
   ProjectDetail,
   ProjectUpdate,
+  SingleResultMemberResponseDTO,
   SingleResultProjectDetail,
   TaskCreate,
   TaskUpdate,
@@ -29,7 +30,6 @@ import type {
 } from "@/api/generated/data-contracts";
 
 import { authProjectApi } from "../Api";
-import type { SingleResultMemberResponseDTO } from "../generated/data-contracts";
 
 const getProjectDetail = async (
   projectId: number
