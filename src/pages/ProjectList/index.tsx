@@ -73,7 +73,7 @@ export const ProjectListPage: React.FC = () => {
       );
     }
 
-    if (!projectResponse?.resultData == undefined) {
+    if (!projectResponse?.resultData?.length) {
       return (
         <Center py={10}>
           <VStack spacing={4}>
@@ -95,7 +95,7 @@ export const ProjectListPage: React.FC = () => {
         />
 
         <Flex gap={6}>
-          {projectResponse?.resultData?.map((project) => (
+          {projectResponse.resultData.map((project) => (
             <ProjectCard
               key={project.id}
               id={project.id}
@@ -103,7 +103,7 @@ export const ProjectListPage: React.FC = () => {
               startDate={project.startDate}
               endDate={project.endDate}
               option={{
-                type: project.optionIds.length === 2 ? "basic" : "custom",
+                type: project?.optionIds?.length === 2 ? "basic" : "custom",
               }}
               imageSrc={project.imageURL}
               refetch={refetchProjects}
