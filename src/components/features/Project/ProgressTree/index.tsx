@@ -11,6 +11,7 @@ import Lottie from "lottie-react";
 import { useRef, useState } from "react";
 
 import { useGetProjectProgress } from "../../../../api/hooks/project.api";
+import plantAnimation1 from "../../../../assets/animations/Plant_1.json";
 import plantAnimation2 from "../../../../assets/animations/Plant_2.json";
 import plantAnimation3 from "../../../../assets/animations/Plant_3.json";
 import plantAnimation4 from "../../../../assets/animations/Plant_4.json";
@@ -30,7 +31,8 @@ export const ProgressTree = ({ projectId }: ProgressTreeProps) => {
   const growData = data?.resultData;
 
   const getAnimation = () => {
-    if (growData?.projectProgress) {
+    if (growData?.projectProgress !== undefined) {
+      if (growData.projectProgress === 0) return animationMap[0];
       if (growData.projectProgress <= 25) return animationMap[25];
       if (growData.projectProgress <= 50) return animationMap[50];
       if (growData.projectProgress <= 75) return animationMap[75];
@@ -39,7 +41,8 @@ export const ProgressTree = ({ projectId }: ProgressTreeProps) => {
   };
 
   const getGrowInfo = () => {
-    if (growData?.projectProgress) {
+    if (growData?.projectProgress !== undefined) {
+      if (growData.projectProgress === 0) return growthLevels[0];
       if (growData.projectProgress <= 25) return growthLevels[25];
       if (growData.projectProgress <= 50) return growthLevels[50];
       if (growData.projectProgress <= 75) return growthLevels[75];
@@ -197,6 +200,7 @@ export const ProgressTree = ({ projectId }: ProgressTreeProps) => {
 };
 
 const animationMap: Record<number, object> = {
+  0: plantAnimation1,
   25: plantAnimation2,
   50: plantAnimation3,
   75: plantAnimation4,
@@ -207,6 +211,10 @@ const growthLevels: Record<
   number,
   { growthLevel: string; description: string }
 > = {
+  0: {
+    growthLevel: "아주 작은 새싹",
+    description: "아주 작은 새싹이 보이네요. \n프로젝트를 시작해보세요!",
+  },
   25: {
     growthLevel: "작은 새싹",
     description: "아직 작은 새싹이네요. \n본격적으로 프로젝트를 시작해볼까요?",

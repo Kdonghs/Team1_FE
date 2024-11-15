@@ -19,8 +19,7 @@ import type { AxiosError } from "axios";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-import { useGetUserData } from "../../../../api/hooks/user.api";
-import { useUpdateUser } from "../../../../api/hooks/user.api";
+import { useGetUserData, useUpdateUser } from "../../../../api/hooks/user.api";
 import type { Profile } from "../../../../types";
 
 interface ProfileEditingModalProps {
@@ -161,7 +160,7 @@ export const ProfileEditingModal: React.FC<ProfileEditingModalProps> = ({
             isClosable: true,
           });
         },
-      },
+      }
     );
   });
 

@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 
+import { useGetProjectDates } from "../../api/hooks/useGetProjectDates";
 import { useGetProjects } from "../../api/hooks/useGetProjects";
 import { ProjectCreatingModal } from "../../components/common/modal/ProjectCreate";
 import { ScheduleList } from "../../components/common/ScheduleCard";
@@ -29,12 +30,14 @@ export const ProjectListPage: React.FC = () => {
     data: projectResponse,
     error,
     isLoading,
-    refetch,
+    refetch: refetchProjects,
   } = useGetProjects({
     page: currentPage,
     size: projectsPerPage,
     sort: "createdAt,desc",
   });
+
+  const { refetch: refetchSchedule } = useGetProjectDates();
 
   const handlePrevious = () => {
     if (currentPage > 0) {
@@ -49,15 +52,9 @@ export const ProjectListPage: React.FC = () => {
   };
 
   const handleAddProject = async () => {
-    await refetch();
+    await Promise.all([refetchProjects(), refetchSchedule()]);
     onClose();
   };
-
-  const handleDeleteProject = async () => {
-    await refetch();
-    onClose();
-  };
-
 
   const renderProjectSection = () => {
     if (isLoading) {
@@ -109,9 +106,15 @@ export const ProjectListPage: React.FC = () => {
                 type: project.optionIds.length === 2 ? "basic" : "custom",
               }}
               imageSrc={project.imageURL}
-              refetch={handleDeleteProject} refetchSchedule={function (): Promise<void> {
-                throw new Error("Function not implemented.");
-              } }            />
+              refetch={async (options) => {
+                const result = await refetchProjects(options);
+                return result;
+              }}
+              refetchSchedule={async (options) => {
+                const result = await refetchSchedule(options);
+                return result;
+              }}
+            />
           ))}
         </Flex>
 
