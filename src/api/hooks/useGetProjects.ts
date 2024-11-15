@@ -35,12 +35,12 @@ export interface ProjectListResponse {
 }
 
 export const useGetProjects = (
-  params: ProjectListParams = { page: 0, size: 10 },
+  params: ProjectListParams = { page: 0, size: 10 }
 ) => {
   return useQuery<ProjectListResponse, AxiosError>({
     queryKey: ["projects", params],
     queryFn: async () => {
-      const accessToken = authSessionStorage.get();
+      const accessToken = authSessionStorage.get()?.token;
 
       if (!accessToken) {
         throw new Error("인증 토큰이 없습니다.");

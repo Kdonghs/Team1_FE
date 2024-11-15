@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isReady, setIsReady] = useState(false);
   const { data, error } = useGetUserData();
 
-  const currentAuthToken = authSessionStorage.get();
+  const currentAuthToken = authSessionStorage.get()?.token;
 
   const login = () => {
     const googleAuthUrl = `https://seamlessup.com/api/login`;
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const accessToken = urlParams.get("accessToken");
 
     if (accessToken) {
-      authSessionStorage.set(accessToken);
+      authSessionStorage.set({ role: "USER", token: accessToken });
       localStorage.getItem("user");
       window.location.href = RouterPath.projectList;
     } else {
