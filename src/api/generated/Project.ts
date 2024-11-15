@@ -25,6 +25,7 @@ import {
   GetMemberList,
   GetMemberListData,
   GetMemberProgressData,
+  GetMyMemberData,
   GetOptionData,
   GetOptionListData,
   GetProjectData,
@@ -534,6 +535,23 @@ export class Project<SecurityDataType = unknown> extends HttpClient<SecurityData
   getProjectOptions = (projectId: number, params: RequestParams = {}) =>
     this.request<GetProjectOptionsData, any>({
       path: `/api/project/${projectId}/option`,
+      method: "GET",
+      secure: true,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags 팀원 관리
+   * @name GetMyMember
+   * @summary 팀원 본인 조회
+   * @request GET:/api/project/{projectId}/member/me
+   * @secure
+   * @response `200` `GetMyMemberData` OK
+   */
+  getMyMember = (projectId: number, params: RequestParams = {}) =>
+    this.request<GetMyMemberData, any>({
+      path: `/api/project/${projectId}/member/me`,
       method: "GET",
       secure: true,
       ...params,
