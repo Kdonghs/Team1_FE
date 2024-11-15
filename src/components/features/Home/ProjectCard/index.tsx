@@ -1,5 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/react"
 import styled from "@emotion/styled";
+import type { QueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { MoreVertical } from "lucide-react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,8 +26,8 @@ type Props = {
   width?: number | string;
   height?: number | string;
   onDeleteSuccess?: () => void;
-  refetch: () => Promise<void>;
-  refetchSchedule: () => Promise<void>; // 추가된 prop
+  refetch: (options?: RefetchOptions) => Promise<QueryObserverResult>;
+  refetchSchedule: (options?: RefetchOptions) => Promise<QueryObserverResult>;
 };
 
 export const ProjectCard: React.FC<Props> = ({

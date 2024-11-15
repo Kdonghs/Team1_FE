@@ -1,9 +1,12 @@
 import { ChevronLeftIcon } from "@chakra-ui/icons";
 import { Box, Button, Flex, Stack, Text } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 import { useGetProjectDetail } from "../../../../api/hooks/project.api";
+import { authSessionStorage } from "../../../../utils/storage";
 import { ProjectInfo } from "../ProjectInfo";
+import { MyMemberProfile } from "./MyMemberProfile";
 import { UserProfile } from "./UserProfile";
 
 interface SidebarProps {
@@ -16,6 +19,15 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const projectId = id ? parseInt(id, 10) : null;
 
   const { data } = useGetProjectDetail(projectId);
+
+  const [role, setRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const authData = authSessionStorage.get();
+    if (authData) {
+      setRole(authData.role);
+    }
+  }, []);
 
   return (
     <Box
@@ -31,9 +43,17 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       zIndex={10}
     >
       <Flex justifyContent="space-between" padding={2}>
-        <Text fontSize="3xl" fontWeight="bold">
-          Seamless
-        </Text>
+        {role === "USER" ? (
+          <Link to={`/projects`}>
+            <Text fontSize="3xl" fontWeight="bold">
+              Seamless
+            </Text>
+          </Link>
+        ) : role === "MEMBER" ? (
+          <Text fontSize="3xl" fontWeight="bold">
+            Seamless
+          </Text>
+        ) : null}
 
         <Button
           onClick={onClose}
@@ -46,9 +66,12 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       </Flex>
 
       <Flex>
-        <UserProfile />
+        {role === "USER" ? (
+          <UserProfile />
+        ) : role === "MEMBER" ? (
+          <MyMemberProfile />
+        ) : null}
       </Flex>
-
       <Stack padding={2} gap={8}>
         <Stack gap={2}>
           <Text fontSize="20px" fontWeight="bold">

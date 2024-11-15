@@ -572,6 +572,8 @@ export type GetProjectProgressData = SingleResultProjectProgress;
 
 export type GetProjectOptionsData = ListResultOptionDetail;
 
+export type GetMyMemberData = SingleResultMemberResponseDTO;
+
 export type GetProjectDateData = PageResultProjectDate;
 
 export type MemberCodeJoinData = SingleResultMemberToken;

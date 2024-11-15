@@ -9,12 +9,10 @@ export const ProgressTracker = ({
   projectId,
   size = 10,
   sort = "string",
-  role = "",
 }: {
   projectId: number;
   size?: number;
   sort?: string;
-  role?: string;
 }) => {
   const {
     data,
@@ -23,7 +21,7 @@ export const ProgressTracker = ({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
-  } = useGetTeamProgress(projectId, size, sort, role);
+  } = useGetTeamProgress(projectId, size, sort);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
