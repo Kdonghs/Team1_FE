@@ -99,7 +99,6 @@ export const ProjectCreatingModal = ({
 
       createProject(projectData, {
         onSuccess: (response) => {
-          // 프로젝트 생성 성공시 projects와 projectDates 쿼리 무효화
           queryClient.invalidateQueries({ queryKey: ["projects"] });
           queryClient.invalidateQueries({ queryKey: ["projectDates"] });
 
