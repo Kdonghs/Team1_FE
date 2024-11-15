@@ -16,7 +16,7 @@ const initInstance = (config: AxiosRequestConfig): AxiosInstance => {
   return instance;
 };
 
-export const BASE_URL = "https://api.example.com";
+export const BASE_URL = "https://seamlessup.com";
 
 export const fetchInstance = initInstance({
   baseURL: BASE_URL,
