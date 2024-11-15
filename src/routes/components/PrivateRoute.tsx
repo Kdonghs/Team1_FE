@@ -6,7 +6,7 @@ import { RouterPath } from "../path";
 
 export const PrivateRoute = () => {
   const user = useAuth();
-  const token = authSessionStorage.get();
+  const token = authSessionStorage.get()?.token;
 
   if (!user || !token) {
     console.log(user, token);

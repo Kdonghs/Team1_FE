@@ -50,7 +50,7 @@ interface ProjectMembersResponse {
 
 export const ProjectRoute = () => {
   const { id } = useParams<{ id: string }>();
-  const token = authSessionStorage.get();
+  const token = authSessionStorage.get()?.token;
 
   // JWT 토큰에서 이메일 추출
   const getCurrentUserEmail = () => {

@@ -12,7 +12,7 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = authSessionStorage.get();
+  const token = authSessionStorage.get()?.token;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -72,7 +72,7 @@ export const useCreateProject = (onError?: (message: string) => void) => {
       try {
         const response = await api.post<ApiResponse<ProjectResponse>>(
           "/project",
-          data,
+          data
         );
         return response.data;
       } catch (error) {
