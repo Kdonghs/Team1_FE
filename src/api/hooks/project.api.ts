@@ -468,7 +468,7 @@ const getMyMember = async (
 
 export const useGetMyMember = (projectId: number | null) => {
   return useQuery<MemberResponseDTO | null, Error>({
-    queryKey: ["project", projectId],
+    queryKey: ["getMyMember", projectId],
     queryFn: () => {
       if (projectId === null) {
         throw new Error("Project ID cannot be null");

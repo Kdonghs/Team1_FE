@@ -12,35 +12,38 @@ import { EllipsisVertical, LogOutIcon } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 import { useGetMyMember } from "../../../../api/hooks/project.api";
-import { useAuth } from "../../../../provider/Auth";
+import { RouterPath } from "../../../../routes/path";
+import { authSessionStorage } from "../../../../utils/storage";
 
 export const MyMemberProfile = () => {
   const { id } = useParams<{ id: string }>();
   const projectId = id ? parseInt(id, 10) : null;
-  const { data, error, isLoading } = useGetMyMember(projectId);
+  const {
+    data: memberData,
+    error: memberError,
+    isLoading: memberIsloading,
+  } = useGetMyMember(projectId);
 
-  const { user, logout } = useAuth();
+  const memberLogout = () => {
+    authSessionStorage.set(undefined);
+    localStorage.removeItem("user");
 
-  const handleAuthLogout = () => {
-    if (user) {
-      console.log("Logging out user:", user);
-      logout();
-    }
+    window.location.href = RouterPath.root;
   };
-  console.log(data);
-  if (error) return <div>error...</div>;
-  if (isLoading) return <div>Loading...</div>;
+
+  if (memberError) return <div>error...</div>;
+  if (memberIsloading) return <div>Loading...</div>;
 
   return (
     <Flex width="100%" alignItems="center" justify="space-between">
       <Flex alignItems="center" width="100%">
-        <Avatar src={data?.name} size="md" margin={2} />
+        <Avatar name={memberData?.name} size="md" margin={2} />
         <Flex flexDir="column" justifyContent="center">
           <Text fontSize="lg" fontWeight="bold">
-            {data?.name}
+            {memberData?.name}
           </Text>
           <Text fontSize="sm" color="gray">
-            {data?.role}
+            {memberData?.role}
           </Text>
         </Flex>
       </Flex>
@@ -64,7 +67,7 @@ export const MyMemberProfile = () => {
         >
           <MenuItem
             textAlign="center"
-            onClick={handleAuthLogout}
+            onClick={memberLogout}
             icon={<LogOutIcon size={13} />}
           >
             로그아웃

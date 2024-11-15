@@ -10,6 +10,7 @@ import {
 import { useToast } from "@chakra-ui/react";
 import styled from "@emotion/styled";
 import { useQueryClient } from "@tanstack/react-query";
+import type { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -49,7 +50,7 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
 
   const { data, error, isLoading } = useGetProjectDetail(projectId);
   const [selectedFeature, setSelectedFeature] = useState("기본");
-  const { mutate } = useUpdateProject(projectId);
+  const { mutateAsync } = useUpdateProject(projectId);
   const toast = useToast();
   const queryClient = useQueryClient();
 
@@ -73,49 +74,50 @@ export const ProjectSettingModal = ({ onClose }: { onClose: () => void }) => {
     }
   }, [data, methods]);
 
-  const onSubmit = handleSubmit((updatedData) => {
-    if (!isValid) {
-      return;
-    }
+  const onSubmit = handleSubmit(async (updatedData) => {
+    if (!isValid) return;
 
-    const newName = updatedData.name?.trim();
-    const newStartDate = updatedData.startDate
-      ? getKoreanTimeISO(new Date(updatedData.startDate))
-      : undefined;
-    const newEndDate = updatedData.endDate
-      ? getKoreanTimeISO(new Date(updatedData.endDate))
-      : undefined;
-    const newOptionIds =
-      selectedFeature === "기본" ? [2, 4] : updatedData.optionIds || [];
-    const updatedProjectData: ProjectUpdate = {
-      name: newName || "",
-      startDate: newStartDate,
-      endDate: newEndDate,
-      optionIds: newOptionIds,
-    };
-    console.log(updatedProjectData);
-    mutate(updatedProjectData, {
-      onSuccess: () => {
-        toast({
-          title: "프로젝트 업데이트 성공",
-          description: "프로젝트가 성공적으로 업데이트되었습니다.",
-          status: "success",
-          duration: 3000,
-          isClosable: true,
-        });
-        queryClient.refetchQueries({ queryKey: ["project", projectId] });
-        onClose();
-      },
-      onError: () => {
-        toast({
-          title: "프로젝트 업데이트 오류",
-          description: "업데이트 중 오류가 발생했습니다.",
-          status: "error",
-          duration: 3000,
-          isClosable: true,
-        });
-      },
-    });
+    try {
+      const newName = updatedData.name?.trim();
+      const newStartDate = updatedData.startDate
+        ? getKoreanTimeISO(new Date(updatedData.startDate))
+        : undefined;
+      const newEndDate = updatedData.endDate
+        ? getKoreanTimeISO(new Date(updatedData.endDate))
+        : undefined;
+      const newOptionIds =
+        selectedFeature === "기본" ? [2, 4] : updatedData.optionIds || [];
+
+      const updatedProjectData: ProjectUpdate = {
+        name: newName || "",
+        startDate: newStartDate,
+        endDate: newEndDate,
+        optionIds: newOptionIds,
+      };
+
+      await mutateAsync(updatedProjectData);
+
+      toast({
+        title: "프로젝트 업데이트 성공",
+        description: "프로젝트가 성공적으로 업데이트되었습니다.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+      });
+
+      queryClient.refetchQueries({ queryKey: ["project", projectId] });
+      onClose();
+    } catch (axiosError) {
+      const err = axiosError as AxiosError;
+      const errorMessage = err.request.responseText;
+      toast({
+        title: "업데이트 실패",
+        description: errorMessage,
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   });
 
   const preventEnterKeySubmission = (

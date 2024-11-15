@@ -43,9 +43,17 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       zIndex={10}
     >
       <Flex justifyContent="space-between" padding={2}>
-        <Text fontSize="3xl" fontWeight="bold">
-          Seamless
-        </Text>
+        {role === "USER" ? (
+          <Link to={`/projects`}>
+            <Text fontSize="3xl" fontWeight="bold">
+              Seamless
+            </Text>
+          </Link>
+        ) : role === "MEMBER" ? (
+          <Text fontSize="3xl" fontWeight="bold">
+            Seamless
+          </Text>
+        ) : null}
 
         <Button
           onClick={onClose}
