@@ -48,35 +48,35 @@ export const ProjectRoute = () => {
 
   // 프로젝트 상세 정보 조회
   const { data: projectResponse, isLoading: isProjectLoading } = useQuery<
-  ProjectResponse,
-  AxiosError
->({
-  queryKey: ["project", id],
-  queryFn: async () => {
-    const currentToken = authSessionStorage.get()?.token;
+    ProjectResponse,
+    AxiosError
+  >({
+    queryKey: ["project", id],
+    queryFn: async () => {
+      const currentToken = authSessionStorage.get()?.token;
 
-    if (!currentToken) {
-      throw new Error("인증 토큰이 없습니다.");
-    }
-    if (!id) {
-      throw new Error("Project ID is required");
-    }
+      if (!currentToken) {
+        throw new Error("인증 토큰이 없습니다.");
+      }
+      if (!id) {
+        throw new Error("Project ID is required");
+      }
 
-    console.log("프로젝트 상세 조회 요청:", id);
-    const response = await axios.get<ProjectResponse>(`/api/project/${id}`, {
-      headers: {
-        Authorization: `Bearer ${currentToken}`,
-        "Content-Type": "application/json",
-      },
-    });
-    console.log("프로젝트 상세 조회 응답:", response.data);
-    return response.data;
-  },
-  enabled: !!id,
-  staleTime: 0,
-  refetchOnMount: true,
-  retry: 1,
-});
+      console.log("프로젝트 상세 조회 요청:", id);
+      const response = await axios.get<ProjectResponse>(`/api/project/${id}`, {
+        headers: {
+          Authorization: `Bearer ${currentToken}`,
+          "Content-Type": "application/json",
+        },
+      });
+      console.log("프로젝트 상세 조회 응답:", response.data);
+      return response.data;
+    },
+    enabled: !!id,
+    staleTime: 0,
+    refetchOnMount: true,
+    retry: 1,
+  });
 
   // 프로젝트 멤버 본인 조회
   const { data: memberResponse, isLoading: isMemberLoading } = useQuery<
@@ -85,7 +85,9 @@ export const ProjectRoute = () => {
   >({
     queryKey: ["project-member-me", id],
     queryFn: async () => {
-      if (!token || !id) {
+      const currentToken = authSessionStorage.get()?.token;
+
+      if (!currentToken || !id) {
         throw new Error("인증 정보 또는 프로젝트 ID가 없습니다.");
       }
 
@@ -93,7 +95,7 @@ export const ProjectRoute = () => {
         `/api/project/${id}/member/me`,
         {
           headers: {
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${currentToken}`,
             "Content-Type": "application/json",
           },
         }
@@ -121,7 +123,8 @@ export const ProjectRoute = () => {
 
   // 프로젝트 멤버 본인 조회 성공한 경우
   if (memberResponse?.errorCode === 200) {
-    return <Outlet />;
+    window.location.href = `/project/${id}`;
+    return null;
   }
 
   // 모든 접근 시도 실패
