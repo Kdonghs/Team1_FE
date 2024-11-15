@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import axios from "axios";
 
 import { authSessionStorage } from "../../utils/storage";
@@ -26,7 +26,7 @@ export interface ProjectListResponse {
       name: string;
       imageURL: string;
     };
-  }>;
+  }> | null;
   size: number;
   page: number;
   pages: number;
@@ -47,15 +47,29 @@ export const useGetProjects = (
       }
 
       console.log("프로젝트 목록 조회 요청:", params);
-      const response = await axios.get<ProjectListResponse>("/api/project", {
-        params,
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          "Content-Type": "application/json",
-        },
-      });
-      console.log("프로젝트 목록 조회 응답:", response.data);
-      return response.data;
+
+      try {
+        const response = await axios.get<ProjectListResponse>("/api/project", {
+          params,
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+          },
+        });
+
+        if (!response.data || !Array.isArray(response.data.resultData)) {
+          throw new Error("프로젝트 목록을 조회할 수 없습니다.");
+        }
+
+        console.log("프로젝트 목록 조회 응답:", response.data);
+        return response.data;
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          console.error("API 요청 오류:", error.message);
+          throw new Error(error.message || "프로젝트 목록 조회 실패");
+        }
+        throw error;
+      }
     },
     staleTime: Infinity,
     refetchOnMount: false,

@@ -73,7 +73,7 @@ export const ProjectListPage: React.FC = () => {
       );
     }
 
-    if (!projectResponse?.resultData.length) {
+    if (!projectResponse?.resultData) {
       return (
         <Center py={10}>
           <VStack spacing={4}>
