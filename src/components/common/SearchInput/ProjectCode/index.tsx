@@ -98,7 +98,6 @@ export const SearchInput: React.FC<SearchInputProps> = ({
         role: "MEMBER",
         token: response.resultData.token,
       });
-      console.log("Authenticated user:", response.resultData.token);
       toast({
         title: "인증 성공",
         description: "프로젝트로 이동합니다.",
