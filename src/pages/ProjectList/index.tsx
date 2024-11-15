@@ -73,7 +73,10 @@ export const ProjectListPage: React.FC = () => {
       );
     }
 
-    if (!projectResponse?.resultData) {
+    if (
+      !projectResponse?.resultData ||
+      !Array.isArray(projectResponse.resultData)
+    ) {
       return (
         <Center py={10}>
           <VStack spacing={4}>
