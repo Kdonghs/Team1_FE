@@ -73,10 +73,7 @@ export const ProjectListPage: React.FC = () => {
       );
     }
 
-    if (
-      !projectResponse?.resultData ||
-      !Array.isArray(projectResponse.resultData)
-    ) {
+    if (!projectResponse?.resultData == undefined) {
       return (
         <Center py={10}>
           <VStack spacing={4}>
@@ -98,7 +95,7 @@ export const ProjectListPage: React.FC = () => {
         />
 
         <Flex gap={6}>
-          {projectResponse.resultData.map((project) => (
+          {projectResponse?.resultData?.map((project) => (
             <ProjectCard
               key={project.id}
               id={project.id}
