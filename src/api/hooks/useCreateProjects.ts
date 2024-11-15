@@ -5,7 +5,7 @@ import axios from "axios";
 import { authSessionStorage } from "../../utils/storage";
 
 const api = axios.create({
-  baseURL: "/api",
+  baseURL: "https://seamlessup.com/api",
   headers: {
     "Content-Type": "application/json",
   },
