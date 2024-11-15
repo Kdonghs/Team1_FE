@@ -48,30 +48,35 @@ export const ProjectRoute = () => {
 
   // 프로젝트 상세 정보 조회
   const { data: projectResponse, isLoading: isProjectLoading } = useQuery<
-    ProjectResponse,
-    AxiosError
-  >({
-    queryKey: ["project", id],
-    queryFn: async () => {
-      if (!token) {
-        throw new Error("인증 토큰이 없습니다.");
-      }
-      if (!id) {
-        throw new Error("Project ID is required");
-      }
-      const response = await axios.get<ProjectResponse>(`/api/project/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-      return response.data;
-    },
-    enabled: !!id && !!token,
-    staleTime: 0,
-    refetchOnMount: true,
-    retry: 1,
-  });
+  ProjectResponse,
+  AxiosError
+>({
+  queryKey: ["project", id],
+  queryFn: async () => {
+    const currentToken = authSessionStorage.get()?.token;
+
+    if (!currentToken) {
+      throw new Error("인증 토큰이 없습니다.");
+    }
+    if (!id) {
+      throw new Error("Project ID is required");
+    }
+
+    console.log("프로젝트 상세 조회 요청:", id);
+    const response = await axios.get<ProjectResponse>(`/api/project/${id}`, {
+      headers: {
+        Authorization: `Bearer ${currentToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+    console.log("프로젝트 상세 조회 응답:", response.data);
+    return response.data;
+  },
+  enabled: !!id,
+  staleTime: 0,
+  refetchOnMount: true,
+  retry: 1,
+});
 
   // 프로젝트 멤버 본인 조회
   const { data: memberResponse, isLoading: isMemberLoading } = useQuery<
