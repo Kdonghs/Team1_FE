@@ -3,7 +3,6 @@ import type { AxiosError } from "axios";
 import axios from "axios";
 import { Navigate, Outlet, useParams } from "react-router-dom";
 
-import { useAuth } from "../../provider/Auth";
 import { authSessionStorage } from "../../utils/storage";
 import { RouterPath } from "../path";
 
@@ -32,7 +31,6 @@ interface ProjectResponse {
 
 export const ProjectRoute = () => {
   const { id } = useParams<{ id: string }>();
-  const user = useAuth();
   const token = authSessionStorage.get();
 
   const { data: response, isLoading } = useQuery<ProjectResponse, AxiosError>({
@@ -62,7 +60,7 @@ export const ProjectRoute = () => {
     retry: 1,
   });
 
-  if (!user || !token) {
+  if (!token) {
     return <Navigate to={RouterPath.login} />;
   }
 

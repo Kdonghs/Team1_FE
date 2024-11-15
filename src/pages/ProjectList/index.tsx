@@ -49,9 +49,15 @@ export const ProjectListPage: React.FC = () => {
   };
 
   const handleAddProject = async () => {
-    await refetch(); // 프로젝트 목록 강제 리프레시
+    await refetch();
     onClose();
   };
+
+  const handleDeleteProject = async () => {
+    await refetch();
+    onClose();
+  };
+
 
   const renderProjectSection = () => {
     if (isLoading) {
@@ -77,14 +83,6 @@ export const ProjectListPage: React.FC = () => {
             <Text color="gray.500" fontSize="lg">
               참여중인 프로젝트가 없습니다.
             </Text>
-            {/* <Button
-              backgroundColor="#95A4FC"
-              color="#FFFFFF"
-              onClick={onOpen}
-              leftIcon={<AddIcon />}
-            >
-              프로젝트 생성하기
-            </Button> */}
           </VStack>
         </Center>
       );
@@ -111,7 +109,9 @@ export const ProjectListPage: React.FC = () => {
                 type: project.optionIds.length === 2 ? "basic" : "custom",
               }}
               imageSrc={project.imageURL}
-            />
+              refetch={handleDeleteProject} refetchSchedule={function (): Promise<void> {
+                throw new Error("Function not implemented.");
+              } }            />
           ))}
         </Flex>
 
