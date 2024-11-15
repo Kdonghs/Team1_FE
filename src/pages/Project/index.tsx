@@ -23,10 +23,9 @@ export const ProjectPage = () => {
   }, [projectId, navigate]);
 
   useEffect(() => {
-    if (!dayjs(data?.endDate).isAfter(dayjs())) {
+    if (data?.endDate && dayjs(data.endDate).isBefore(dayjs(), "day")) {
       toast({
         title: "종료된 프로젝트입니다.",
-        description: "일부 기능이 제한될 수 있습니다.",
         status: "info",
         duration: 3000,
         isClosable: true,
@@ -35,7 +34,7 @@ export const ProjectPage = () => {
   }, [data, toast]);
 
   if (error) {
-    console.log(error);
+    return <div>error</div>;
   }
 
   if (isLoading) return <div>Loading...</div>;
